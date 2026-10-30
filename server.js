@@ -15,6 +15,10 @@ CREATE TABLE IF NOT EXISTS payments (
   telegram_charge_id TEXT PRIMARY KEY, telegram_id TEXT NOT NULL, amount INTEGER NOT NULL,
   currency TEXT NOT NULL, expires_at INTEGER, created_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS access_invites (
+  token TEXT PRIMARY KEY, duration_days INTEGER NOT NULL, created_by TEXT NOT NULL,
+  created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL, used_at INTEGER, used_by TEXT
+);
 `);
 const ADMIN_ID = String(process.env.ADMIN_TELEGRAM_ID || '7738464404');
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -143,6 +147,33 @@ app.post('/api/admin/grant', (req,res) => {
   db.prepare(`INSERT INTO users(telegram_id,first_name,access,access_expires_at,created_at) VALUES(?,?,?,?,?)
     ON CONFLICT(telegram_id) DO UPDATE SET access='FRIENDS',access_expires_at=excluded.access_expires_at`).run(id,'FRIENDS','FRIENDS',expires,Date.now());
   res.json({ok:true});
+});
+app.post('/api/invites/redeem', auth, (req,res) => {
+  const token=String(req.body?.token||'');
+  if(!/^[a-f0-9]{48}$/.test(token)) return res.status(400).json({error:'Некорректная ссылка-приглашение'});
+  const now=Date.now();
+  const claim=db.transaction(() => {
+    const invite=db.prepare('SELECT duration_days,expires_at,used_at FROM access_invites WHERE token=?').get(token);
+    if(!invite || invite.used_at || invite.expires_at<=now) return null;
+    const expires=invite.duration_days===0?null:now+invite.duration_days*86400000;
+    db.prepare('UPDATE access_invites SET used_at=?,used_by=? WHERE token=? AND used_at IS NULL').run(now,String(req.telegramUser.id),token);
+    db.prepare(`INSERT INTO users(telegram_id,first_name,access,access_expires_at,created_at) VALUES(?,?,?,?,?)
+      ON CONFLICT(telegram_id) DO UPDATE SET access='FRIENDS',access_expires_at=excluded.access_expires_at`)
+      .run(String(req.telegramUser.id),req.telegramUser.first_name||'Пользователь','FRIENDS',expires,now);
+    return {expiresAt:expires};
+  });
+  const result=claim();
+  if(!result) return res.status(410).json({error:'Ссылка уже использована или срок её действия истёк'});
+  res.json({ok:true,expiresAt:result.expiresAt});
+});
+app.post('/api/admin/invites', (req,res) => {
+  const days=Number(req.body?.durationDays);
+  if(![0,7,30,90,365].includes(days)) return res.status(400).json({error:'Invalid invite duration'});
+  const token=crypto.randomBytes(24).toString('hex');
+  const now=Date.now();
+  db.prepare('INSERT INTO access_invites(token,duration_days,created_by,created_at,expires_at) VALUES(?,?,?,?,?)')
+    .run(token,String(req.telegramUser.id),now,now,now+7*86400000);
+  res.json({ok:true,token,inviteUrl:'https://t.me/VAMOPAV_bot?startapp='+token,expiresAt:now+7*86400000,durationDays:days});
 });
 app.post('/api/admin/revoke', (req,res) => {
   const id=String(req.body?.telegramId||'');
