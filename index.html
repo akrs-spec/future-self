@@ -300,12 +300,12 @@
           <button onclick="openDailySection('question')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">❔</span><p class="text-xs font-bold text-mauve mt-2">Вопрос дня</p><p class="text-[9px] text-mauve-light mt-1">Один вопрос для себя</p></button>
           <button onclick="openDailySection('delayed')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">✉️</span><p class="text-xs font-bold text-mauve mt-2">Отложенное письмо</p><p class="text-[9px] text-mauve-light mt-1">Открой в нужный день</p></button>
           <button onclick="openDailySection('fills')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">☀️</span><p class="text-xs font-bold text-mauve mt-2">Что меня наполняет</p><p class="text-[9px] text-mauve-light mt-1">Твои источники энергии</p></button>
-          <button onclick="openDailySection('capsule')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">⏳</span><p class="text-xs font-bold text-mauve mt-2">Капсула времени</p><p class="text-[9px] text-mauve-light mt-1">Послание себе в будущем</p></button>
-          <button onclick="openDailySection('monthly')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">月</span><p class="text-xs font-bold text-mauve mt-2">Итоги месяца</p><p class="text-[9px] text-mauve-light mt-1">Посмотри, что изменилось</p></button>
-          <button onclick="openDailySection('favorites')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">♡</span><p class="text-xs font-bold text-mauve mt-2">Избранное</p><p class="text-[9px] text-mauve-light mt-1">Всё важное в одном месте</p></button>
+
+
+
           <button onclick="openDailySection('search')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">⌕</span><p class="text-xs font-bold text-mauve mt-2">Поиск по дневнику</p><p class="text-[9px] text-mauve-light mt-1">Найди старые мысли</p></button>
           <button onclick="openDailySection('calendar')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">▦</span><p class="text-xs font-bold text-mauve mt-2">Календарь активности</p><p class="text-[9px] text-mauve-light mt-1">Твои дни с собой</p></button>
-          <button onclick="openDailySection('cards')" class="glass-card rounded-2xl border border-blush p-3 text-left col-span-2"><span class="text-lg">✧</span><p class="text-xs font-bold text-mauve mt-2">Карточки для сохранения</p><p class="text-[9px] text-mauve-light mt-1">Создай красивую карточку из своей мысли</p></button>
+
         </div>
       </div>
         <button onclick="openDailySection('pause')" class="w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left shadow-sm" style="background:linear-gradient(115deg,#F8ECEE,#FFF9F9)">
@@ -494,27 +494,11 @@
         <div id="fillsMeList" class="space-y-2"></div>
       </div>
 
-      <div id="dailySection-capsule" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <div class="rounded-3xl p-5 text-center" style="background:linear-gradient(145deg,#F8E9EB,#E8C5C8)"><div class="text-3xl">⏳</div><h3 class="text-xl font-extrabold text-mauve mt-2">Капсула времени</h3><p class="text-xs text-mauve-light mt-2">Оставь здесь мысли о сегодняшнем дне. Выбери дату, когда захочешь к ним вернуться.</p></div>
-        <div class="glass-card rounded-2xl border border-blush p-4 space-y-3">
-          <textarea id="timeCapsuleText" rows="5" placeholder="Что важно запомнить о себе сегодняшней?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y"></textarea>
-          <label class="block text-[10px] font-bold text-mauve">Открыть капсулу</label><input id="timeCapsuleDate" type="date" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve">
-          <button onclick="saveTimeCapsule()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить капсулу</button>
-        </div>
-        <div id="timeCapsuleList" class="space-y-2"></div>
-      </div>
+      
 
-      <div id="dailySection-monthly" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Твоя история</span><h3 class="text-xl font-extrabold text-mauve">Итоги месяца</h3><p class="text-xs text-mauve-light mt-1">Небольшой взгляд на то, чем был наполнен этот месяц.</p></div>
-        <div class="glass-card rounded-2xl border border-blush p-4 space-y-3"><div class="flex items-center justify-between"><button onclick="changeMonthlyOffset(-1)" class="w-9 h-9 rounded-full bg-milk text-mauve">‹</button><p id="monthlyReportTitle" class="text-sm font-extrabold text-mauve"></p><button onclick="changeMonthlyOffset(1)" class="w-9 h-9 rounded-full bg-milk text-mauve">›</button></div><div id="monthlyReportContent" class="space-y-3"></div></div>
-      </div>
+      
 
-      <div id="dailySection-favorites" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <div><h3 class="text-xl font-extrabold text-mauve">Избранное</h3><p class="text-xs text-mauve-light mt-1">Записи, к которым хочется возвращаться.</p></div><div id="favoritesList" class="space-y-2"></div>
-      </div>
+      
 
       <div id="dailySection-search" class="hidden space-y-4">
         <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
@@ -529,12 +513,7 @@
         <div class="glass-card rounded-2xl border border-blush p-4 space-y-3"><div class="flex items-center justify-between"><button onclick="changeActivityMonth(-1)" class="w-9 h-9 rounded-full bg-milk text-mauve">‹</button><p id="activityMonthTitle" class="text-sm font-extrabold text-mauve"></p><button onclick="changeActivityMonth(1)" class="w-9 h-9 rounded-full bg-milk text-mauve">›</button></div><div class="grid grid-cols-7 gap-1 text-center text-[9px] text-dusty"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div><div id="activityCalendarGrid" class="grid grid-cols-7 gap-1 text-center"></div><p class="text-[9px] text-mauve-light">Розовая отметка означает, что в этот день была хотя бы одна запись или активность.</p></div><div id="activityCalendarSummary" class="text-xs text-mauve-light text-center"></div>
       </div>
 
-      <div id="dailySection-cards" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <div><h3 class="text-xl font-extrabold text-mauve">Карточка для сохранения</h3><p class="text-xs text-mauve-light mt-1">Преврати свою мысль, фразу или напоминание в красивую карточку.</p></div>
-        <div class="glass-card rounded-2xl border border-blush p-4 space-y-3"><textarea id="shareCardText" rows="4" maxlength="260" placeholder="Напиши фразу, которую хочешь сохранить..." class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y"></textarea><input id="shareCardAuthor" maxlength="40" placeholder="Подпись (необязательно)" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"><div class="grid grid-cols-3 gap-2"><button onclick="setShareCardTheme('rose')" class="rounded-xl p-2 text-[10px] border border-blush" style="background:#F4DDE1">Розовая</button><button onclick="setShareCardTheme('cream')" class="rounded-xl p-2 text-[10px] border border-blush" style="background:#F8F0E8">Кремовая</button><button onclick="setShareCardTheme('night')" class="rounded-xl p-2 text-[10px] border border-blush text-white" style="background:#59434A">Вечерняя</button></div><button onclick="renderShareCard()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Создать карточку</button></div>
-        <div id="shareCardPreview" class="hidden space-y-3"><div id="shareCardCanvas" class="rounded-3xl min-h-[340px] p-8 flex flex-col justify-between text-center shadow-card-float" style="background:linear-gradient(145deg,#F8E9EB,#E8C5C8);color:#5A3D42;width:100%;"><p style="font-size:10px;letter-spacing:4px;font-weight:700">FUTURE SELF</p><p id="shareCardPreviewText" style="font-family:Georgia,serif;font-size:25px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere"></p><div><p id="shareCardPreviewAuthor" style="font-size:12px"></p><p style="font-size:9px;letter-spacing:3px;margin-top:12px">A MOMENT FOR YOU</p></div></div><button onclick="downloadShareCard()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold"><i class="fa-solid fa-download mr-2"></i>Сохранить изображение</button><button onclick="shareShareCard()" class="w-full py-3 rounded-xl border border-blush text-xs font-bold text-mauve">Поделиться</button></div>
-      </div>
+      
     </section>
 
     <!-- 3. GOAL PLANNER -->
@@ -1018,12 +997,8 @@
       if (key === 'question') renderQuestionOfDay();
       if (key === 'delayed') renderDelayedLetters();
       if (key === 'fills') renderFillsMe();
-      if (key === 'capsule') renderTimeCapsules();
-      if (key === 'monthly') renderMonthlyReport();
-      if (key === 'favorites') renderFavorites();
       if (key === 'search') searchDiary();
       if (key === 'calendar') renderActivityCalendar();
-      if (key === 'cards') document.getElementById('shareCardPreview')?.classList.add('hidden');
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
     }
     function closeDailySection() {
