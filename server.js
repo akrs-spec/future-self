@@ -172,7 +172,7 @@ app.post('/api/admin/invites', (req,res) => {
   const token=crypto.randomBytes(24).toString('hex');
   const now=Date.now();
   db.prepare('INSERT INTO access_invites(token,duration_days,created_by,created_at,expires_at) VALUES(?,?,?,?,?)')
-    .run(token,String(req.telegramUser.id),now,now,now+7*86400000);
+    .run(token,days,String(req.telegramUser.id),now,now+7*86400000);
   res.json({ok:true,token,inviteUrl:'https://t.me/VAMOPAV_bot?startapp='+token,expiresAt:now+7*86400000,durationDays:days});
 });
 app.post('/api/admin/revoke', (req,res) => {
