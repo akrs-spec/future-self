@@ -913,8 +913,10 @@
        if(!text||!input)return;text.textContent=question;date.textContent=new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
        input.value=answers[today]?.answer||'';saved.textContent=answers[today]?'Ответ за сегодня уже сохранён. Его можно дополнить и сохранить обновлённую версию.':'';
        const hist=document.getElementById('dailyQuestionHistory');
-       const history=Array.isArray(appState.dailyQuestionHistory)?appState.dailyQuestionHistory:[];
-       const entries=history.length?history.slice():Object.entries(answers).map(([d,v])=>({date:d,question:v.question||dailyQuestionFor(d),answer:v.answer,createdAt:v.updatedAt||d}));
+       const history=Array.isArray(appState.dailyQuestionHistory)?appState.dailyQuestionHistory.slice():[];
+       const known=new Set(history.map(v=>String(v.date||String(v.createdAt||'').slice(0,10))+'|'+String(v.answer||'')));
+       Object.entries(answers).forEach(([d,v])=>{const key=d+'|'+String(v.answer||'');if(v.answer&&!known.has(key))history.push({date:d,question:v.question||dailyQuestionFor(d),answer:v.answer,createdAt:v.updatedAt||d});});
+       const entries=history;
        entries.sort((a,b)=>String(b.createdAt||b.date).localeCompare(String(a.createdAt||a.date)));
        if(hist)hist.innerHTML=entries.length?'<h4 class="text-xs font-bold text-mauve pt-2">История ответов</h4>'+entries.map(v=>'<div class="glass-card rounded-xl border border-blush p-3"><p class="text-[9px] text-dusty">'+escapeHtml(v.date||String(v.createdAt||'').slice(0,10))+'</p><p class="text-xs font-bold text-mauve mt-1">'+escapeHtml(v.question||'Вопрос дня')+'</p><p class="text-xs text-mauve-light mt-2 whitespace-pre-wrap">'+escapeHtml(v.answer||'')+'</p></div>').join(''):'<p class="text-center text-[10px] text-mauve-light py-3">Сохранённые ответы будут появляться здесь по порядку.</p>';
      }
@@ -1294,9 +1296,6 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
         appState.futureScriptHistory.push({id:'legacy-future-script',legacy:true,idealDay:f.idealDay||'',identity:f.identity||'',leavingBehind:f.leavingBehind||''});
         saveState();
       }
-      document.getElementById('idealDayText').value=f.idealDay||'';
-      document.getElementById('identityText').value=f.identity||'';
-      document.getElementById('leavingBehindText').value=f.leavingBehind||'';
       renderFutureScriptHistory();
       await initAccount();
     });
