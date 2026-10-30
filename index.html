@@ -145,7 +145,40 @@
       background-size: 200% 100%;
       animation: roseShimmer 4s infinite linear;
     }
-  </style>
+  
+    .fate-ball {
+      width: 154px;
+      height: 154px;
+      border: 1px solid rgba(255,255,255,.8);
+      background: radial-gradient(circle at 34% 27%, #F9E4E7 0%, #D9A9B0 24%, #8D626B 58%, #49343D 100%);
+      box-shadow: inset -12px -15px 28px rgba(48,27,39,.38), inset 8px 8px 20px rgba(255,255,255,.5), 0 12px 28px rgba(94,57,68,.25);
+      cursor: pointer;
+      transition: transform .2s ease, filter .2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fate-ball:active { transform: scale(.94); }
+    .fate-ball:disabled { cursor: default; filter: grayscale(.25); opacity: .72; }
+    .fate-ball-answer {
+      width: 76px; height: 76px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at 40% 35%, rgba(255,255,255,.94), rgba(245,213,218,.82) 62%, rgba(201,139,147,.92));
+      color: #68464E; font-size: 30px; font-weight: 900;
+      box-shadow: 0 3px 16px rgba(255,255,255,.35), inset 0 0 12px rgba(137,83,94,.16);
+      text-shadow: 0 1px 0 white;
+    }
+    .fate-ball.rolling { animation: fateRoll .65s ease-in-out; }
+    @keyframes fateRoll {
+      0% { transform: rotate(0) scale(1); }
+      25% { transform: rotate(-12deg) scale(1.06); }
+      55% { transform: rotate(12deg) scale(.96); }
+      100% { transform: rotate(0) scale(1); }
+    }
+    .fate-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #C98B93; opacity: .9;
+    }
+    .fate-dot.used { background: #E8DADD; opacity: 1; }
+</style>
 </head>
 
 <body class="h-full flex flex-col justify-between max-w-md mx-auto relative shadow-2xl bg-cream min-h-screen pb-24 pt-4 px-4">
@@ -229,12 +262,50 @@
         <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
       </div>
 
+<!-- Feelings Journal -->
+      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
+        <div>
+          <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">Дневник чувств</h3>
+          <p class="text-[10px] text-mauve-light mt-1">Отметь, что ты чувствуешь сейчас. Здесь нет правильных или неправильных эмоций.</p>
+        </div>
+        <select id="feelingMood" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none">
+          <option value="Радость">😊 Радость</option>
+          <option value="Спокойствие">😌 Спокойствие</option>
+          <option value="Благодарность">🤍 Благодарность</option>
+          <option value="Вдохновение">✨ Вдохновение</option>
+          <option value="Тревога">🌧️ Тревога</option>
+          <option value="Грусть">💧 Грусть</option>
+          <option value="Злость">🔥 Злость</option>
+          <option value="Усталость">🌙 Усталость</option>
+          <option value="Одиночество">🫂 Одиночество</option>
+          <option value="Растерянность">🌀 Растерянность</option>
+        </select>
+        <textarea id="feelingNote" rows="3" placeholder="Что повлияло на это состояние? О чём хочется себе сказать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none resize-y"></textarea>
+        <button onclick="saveFeelingEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить запись</button>
+      </div>
+      <div id="feelingHistoryContainer" class="space-y-2"></div>
+    
 
-      <!-- Future Self: scripting -->
+<!-- Gratitude Form -->
+      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
+        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
+        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
+      </div>
+
+      <div id="gratitudeHistoryContainer" class="space-y-2">
+        <!-- Rendered via JS -->
+      </div>
+
+      
+
+<!-- Future Self: scripting -->
 
       <div>
         <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Письмо в будущее</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Мой Идеальный День</h2>
+        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Письмо в будущее</h2>
       </div>
 
       <!-- Ambient Audio Focus Player -->
@@ -273,48 +344,16 @@
       </div>
 
 
-      <!-- Daily Affirmation Card -->
+      
+
+<!-- Daily Affirmation Card -->
       <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
         <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
         <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
         <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
       </div>
 
-      <!-- Gratitude Form -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
-        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
-      </div>
-
-      <div id="gratitudeHistoryContainer" class="space-y-2">
-        <!-- Rendered via JS -->
-      </div>
-
-      <!-- Feelings Journal -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <div>
-          <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">Дневник чувств</h3>
-          <p class="text-[10px] text-mauve-light mt-1">Отметь, что ты чувствуешь сейчас. Здесь нет правильных или неправильных эмоций.</p>
-        </div>
-        <select id="feelingMood" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none">
-          <option value="Радость">😊 Радость</option>
-          <option value="Спокойствие">😌 Спокойствие</option>
-          <option value="Благодарность">🤍 Благодарность</option>
-          <option value="Вдохновение">✨ Вдохновение</option>
-          <option value="Тревога">🌧️ Тревога</option>
-          <option value="Грусть">💧 Грусть</option>
-          <option value="Злость">🔥 Злость</option>
-          <option value="Усталость">🌙 Усталость</option>
-          <option value="Одиночество">🫂 Одиночество</option>
-          <option value="Растерянность">🌀 Растерянность</option>
-        </select>
-        <textarea id="feelingNote" rows="3" placeholder="Что повлияло на это состояние? О чём хочется себе сказать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none resize-y"></textarea>
-        <button onclick="saveFeelingEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить запись</button>
-      </div>
-      <div id="feelingHistoryContainer" class="space-y-2"></div>
+      
     </section>
 
     <!-- 3. GOAL PLANNER -->
@@ -474,7 +513,28 @@
       </div>
 
 
-    </section>
+    
+      <!-- YES / NO ORACLE -->
+      <div class="glass-card rounded-3xl p-5 border border-blush space-y-4 text-center">
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Короткий ответ</span>
+          <h3 class="text-lg font-extrabold text-mauve">Шар судьбы</h3>
+          <p class="text-[11px] leading-relaxed text-mauve-light">Мысленно задай вопрос, на который можно ответить только «да» или «нет», и коснись шара.</p>
+        </div>
+        <button id="fateBallButton" type="button" onclick="rollFateBall()" class="fate-ball mx-auto flex items-center justify-center rounded-full" aria-label="Получить ответ да или нет">
+          <span id="fateBallAnswer" class="fate-ball-answer">?</span>
+        </button>
+        <p id="fateBallResult" class="min-h-7 text-xl font-extrabold text-mauve" aria-live="polite">Твой ответ появится здесь</p>
+        <div class="space-y-2">
+          <div class="flex items-center justify-center gap-1.5" id="fateBallAttempts" aria-label="Осталось три попытки">
+            <span class="fate-dot"></span><span class="fate-dot"></span><span class="fate-dot"></span>
+          </div>
+          <p id="fateBallCounter" class="text-[10px] text-mauve-light">Осталось 3 из 3 ответов на сегодня</p>
+        </div>
+        <p class="text-[9px] text-mauve-light">Это игра для размышления, а не способ принимать важные решения.</p>
+      </div>
+
+</section>
 
     
 
@@ -603,7 +663,7 @@
         { id: '1', type: 'image', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80', x: 12, y: 18, width: 140, title: 'Путешествия' },
         { id: '2', type: 'image', url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80', x: 165, y: 42, width: 140, title: 'Дом мечты' }
       ], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
-      goals: [{ id: 'g1', title: 'Создать личный проект', cat: 'career', completed: false }], gratitudes: [], feelings: [], practiceDays: []
+      goals: [{ id: 'g1', title: 'Создать личный проект', cat: 'career', completed: false }], gratitudes: [], feelings: [], practiceDays: [], yesNoOracle: { date: '', used: 0, answer: '' }
     };
     const storageKey = 'FUTURE_SELF_APP_STATE_' + (tg?.initDataUnsafe?.user?.id || 'preview');
     let appState = { ...DEFAULT_STATE, ...(JSON.parse(localStorage.getItem(storageKey) || 'null') || {}) };
@@ -637,7 +697,7 @@
       document.querySelectorAll('.nav-btn').forEach(btn=>{btn.classList.remove('text-dusty');btn.classList.add('text-mauve-light');});
       document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
       const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
-      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='future') renderDailyTarot(); if(tabId==='practices') renderPracticeProgress();
+      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='future'){renderDailyTarot();renderFateBall();} if(tabId==='practices') renderPracticeProgress();
     }
     let selectedBoardItemId=null;
     function boardPlacement(width){const c=document.getElementById('boardCanvas');const maxX=Math.max(8,(c?.clientWidth||340)-width-8);return{x:Math.round(8+Math.random()*maxX),y:Math.round(8+Math.random()*210),rotation:Math.round((Math.random()*12-6)*10)/10};}
@@ -709,7 +769,39 @@
     const tarotRanks = ['Туз','Двойка','Тройка','Четвёрка','Пятёрка','Шестёрка','Семёрка','Восьмёрка','Девятка','Десятка','Паж','Рыцарь','Королева','Король'];
     const tarotDeck = tarotMajors.map((c,i)=>({name:c[0],message:c[1],focus:c[2],question:c[3],symbol:c[4],number:String(i+1).padStart(2,'0')}));
     tarotSuits.forEach((s,si)=>tarotRanks.forEach((rank,ri)=>{tarotDeck.push({name:rank+' '+s.name,message:s.verbs[ri],focus:'Тема карты — '+s.theme+'. Сегодня присмотрись: '+s.focus+'.',question:s.q,symbol:s.symbol,number:String(tarotDeck.length+1).padStart(2,'0')});}));
-    function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+        function renderFateBall(){
+      const state=appState.yesNoOracle||{date:'',used:0,answer:''};
+      const today=localDayKey();
+      if(state.date!==today){appState.yesNoOracle={date:today,used:0,answer:''};saveState();}
+      const current=appState.yesNoOracle;
+      const used=Math.min(3,Math.max(0,Number(current.used)||0));
+      const answer=document.getElementById('fateBallAnswer');
+      const result=document.getElementById('fateBallResult');
+      const counter=document.getElementById('fateBallCounter');
+      const button=document.getElementById('fateBallButton');
+      const dots=document.querySelectorAll('#fateBallAttempts .fate-dot');
+      if(!answer||!result||!counter||!button)return;
+      answer.textContent=current.answer||'?';
+      result.textContent=current.answer||'Твой ответ появится здесь';
+      counter.textContent=used>=3?'На сегодня ответы закончились':'Осталось '+(3-used)+' из 3 ответов на сегодня';
+      button.disabled=used>=3;
+      dots.forEach((dot,index)=>dot.classList.toggle('used',index>=3-used));
+    }
+    function rollFateBall(){
+      const today=localDayKey();
+      let state=appState.yesNoOracle||{date:today,used:0,answer:''};
+      if(state.date!==today)state={date:today,used:0,answer:''};
+      if((Number(state.used)||0)>=3){renderFateBall();return;}
+      state.used=(Number(state.used)||0)+1;
+      state.answer=Math.random()<0.5?'Да':'Нет';
+      state.date=today;
+      appState.yesNoOracle=state;
+      saveState();
+      const ball=document.getElementById('fateBallButton');
+      if(ball){ball.classList.remove('rolling');void ball.offsetWidth;ball.classList.add('rolling');}
+      renderFateBall();
+    }
+function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
     function dailyTarotIndex(key){const seed=String(key)+'-'+String(tg?.initDataUnsafe?.user?.id||'preview');let n=0;for(let i=0;i<seed.length;i++)n=(n*31+seed.charCodeAt(i))>>>0;return n%tarotDeck.length;}
     function renderDailyTarot(){const history=appState.dailyTarot||[],today=localDayKey(),entry=history.find(x=>x.date===today);const back=document.getElementById('dailyTarotBack'),reveal=document.getElementById('dailyTarotReveal'),button=document.getElementById('dailyTarotDrawBtn');if(!back||!reveal||!button)return;if(entry&&entry.revealed){const card=tarotDeck[entry.index];back.classList.add('hidden');reveal.classList.remove('hidden');document.getElementById('dailyTarotNumber').innerText='АРХЕТИП '+card.number;document.getElementById('dailyTarotSymbol').innerText=card.symbol;document.getElementById('dailyTarotCardName').innerText=card.name;document.getElementById('dailyTarotMessage').innerText=card.message;document.getElementById('dailyTarotFocus').innerText=card.focus;document.getElementById('dailyTarotQuestion').innerText=card.question;button.innerText='Карта уже открыта сегодня';button.disabled=true;button.style.opacity='.65';}else{back.classList.remove('hidden');reveal.classList.add('hidden');button.innerText='Открыть карту дня';button.disabled=false;button.style.opacity='1';}const hist=document.getElementById('dailyTarotHistory');const past=history.filter(x=>x.date!==today).slice(0,5);hist.innerHTML=past.length?'<p class="text-[9px] font-bold text-dusty uppercase tracking-widest">Предыдущие карты</p>'+past.map(x=>{const c=tarotDeck[x.index];return '<div class="glass-card rounded-xl p-3 flex items-center justify-between"><div><p class="text-xs font-bold text-mauve">'+escapeHtml(c.name)+'</p><p class="text-[9px] text-mauve-light">'+escapeHtml(x.date)+'</p></div><span class="text-xl text-dusty">'+c.symbol+'</span></div>';}).join(''):'';}
     function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const today=localDayKey();if(appState.dailyTarot.some(x=>x.date===today)){renderDailyTarot();return;}const index=dailyTarotIndex(today);appState.dailyTarot.unshift({date:today,index,revealed:true});appState.dailyTarot=appState.dailyTarot.slice(0,30);saveState();renderDailyTarot();showToast('Твоя карта дня открыта');}
@@ -729,7 +821,7 @@
     async function revokeFriendAccess(id){try{await api('/admin/revoke',{telegramId:id});showToast('Доступ отозван');loadFriendUsers();}catch(e){showToast(e.message);}}
     async function loadFriendUsers(){const c=document.getElementById('friendUsersList');try{const data=await api('/admin/users');c.innerHTML=data.users.length?data.users.map(u=>`<div class="flex items-center justify-between bg-milk rounded-xl p-2"><div><b>${escapeHtml(u.name||'Пользователь')}</b><p>ID: ${escapeHtml(u.telegramId)} · ${escapeHtml(u.access)}${u.expiresAt?' · до '+new Date(u.expiresAt).toLocaleDateString('ru-RU'):''}</p></div><button onclick="revokeFriendAccess('${u.telegramId}')" class="text-red-700 underline">Отозвать</button></div>`).join(''):'<p>Пока нет выданных доступов.</p>';}catch(e){c.innerHTML='<p>'+escapeHtml(e.message)+'</p>';}}
     async function simulateTelegramPay(){try{const result=await api('/payments/create-invoice',{plan:'pro_monthly'});if(!result.invoiceLink)throw new Error('Сервер не вернул ссылку на оплату');if(tg?.openInvoice)tg.openInvoice(result.invoiceLink,(status)=>{if(status==='paid'){showToast('Оплата подтверждена. Обновляю доступ…');initAccount();}else if(status==='cancelled')showToast('Оплата отменена');else showToast('Платёж не завершён');});else window.open(result.invoiceLink,'_blank');}catch(e){showToast(e.message || 'Не удалось создать счёт на оплату. Попробуй ещё раз.');}}
-    window.addEventListener('load',async()=>{renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();const f=appState.futureScript||{};document.getElementById('idealDayText').value=f.idealDay||'';document.getElementById('identityText').value=f.identity||'';document.getElementById('leavingBehindText').value=f.leavingBehind||'';await initAccount();});
+    window.addEventListener('load',async()=>{renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();renderFateBall();const f=appState.futureScript||{};document.getElementById('idealDayText').value=f.idealDay||'';document.getElementById('identityText').value=f.identity||'';document.getElementById('leavingBehindText').value=f.leavingBehind||'';await initAccount();});
   </script>
 </body>
 </html>
