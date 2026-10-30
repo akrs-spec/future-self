@@ -263,13 +263,13 @@
         <p class="text-[11px] text-mauve-light mt-1">Твои записи остаются здесь. Открывай нужный раздел, когда захочешь вернуться к ним.</p>
       </div>
 
-      <div id="dailyJournalHome" class="space-y-2">
+      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2 mb-4">
+        <span class="text-[10px] font-bold text-dusty uppercase tracking-wider">Аффирмация дня · напоминание</span>
+        <p id="dailyAffirmationText" class="text-sm font-bold text-mauve italic">«Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью».</p>
+        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
+      </div>
 
-        <button onclick="openDailySection('affirmation')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
-          <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">♡</span>
-          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Аффирмация дня</span><span class="block text-[10px] text-mauve-light mt-1">Настрой и мысль, которую хочется забрать с собой</span></span>
-          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
-        </button>
+      <div id="dailyJournalHome" class="space-y-2">
         <button onclick="openDailySection('gratitude')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
           <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">🤍</span>
           <span class="flex-1"><span class="block text-xs font-bold text-mauve">Дневник благодарности</span><span class="block text-[10px] text-mauve-light mt-1">Три вещи, за которые ты благодарна сегодня</span></span>
@@ -288,17 +288,6 @@
       </div>
 
 
-
-      <div id="dailySection-affirmation" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <h3 class="text-lg font-extrabold text-mauve">Аффирмация дня</h3>
-        
-      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
-        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
-        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
-        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
-      </div>
-      </div>
 
       <div id="dailySection-gratitude" class="hidden space-y-4">
         <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
