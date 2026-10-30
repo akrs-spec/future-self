@@ -153,14 +153,15 @@ app.post('/api/invites/redeem', auth, (req,res) => {
   if(!/^[a-f0-9]{48}$/.test(token)) return res.status(400).json({error:'Некорректная ссылка-приглашение'});
   const now=Date.now();
   const claim=db.transaction(() => {
-    const invite=db.prepare('SELECT duration_days,expires_at,used_at FROM access_invites WHERE token=?').get(token);
-    if(!invite || invite.used_at || invite.expires_at<=now) return null;
+    const invite=db.prepare('SELECT duration_days,expires_at,used_at,used_by FROM access_invites WHERE token=?').get(token);
+    if(!invite || invite.expires_at<=now) return null;
+    if(invite.used_at) return invite.used_by===String(req.telegramUser.id)?{alreadyActivated:true}:null;
     const expires=invite.duration_days===0?null:now+invite.duration_days*86400000;
     db.prepare('UPDATE access_invites SET used_at=?,used_by=? WHERE token=? AND used_at IS NULL').run(now,String(req.telegramUser.id),token);
     db.prepare(`INSERT INTO users(telegram_id,first_name,access,access_expires_at,created_at) VALUES(?,?,?,?,?)
       ON CONFLICT(telegram_id) DO UPDATE SET access='FRIENDS',access_expires_at=excluded.access_expires_at`)
       .run(String(req.telegramUser.id),req.telegramUser.first_name||'Пользователь','FRIENDS',expires,now);
-    return {expiresAt:expires};
+    return {expiresAt:expires,alreadyActivated:false};
   });
   const result=claim();
   if(!result) return res.status(410).json({error:'Ссылка уже использована или срок её действия истёк'});
