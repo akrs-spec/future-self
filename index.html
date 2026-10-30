@@ -269,7 +269,7 @@
 
     <!-- 2. FUTURE SELF NARRATIVE SCRIPTING -->
     <section id="tab-daily" class="tab-content hidden space-y-4">
-      <div>
+      <div id="dailyJournalHeader">
         <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Рефлексия</span>
         <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник дня</h2>
         <p class="text-[11px] text-mauve-light mt-1">Твои записи остаются здесь. Открывай нужный раздел, когда захочешь вернуться к ним.</p>
@@ -966,6 +966,7 @@
       panels.forEach(panel => setDailyPanelVisible(panel, false));
       setDailyPanelVisible(document.getElementById('dailyJournalHome'), false);
       setDailyPanelVisible(document.getElementById('dailyToolsHome'), false);
+      setDailyPanelVisible(document.getElementById('dailyJournalHeader'), false);
 
       const activePanel = document.getElementById('dailySection-' + key);
       if (!activePanel) {
@@ -988,6 +989,7 @@
       document.querySelectorAll('[id^="dailySection-"]').forEach(panel => setDailyPanelVisible(panel, false));
       setDailyPanelVisible(document.getElementById('dailyJournalHome'), true);
       setDailyPanelVisible(document.getElementById('dailyToolsHome'), true);
+      setDailyPanelVisible(document.getElementById('dailyJournalHeader'), true);
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
     }
     let selectedBoardItemId=null;
