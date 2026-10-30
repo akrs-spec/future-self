@@ -491,9 +491,16 @@
 
     <!-- 3. GOAL PLANNER -->
     <section id="tab-future" class="tab-content hidden space-y-4">
-      <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Саморефлексия и символы</span><h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Оракул</h2></div>
-      <!-- Карта дня -->
-    <div class="space-y-3">
+      <div class="space-y-1"><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Саморефлексия и символы</span><h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Оракул</h2><p class="text-[11px] text-mauve-light">Выбери инструмент, к которому хочется обратиться сейчас.</p></div>
+
+      <div class="space-y-3">
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleFolder('daily')" aria-expanded="false" aria-controls="oracleFolderDailyContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
+            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#F8E7E9,#EBD0D4)">✧</span>
+            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Карта дня</span><span class="block text-[10px] text-mauve-light mt-1">Символ и послание на сегодня</span></span>
+            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div id="oracleFolderDailyContent" class="hidden space-y-3">
         <div class="flex items-end justify-between">
           <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Точка внимания</span><h3 class="text-lg font-extrabold text-mauve">Карта дня</h3></div>
           <span class="text-[9px] text-mauve-light">78 архетипов • один день</span>
@@ -537,9 +544,16 @@
             </div>
           </div>
         </div>
-      </div>
+          </div>
+        </div>
 
-
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleFolder('yesno')" aria-expanded="false" aria-controls="oracleFolderYesNoContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
+            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E9E3F0,#D8CDE4)">☾</span>
+            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Да или нет</span><span class="block text-[10px] text-mauve-light mt-1">Задай вопрос и получи короткий ответ</span></span>
+            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div id="oracleFolderYesNoContent" class="hidden">
     
       <!-- YES / NO ORACLE -->
       <div class="glass-card rounded-3xl p-5 border border-blush space-y-4 text-center">
@@ -559,6 +573,9 @@
           <p id="fateBallCounter" class="text-[10px] text-mauve-light">Осталось 3 из 3 ответов на сегодня</p>
         </div>
         <p class="text-[9px] text-mauve-light">Это игра для размышления, а не способ принимать важные решения.</p>
+      </div>
+          </div>
+        </div>
       </div>
 
 </section>
@@ -1227,7 +1244,23 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
     function renderDailyTarot(){const history=appState.dailyTarot||[],today=localDayKey(),entry=history.find(x=>x.date===today);const back=document.getElementById('dailyTarotBack'),reveal=document.getElementById('dailyTarotReveal'),button=document.getElementById('dailyTarotDrawBtn');if(!back||!reveal||!button)return;if(entry&&entry.revealed){const card=tarotDeck[entry.index];if(card){back.classList.add('hidden');reveal.classList.remove('hidden');document.getElementById('dailyTarotNumber').innerText='АРХЕТИП '+card.number;document.getElementById('dailyTarotSymbol').innerText=card.symbol;document.getElementById('dailyTarotCardName').innerText=card.name;document.getElementById('dailyTarotMessage').innerText=card.message;document.getElementById('dailyTarotFocus').innerText=card.focus;document.getElementById('dailyTarotQuestion').innerText=card.question;}button.innerText='Карта уже открыта сегодня';button.disabled=true;button.style.opacity='.65';}else{back.classList.remove('hidden');reveal.classList.add('hidden');button.innerText='Открыть карту дня';button.disabled=false;button.style.opacity='1';}const hist=document.getElementById('dailyTarotHistory');if(!hist)return;const past=history.filter(x=>x.date!==today&&tarotDeck[x.index]).sort((a,b)=>String(b.date).localeCompare(String(a.date)));if(!past.length){hist.innerHTML='';return;}const groups={};past.forEach(x=>{const key=String(x.date||'').slice(0,7)||'Без даты';(groups[key]=groups[key]||[]).push(x);});hist.innerHTML='<div class="flex items-center justify-between"><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Мои карты</p><span class="text-[10px] text-mauve-light">'+past.length+' из 30</span></div>'+Object.entries(groups).map(([month,items])=>{const label=month==='Без даты'?month:new Date(month+'-02T12:00:00').toLocaleDateString('ru-RU',{month:'long',year:'numeric'});return '<section class="space-y-2"><p class="text-[10px] font-semibold text-mauve-light capitalize">'+escapeHtml(label)+'</p><div class="grid grid-cols-3 gap-2">'+items.map(x=>{const c=tarotDeck[x.index];return '<button type="button" onclick="openTarotArchiveCard(\''+escapeHtml(x.date)+'\')" class="min-w-0 rounded-2xl p-2 flex flex-col items-center gap-1.5 text-center border border-blush/80" style="background:linear-gradient(160deg,#FFF9F8,#F5E6E8)" aria-label="Открыть карту '+escapeHtml(c.name)+' за '+escapeHtml(x.date)+'"><span class="w-10 h-12 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(145deg,#EFD5D9,#D8B5BC);color:#684950">'+c.symbol+'</span><span class="w-full text-[10px] font-bold text-mauve leading-tight line-clamp-2">'+escapeHtml(c.name)+'</span><span class="text-[9px] text-mauve-light">'+escapeHtml(x.date.slice(8,10)+'.'+x.date.slice(5,7))+'</span></button>';}).join('')+'</div></section>';}).join('');}
     function openTarotArchiveCard(date){const entry=(appState.dailyTarot||[]).find(x=>x.date===date);if(!entry)return;const card=tarotDeck[entry.index];if(!card)return;document.getElementById('tarotArchiveSymbol').textContent=card.symbol;document.getElementById('tarotArchiveNumber').textContent='АРХЕТИП '+card.number;document.getElementById('tarotArchiveName').textContent=card.name;document.getElementById('tarotArchiveDate').textContent=new Date(date+'T12:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});document.getElementById('tarotArchiveMessage').textContent=card.message;document.getElementById('tarotArchiveFocus').textContent=card.focus;document.getElementById('tarotArchiveQuestion').textContent=card.question;const modal=document.getElementById('dailyTarotArchiveModal');modal.classList.remove('hidden');modal.classList.add('flex');}
     function closeTarotArchiveCard(){const modal=document.getElementById('dailyTarotArchiveModal');if(!modal)return;modal.classList.add('hidden');modal.classList.remove('flex');}
-    function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const today=localDayKey();if(appState.dailyTarot.some(x=>x.date===today)){renderDailyTarot();return;}const index=dailyTarotIndex(today);appState.dailyTarot.unshift({date:today,index,revealed:true});appState.dailyTarot=appState.dailyTarot.slice(0,30);saveState();renderDailyTarot();showToast('Твоя карта дня открыта');}
+    function toggleOracleFolder(which){
+  const panels={daily:document.getElementById('oracleFolderDailyContent'),yesno:document.getElementById('oracleFolderYesNoContent')};
+  const buttons=document.querySelectorAll('#tab-future button[aria-controls^="oracleFolder"]');
+  const target=panels[which];
+  if(!target)return;
+  const willOpen=target.classList.contains('hidden');
+  Object.entries(panels).forEach(([key,panel])=>{
+    if(panel)panel.classList.toggle('hidden',key!==which||!willOpen);
+  });
+  buttons.forEach(button=>{
+    const active=button.getAttribute('aria-controls')===(which==='daily'?'oracleFolderDailyContent':'oracleFolderYesNoContent')&&willOpen;
+    button.setAttribute('aria-expanded',String(active));
+    const chevron=button.querySelector('.oracle-folder-chevron');
+    if(chevron)chevron.textContent=active?'⌃':'⌄';
+  });
+}
+function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const today=localDayKey();if(appState.dailyTarot.some(x=>x.date===today)){renderDailyTarot();return;}const index=dailyTarotIndex(today);appState.dailyTarot.unshift({date:today,index,revealed:true});appState.dailyTarot=appState.dailyTarot.slice(0,30);saveState();renderDailyTarot();showToast('Твоя карта дня открыта');}
 
     let editingGratitudeIndex=null,editingFeelingIndex=null,editingFutureLetterIndex=null;
     function saveGratitudeEntry(){
