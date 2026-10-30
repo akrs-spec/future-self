@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FUTURE SELF — Telegram Mini App</title>
+  
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Canvas to Image Library for Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FFF9F9',
+            milk: '#FDF2F4',
+            powder: '#F9E4E7',
+            blush: {
+              light: '#F5D5DA',
+              DEFAULT: '#E8C5C8',
+              dark: '#D8A4A9'
+            },
+            dusty: {
+              DEFAULT: '#C98B93',
+              dark: '#B8737B'
+            },
+            mauve: {
+              DEFAULT: '#5A3D42',
+              light: '#846066',
+              dark: '#3D272A'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'sans-serif'],
+            body: ['Inter', '-apple-system', 'sans-serif']
+          },
+          boxShadow: {
+            'soft-pink': '0 10px 30px -5px rgba(201, 139, 147, 0.2)',
+            'card-float': '0 15px 35px -10px rgba(90, 61, 66, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FFF9F9;
+      color: #4A3236;
+      font-family: 'Inter', -apple-system, sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(245, 213, 218, 0.7);
+    }
+
+    .breath-circle {
+      transition: transform 1s ease-in-out, background-color 1s ease-in-out;
+    }
+    
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(216, 164, 169, 0.4); }
+      50% { box-shadow: 0 0 45px rgba(184, 115, 123, 0.7); }
+    }
+    
+    .breath-glow {
+      animation: pulseGlow 4s infinite ease-in-out;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FDF2F4;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C98B93;
+      border-radius: 4px;
+    }
+
+    .board-item {
+      touch-action: none;
+      cursor: grab;
+      transition: box-shadow 0.2s ease;
+    }
+    .board-item:active {
+      cursor: grabbing;
+      box-shadow: 0 15px 30px rgba(74, 50, 54, 0.2);
+    }
+
+    @keyframes roseShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .rose-shimmer-bg {
+      background: linear-gradient(90deg, #C98B93 0%, #F9E4E7 50%, #C98B93 100%);
+      background-size: 200% 100%;
+      animation: roseShimmer 4s infinite linear;
+    }
+  </style>
+</head>
+
+<body class="h-full flex flex-col justify-between max-w-md mx-auto relative shadow-2xl bg-cream min-h-screen pb-24 pt-4 px-4">
+
+  <!-- TOP HEADER -->
+  <header class="flex justify-between items-center mb-4 pt-2">
+    <div class="flex items-center space-x-2">
+      <div class="w-9 h-9 rounded-full bg-powder border border-blush flex items-center justify-center text-dusty font-bold text-sm">
+        ✨
+      </div>
+      <div>
+        <h1 id="userGreeting" class="text-xs font-bold tracking-widest text-mauve uppercase">КАРТА БУДУЩЕГО • ЕКАТЕРИНА</h1>
+        <p id="userAccountStatus" class="text-[10px] text-dusty font-semibold">FREE TARIF • BASIC</p>
+      </div>
+    </div>
+    <button id="adminOpenBtn" onclick="openAdminPanel()" class="hidden px-3 py-1.5 rounded-full bg-mauve text-white text-xs font-bold">ADMIN</button>
+    <button onclick="openPremiumModal()" class="px-3 py-1.5 rounded-full bg-powder border border-blush text-mauve text-xs font-bold hover:bg-blush transition flex items-center space-x-1 shadow-sm">
+      <i class="fa-solid fa-crown text-dusty text-[10px]"></i>
+      <span>PRO</span>
+    </button>
+  </header>
+
+  <!-- MAIN TAB CONTENT CONTAINER -->
+  <main class="flex-1 space-y-4">
+
+    <!-- 1. MY VISION BOARD SECTION -->
+    <section id="tab-vision" class="tab-content space-y-3">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Визуализация</span>
+          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Vision Board</h2>
+        </div>
+        <div class="flex space-x-2">
+          <button onclick="openAddElementModal()" class="w-8 h-8 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-md hover:bg-mauve-light transition">
+            <i class="fa-solid fa-plus text-xs"></i>
+          </button>
+          <button onclick="exportVisionBoard()" class="w-8 h-8 rounded-full bg-milk border border-blush text-mauve flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-download text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas Container -->
+      <div id="visionCanvasContainer" class="relative w-full h-[400px] bg-milk/60 border-2 border-dashed border-blush/80 rounded-3xl overflow-hidden shadow-inner p-2">
+        <div id="boardCanvas" class="w-full h-full relative">
+          <!-- Draggable items rendered via JS -->
+        </div>
+        <div class="absolute bottom-3 right-3 text-[9px] text-mauve-light/60 font-semibold uppercase tracking-widest pointer-events-none">
+          FUTURE SELF • VISION
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. FUTURE SELF NARRATIVE SCRIPTING -->
+    <section id="tab-future" class="tab-content hidden space-y-4">
+      <div>
+        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Письмо в будущее</span>
+        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Мой Идеальный День</h2>
+      </div>
+
+      <!-- Ambient Audio Focus Player -->
+      <div class="glass-card rounded-2xl p-3 border border-blush flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+          <button onclick="toggleAmbientAudio()" class="w-9 h-9 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-sm">
+            <i id="ambientIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
+          </button>
+          <div>
+            <p class="text-xs font-bold text-mauve">Атмосфера Сосредоточения</p>
+            <p id="ambientStatus" class="text-[10px] text-mauve-light">Мягкие медитативные волны</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Questionnaire Wizard -->
+      <div class="space-y-3">
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Как выглядит твой идеальный день через 3 года?</label>
+          <textarea id="idealDayText" rows="3" placeholder="Я просыпаюсь в светлой комнате с видом на море..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Кем ты являешься? Каковы твои привычки?</label>
+          <textarea id="identityText" rows="2" placeholder="Я уверенная, спокойная, занимаюсь любимым делом..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Что ты оставляешь в прошлом?</label>
+          <textarea id="leavingBehindText" rows="2" placeholder="Страх проявления, сомнения, синдром самозванца..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <button onclick="saveFutureSelfScript()" class="w-full py-3 bg-mauve text-blush-light text-xs font-bold rounded-2xl shadow-md hover:bg-mauve-light transition">
+          Сохранить Видение Будущего ✨
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. GOAL PLANNER -->
+    <section id="tab-goals" class="tab-content hidden space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">План действий</span>
+          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Цели & Этапы</h2>
+        </div>
+        <button onclick="openAddGoalModal()" class="px-3 py-1.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md flex items-center space-x-1">
+          <i class="fa-solid fa-plus text-[10px]"></i>
+          <span>Новая Цель</span>
+        </button>
+      </div>
+
+      <!-- Stats Summary -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="glass-card p-3 rounded-2xl border border-blush text-center">
+          <span id="statActiveGoals" class="text-lg font-extrabold text-mauve">0</span>
+          <p class="text-[9px] text-mauve-light font-bold uppercase">В процессе</p>
+        </div>
+        <div class="glass-card p-3 rounded-2xl border border-blush text-center">
+          <span id="statCompletedGoals" class="text-lg font-extrabold text-dusty">0</span>
+          <p class="text-[9px] text-mauve-light font-bold uppercase">Достигнуто</p>
+        </div>
+        <div class="glass-card p-3 rounded-2xl border border-blush text-center">
+          <span id="statGoalProgressPercent" class="text-lg font-extrabold text-mauve">0%</span>
+          <p class="text-[9px] text-mauve-light font-bold uppercase">Прогресс</p>
+        </div>
+      </div>
+
+      <div id="goalsContainer" class="space-y-3">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- 4. PRACTICES & BREATHWORK -->
+    <section id="tab-practices" class="tab-content hidden space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">PRO РИТУАЛЫ & ОСОЗНАННОСТЬ</span>
+          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Практики & Дыхание</h2>
+        </div>
+        <span class="px-2.5 py-1 bg-mauve text-blush-light text-[10px] font-bold rounded-full shadow-sm flex items-center space-x-1">
+          <i class="fa-solid fa-crown text-blush"></i>
+          <span>PREMIUM</span>
+        </span>
+      </div>
+
+      <!-- BREATHWORK VISUALIZER CARD -->
+      <div class="glass-card rounded-3xl p-5 border border-blush shadow-card-float text-center space-y-4 relative overflow-hidden">
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] font-bold text-mauve uppercase tracking-wider">ДЫХАТЕЛЬНЫЙ ТРЕНАЖЕР</span>
+          <div class="flex space-x-1">
+            <button onclick="setBreathPattern('box')" id="breathBtnBox" class="px-2.5 py-1 rounded-lg bg-mauve text-blush-light text-[10px] font-bold">4-4-4-4</button>
+            <button onclick="setBreathPattern('sleep')" id="breathBtnSleep" class="px-2.5 py-1 rounded-lg bg-milk text-mauve border border-blush text-[10px]">4-7-8</button>
+            <button onclick="setBreathPattern('energy')" id="breathBtnEnergy" class="px-2.5 py-1 rounded-lg bg-milk text-mauve border border-blush text-[10px]">6-2-6</button>
+          </div>
+        </div>
+
+        <p id="breathPatternTitle" class="text-xs font-bold text-mauve">Квадратное дыхание (Снятие стресса & Баланс)</p>
+
+        <!-- Animated Breathing Circle -->
+        <div class="relative w-40 h-40 mx-auto my-3 flex items-center justify-center">
+          <div id="breathCircle" class="w-28 h-28 rounded-full bg-gradient-to-tr from-dusty to-blush-light flex flex-col items-center justify-center text-mauve font-extrabold shadow-lg breath-circle breath-glow">
+            <span id="breathPhaseText" class="text-xs uppercase tracking-wider font-bold">ВДОХ</span>
+            <span id="breathTimerNum" class="text-2xl font-black mt-0.5">4</span>
+          </div>
+        </div>
+
+        <button id="breathToggleBtn" onclick="toggleBreathingSession()" class="px-6 py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md flex items-center space-x-2 mx-auto hover:bg-mauve-light transition">
+          <i id="breathPlayIcon" class="fa-solid fa-play"></i>
+          <span id="breathPlayText">Начать Практику</span>
+        </button>
+      </div>
+
+      <!-- AUDIO MEDITATION PLAYER -->
+      <div class="glass-card rounded-3xl p-4 border border-blush space-y-3">
+        <h3 class="font-sans text-xs font-bold text-mauve uppercase tracking-wider">Аудио-Визуализации</h3>
+        
+        <div class="bg-milk/80 rounded-2xl p-3 border border-blush space-y-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-mauve text-blush-light flex items-center justify-center text-sm shrink-0">
+              🧘‍♀️
+            </div>
+            <div class="flex-1 min-w-0">
+              <h4 id="meditationTrackTitle" class="text-xs font-bold text-mauve truncate">Встреча с Собой через 5 лет</h4>
+              <p id="meditationTrackDesc" class="text-[10px] text-mauve-light truncate">Глубокое соединение с идеальным Я</p>
+            </div>
+            <button onclick="toggleMeditationPlay()" id="meditationPlayBtn" class="w-8 h-8 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-md shrink-0">
+              <i id="meditationPlayIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div onclick="selectMeditationTrack(0)" class="p-2 rounded-xl bg-milk/50 border border-blush/60 flex items-center justify-between cursor-pointer hover:bg-powder/40 transition">
+            <span class="text-xs font-bold text-mauve">1. Встреча с Собой через 5 лет</span>
+            <span class="text-[9px] text-mauve-light font-mono">10 мин</span>
+          </div>
+          <div onclick="selectMeditationTrack(1)" class="p-2 rounded-xl bg-milk/50 border border-blush/60 flex items-center justify-between cursor-pointer hover:bg-powder/40 transition">
+            <span class="text-xs font-bold text-mauve">2. Активация Изобилия</span>
+            <span class="text-[9px] text-mauve-light font-mono">8 мин</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. AI VISION ASSISTANT SECTION -->
+    <section id="tab-ai" class="tab-content hidden space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">AI Наставник</span>
+          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">AI Assistant</h2>
+        </div>
+        <span class="px-2.5 py-1 bg-powder text-dusty text-[10px] font-bold rounded-full border border-blush">GEMINI 3.1</span>
+      </div>
+
+      <!-- Quick AI Prompts -->
+      <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
+        <button onclick="sendQuickPrompt('Составь пошаговый план достижения цели на 30 дней')" class="px-3 py-1.5 bg-milk border border-blush rounded-xl text-xs text-mauve font-medium shrink-0">
+          🗓️ План на 30 дней
+        </button>
+        <button onclick="sendQuickPrompt('Переформулируй мой страх в силу и аффирмацию')" class="px-3 py-1.5 bg-milk border border-blush rounded-xl text-xs text-mauve font-medium shrink-0">
+          ✨ Трансформация страха
+        </button>
+      </div>
+
+      <!-- Chat Container -->
+      <div class="glass-card rounded-2xl p-4 border border-blush h-[360px] flex flex-col justify-between shadow-inner">
+        <div id="chatMessages" class="overflow-y-auto space-y-3 pr-1 text-xs">
+          <div class="flex items-start space-x-2.5">
+            <div class="w-7 h-7 rounded-full bg-mauve text-blush-light flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
+            <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-blush text-mauve space-y-1">
+              <p class="font-bold">Привет! Я твой AI-архитектор будущего.</p>
+              <p class="text-mauve-light">Расскажи о своей цели, и я составлю план её достижения.</p>
+            </div>
+          </div>
+        </div>
+
+        <form onsubmit="handleAIChatSubmit(event)" class="mt-3 flex items-center space-x-2">
+          <input id="aiChatInput" type="text" placeholder="Спроси ИИ о своей цели..." class="flex-1 bg-cream border border-blush rounded-xl px-3 py-2 text-xs text-mauve focus:outline-none focus:border-dusty">
+          <button type="submit" class="w-8 h-8 rounded-xl bg-mauve text-blush-light flex items-center justify-center shrink-0 shadow-md">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 6. DAILY INSPIRATION & JOURNAL -->
+    <section id="tab-daily" class="tab-content hidden space-y-4">
+      <div>
+        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Рефлексия</span>
+        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
+      </div>
+
+      <!-- Daily Affirmation Card -->
+      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
+        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
+        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
+        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
+      </div>
+
+      <!-- Gratitude Form -->
+      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
+        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
+        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
+      </div>
+
+      <div id="gratitudeHistoryContainer" class="space-y-2">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass-card border-t border-blush/80 px-2 py-2 z-40 flex justify-around items-center">
+    <button onclick="switchTab('vision')" class="nav-btn flex flex-col items-center text-dusty" data-tab="vision">
+      <i class="fa-solid fa-compass text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Карта</span>
+    </button>
+    <button onclick="switchTab('future')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="future">
+      <i class="fa-solid fa-feather text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Видение</span>
+    </button>
+    <button onclick="switchTab('goals')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="goals">
+      <i class="fa-solid fa-bullseye text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Цели</span>
+    </button>
+    <button onclick="switchTab('practices')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="practices">
+      <i class="fa-solid fa-wind text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Практики</span>
+    </button>
+    <button onclick="switchTab('ai')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="ai">
+      <i class="fa-solid fa-sparkles text-base"></i>
+      <span class="text-[9px] font-bold mt-1">ИИ</span>
+    </button>
+    <button onclick="switchTab('daily')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="daily">
+      <i class="fa-solid fa-book-open text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Дневник</span>
+    </button>
+  </nav>
+
+  <!-- MODALS -->
+  <div id="addBoardModal" class="fixed inset-0 bg-mauve/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-cream w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-blush space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="font-sans text-base font-extrabold text-mauve">Добавить на карту</h3>
+        <button onclick="closeModal('addBoardModal')" class="text-mauve-light"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="curatedImagesGrid" class="grid grid-cols-3 gap-2 max-h-56 overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <div id="addGoalModal" class="fixed inset-0 bg-mauve/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-cream w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-blush space-y-3">
+      <div class="flex justify-between items-center">
+        <h3 class="font-sans text-base font-extrabold text-mauve">Новая Цель</h3>
+        <button onclick="closeModal('addGoalModal')" class="text-mauve-light"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <input type="text" id="goalTitleInput" placeholder="Название цели..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none">
+      <select id="goalCategorySelect" class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none">
+        <option value="wealth">💎 Финансы</option>
+        <option value="career">🚀 Карьера</option>
+        <option value="love">💗 Любовь</option>
+        <option value="health">🌿 Здоровье</option>
+      </select>
+      <button onclick="saveNewGoal()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить</button>
+    </div>
+  </div>
+
+  <div id="premiumModal" class="fixed inset-0 bg-mauve/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-mauve border border-blush/40 w-full max-w-sm rounded-3xl p-6 text-cream space-y-4 text-center shadow-2xl relative">
+      <button onclick="closeModal('premiumModal')" class="absolute top-4 right-4 text-blush/60"><i class="fa-solid fa-xmark text-lg"></i></button>
+      <div class="w-12 h-12 rounded-full bg-dusty/20 text-blush-light border border-blush flex items-center justify-center mx-auto text-xl">
+        <i class="fa-solid fa-crown"></i>
+      </div>
+      <h3 class="font-sans text-xl font-extrabold text-blush-light">FUTURE SELF PRO</h3>
+      <p class="text-xs text-blush/80">Неограниченные карты, практики дыхания и ИИ-наставник.</p>
+      <button onclick="simulateTelegramPay()" class="w-full py-3 rounded-xl rose-shimmer-bg text-mauve font-extrabold text-xs uppercase shadow-xl">Оформить • 390 ₽ / мес</button>
+    </div>
+  </div>
+
+
+  <div id="adminModal" class="fixed inset-0 bg-mauve/80 backdrop-blur-md z-50 hidden p-3 overflow-y-auto">
+    <div class="bg-cream w-full max-w-md mx-auto rounded-3xl p-5 border border-blush space-y-4 my-4">
+      <div class="flex justify-between items-center"><div><p class="text-[10px] uppercase tracking-widest text-dusty font-bold">Управление доступом</p><h3 class="text-xl font-extrabold text-mauve">Панель администратора</h3></div><button onclick="closeModal('adminModal')" class="text-mauve-light"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="bg-milk rounded-2xl p-3 text-xs text-mauve">Выдавай подругам бесплатный полный доступ FRIENDS. Для этого нужен их числовой Telegram ID. Доступ можно сделать бессрочным или ограничить по времени.</div>
+      <div class="space-y-2"><label class="text-xs font-bold text-mauve">Telegram ID пользователя</label><input id="friendTelegramId" inputmode="numeric" placeholder="Например, 123456789" class="w-full bg-white border border-blush rounded-xl p-3 text-sm"></div>
+      <div class="space-y-2"><label class="text-xs font-bold text-mauve">Срок доступа</label><select id="friendDuration" class="w-full bg-white border border-blush rounded-xl p-3 text-sm"><option value="0">Бессрочно</option><option value="7">7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option><option value="365">1 год</option></select></div>
+      <button onclick="grantFriendAccess()" class="w-full py-3 bg-mauve text-white rounded-xl text-sm font-bold">Выдать полный доступ бесплатно</button>
+      <div class="flex justify-between items-center pt-2"><h4 class="text-sm font-bold text-mauve">Пользователи с доступом</h4><button onclick="loadFriendUsers()" class="text-xs underline text-dusty">Обновить</button></div>
+      <div id="friendUsersList" class="space-y-2 text-xs text-mauve"><p class="text-mauve-light">Загрузка списка...</p></div>
+      <p class="text-[10px] text-mauve-light">Управление работает через защищённый сервер. Владелец задаётся в настройках сервера, а не в браузере.</p>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 bg-mauve text-blush-light border border-blush px-4 py-2 rounded-full text-xs font-semibold shadow-xl opacity-0 transition-opacity pointer-events-none z-50">
+    <span id="toastMsg">Сохранено</span>
+  </div>
+
+  <!-- AUDIO -->
+  <audio id="ambientAudio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    const tg = window.Telegram?.WebApp;
+    tg?.ready(); tg?.expand();
+    const API = '/api';
+    const DEFAULT_STATE = {
+      user: { name: 'Гость', isPremium: false, access: 'FREE' },
+      boardElements: [
+        { id: '1', type: 'image', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80', x: 12, y: 18, width: 140, title: 'Путешествия' },
+        { id: '2', type: 'image', url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80', x: 165, y: 42, width: 140, title: 'Дом мечты' }
+      ], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
+      goals: [{ id: 'g1', title: 'Создать личный проект', cat: 'career', completed: false }], gratitudes: []
+    };
+    const storageKey = 'FUTURE_SELF_APP_STATE_' + (tg?.initDataUnsafe?.user?.id || 'preview');
+    let appState = { ...DEFAULT_STATE, ...(JSON.parse(localStorage.getItem(storageKey) || 'null') || {}) };
+    let accessRole = 'FREE'; let isAdmin = false;
+    const initData = tg?.initData || '';
+    async function api(path, body) {
+      if (!initData) throw new Error('Открой приложение через Telegram-бота, чтобы использовать защищённые функции.');
+      const response = await fetch(API + path, { method: body ? 'POST' : 'GET', headers: { 'Content-Type':'application/json', 'X-Telegram-Init-Data': initData }, body: body ? JSON.stringify(body) : undefined });
+      const data = await response.json().catch(()=>({}));
+      if (!response.ok) throw new Error(data.error || 'Ошибка сервера');
+      return data;
+    }
+    function saveState() { localStorage.setItem(storageKey, JSON.stringify(appState)); }
+    function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toastMsg').innerText=msg; t.classList.remove('opacity-0'); clearTimeout(window.toastTimer); window.toastTimer=setTimeout(()=>t.classList.add('opacity-0'),2200); }
+    function escapeHtml(value='') { return String(value).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function setAccess(role) {
+      accessRole=role; appState.user.access=role; appState.user.isPremium=['PRO','FRIENDS','ADMIN'].includes(role);
+      const status=document.getElementById('userAccountStatus');
+      if(status) status.innerText = role==='FRIENDS' ? 'FRIENDS • ПОЛНЫЙ ДОСТУП БЕСПЛАТНО' : role==='ADMIN' ? 'ADMIN • ПОЛНЫЙ ДОСТУП' : role==='PRO' ? 'PRO • ПОЛНЫЙ ДОСТУП' : 'FREE • BASIC';
+      document.getElementById('adminOpenBtn')?.classList.toggle('hidden',!isAdmin);
+    }
+    async function initAccount() {
+      const user=tg?.initDataUnsafe?.user;
+      if(user) { appState.user.name=user.first_name || 'Пользователь'; document.getElementById('userGreeting').innerText='КАРТА БУДУЩЕГО • '+appState.user.name.toUpperCase(); }
+      if(initData) { try { const me=await api('/me'); isAdmin=!!me.isAdmin; setAccess(me.access); } catch(e) { showToast(e.message); } }
+      else { document.getElementById('userGreeting').innerText='КАРТА БУДУЩЕГО • ДЕМО'; setAccess('FREE'); }
+    }
+    function switchTab(tabId) {
+      if (['practices','ai'].includes(tabId) && !appState.user.isPremium) { openPremiumModal(); return; }
+      document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(btn=>{btn.classList.remove('text-dusty');btn.classList.add('text-mauve-light');});
+      document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
+      const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
+      if(tabId==='goals') renderGoals(); if(tabId==='daily') renderGratitude();
+    }
+    function renderVisionBoard(){const c=document.getElementById('boardCanvas');c.innerHTML='';appState.boardElements.forEach(item=>{const d=document.createElement('div');d.className='board-item absolute rounded-2xl overflow-hidden shadow-md border border-blush bg-white p-1';d.style.left=item.x+'px';d.style.top=item.y+'px';d.style.width=item.width+'px';d.innerHTML=`<img src="${escapeHtml(item.url)}" class="w-full h-24 object-cover rounded-xl pointer-events-none"><p class="text-[9px] font-bold text-mauve text-center mt-1 truncate">${escapeHtml(item.title||'')}</p>`;c.appendChild(d);});}
+    function openAddElementModal(){const grid=document.getElementById('curatedImagesGrid');const images=[['Море','https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500'],['Дом','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500'],['Путешествие','https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500'],['Стиль жизни','https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500'],['Финансы','https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=500'],['Здоровье','https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500']];grid.innerHTML=images.map(([name,url])=>`<button onclick="addBoardImage('${url}','${name}')" class="rounded-xl overflow-hidden border border-blush"><img src="${url}" class="w-full h-20 object-cover"><span class="block p-1 text-[10px] text-mauve">${name}</span></button>`).join('');document.getElementById('addBoardModal').classList.remove('hidden');}
+    function addBoardImage(url,title){appState.boardElements.push({id:String(Date.now()),url,title,x:12+(appState.boardElements.length%2)*150,y:20+Math.floor(appState.boardElements.length/2)*130,width:135});saveState();renderVisionBoard();closeModal('addBoardModal');showToast('Добавлено на карту!');}
+    let breathInterval=null,isBreathingActive=false,activeBreathKey='box';
+    const BREATH_PATTERNS={box:{title:'Квадратное дыхание (4-4-4-4)',phases:[['Вдох',4,1.3],['Задержка',4,1.3],['Выдох',4,.8],['Задержка',4,.8]]},sleep:{title:'4-7-8 Расслабление',phases:[['Вдох',4,1.3],['Задержка',7,1.3],['Выдох',8,.8]]},energy:{title:'6-2-6 Энергия',phases:[['Вдох',6,1.3],['Задержка',2,1.3],['Выдох',6,.8]]}};
+    function setBreathPattern(key){stopBreathing();activeBreathKey=key;document.getElementById('breathPatternTitle').innerText=BREATH_PATTERNS[key].title;}
+    function stopBreathing(){clearInterval(breathInterval);isBreathingActive=false;document.getElementById('breathPlayIcon').className='fa-solid fa-play';document.getElementById('breathPlayText').innerText='Начать Практику';document.getElementById('breathCircle').style.transform='scale(1)';}
+    function toggleBreathingSession(){if(isBreathingActive){stopBreathing();return;}isBreathingActive=true;document.getElementById('breathPlayIcon').className='fa-solid fa-pause';document.getElementById('breathPlayText').innerText='Пауза';runBreathLoop();}
+    function runBreathLoop(){const phases=BREATH_PATTERNS[activeBreathKey].phases;let i=0;function step(){if(!isBreathingActive)return;let [name,duration,scale]=phases[i];let n=duration;document.getElementById('breathPhaseText').innerText=name;document.getElementById('breathTimerNum').innerText=n;document.getElementById('breathCircle').style.transform=`scale(${scale})`;breathInterval=setInterval(()=>{n--;document.getElementById('breathTimerNum').innerText=n;if(n<=0){clearInterval(breathInterval);i=(i+1)%phases.length;step();}},1000);}step();}
+    function renderGoals(){const c=document.getElementById('goalsContainer');c.innerHTML=appState.goals.map(g=>`<div class="glass-card rounded-2xl p-3 border border-blush flex justify-between items-center"><div><h4 class="text-xs font-bold text-mauve ${g.completed?'line-through text-mauve-light':''}">${escapeHtml(g.title)}</h4><span class="text-[9px] text-mauve-light font-semibold">${escapeHtml(g.cat)}</span></div><button onclick="toggleGoal('${g.id}')" class="w-7 h-7 rounded-full ${g.completed?'bg-dusty text-white':'bg-milk border border-blush text-mauve-light'}"><i class="fa-solid fa-check text-xs"></i></button></div>`).join('');const done=appState.goals.filter(g=>g.completed).length;document.getElementById('statActiveGoals').innerText=appState.goals.length-done;document.getElementById('statCompletedGoals').innerText=done;document.getElementById('statGoalProgressPercent').innerText=(appState.goals.length?Math.round(done/appState.goals.length*100):0)+'%';}
+    function toggleGoal(id){const g=appState.goals.find(x=>x.id===id);if(g){g.completed=!g.completed;saveState();renderGoals();}}
+    function openAddGoalModal(){document.getElementById('addGoalModal').classList.remove('hidden');} function openPremiumModal(){document.getElementById('premiumModal').classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');}
+    function saveNewGoal(){const title=document.getElementById('goalTitleInput').value.trim(),cat=document.getElementById('goalCategorySelect').value;if(!title)return;appState.goals.push({id:String(Date.now()),title,cat,completed:false});saveState();renderGoals();document.getElementById('goalTitleInput').value='';closeModal('addGoalModal');showToast('Цель добавлена!');}
+    function saveFutureSelfScript(){appState.futureScript={idealDay:document.getElementById('idealDayText').value,identity:document.getElementById('identityText').value,leavingBehind:document.getElementById('leavingBehindText').value};saveState();showToast('Видение сохранено ✨');}
+    function saveGratitudeEntry(){const vals=[1,2,3].map(i=>document.getElementById('gratitude'+i).value.trim());if(!vals.some(Boolean)){showToast('Добавь хотя бы одну благодарность');return;}appState.gratitudes.unshift({date:new Date().toLocaleDateString('ru-RU'),items:vals.filter(Boolean)});saveState();[1,2,3].forEach(i=>document.getElementById('gratitude'+i).value='');renderGratitude();showToast('Запись сохранена');}
+    function renderGratitude(){const c=document.getElementById('gratitudeHistoryContainer');c.innerHTML=appState.gratitudes.map(g=>`<div class="glass-card p-3 rounded-xl border border-blush"><p class="text-[10px] font-bold text-dusty mb-1">${escapeHtml(g.date)}</p>${g.items.map(x=>`<p class="text-xs text-mauve">• ${escapeHtml(x)}</p>`).join('')}</div>`).join('');}
+    const affirmations=['Я создаю жизнь, в которой мне хорошо.','Мои ежедневные действия приближают меня к важному.','Я могу двигаться к своим целям в собственном темпе.','Я достойна заботы, уважения и возможностей.'];function generateNewAffirmation(){document.getElementById('dailyAffirmationText').innerText='“'+affirmations[Math.floor(Math.random()*affirmations.length)]+'”';}
+    let ambientOn=false;function toggleAmbientAudio(){const a=document.getElementById('ambientAudio');if(ambientOn){a.pause();ambientOn=false;document.getElementById('ambientIcon').className='fa-solid fa-play text-xs ml-0.5';document.getElementById('ambientStatus').innerText='Пауза';}else{a.play().then(()=>{ambientOn=true;document.getElementById('ambientIcon').className='fa-solid fa-pause text-xs';document.getElementById('ambientStatus').innerText='Воспроизведение';}).catch(()=>showToast('Не удалось запустить аудио'));}}
+    const tracks=[['Встреча с Собой через 5 лет','Глубокое соединение с идеальным Я'],['Активация Изобилия','Практика фокуса на возможностях']];let selectedTrack=0;function selectMeditationTrack(i){selectedTrack=i;document.getElementById('meditationTrackTitle').innerText=tracks[i][0];document.getElementById('meditationTrackDesc').innerText=tracks[i][1];showToast('Трек выбран. Добавь аудиофайл для воспроизведения.');}function toggleMeditationPlay(){showToast('Для воспроизведения медитации нужно подключить аудиофайл.');}
+    function sendQuickPrompt(text){document.getElementById('aiChatInput').value=text;document.getElementById('aiChatInput').focus();}
+    async function handleAIChatSubmit(event){event.preventDefault();const input=document.getElementById('aiChatInput'),message=input.value.trim();if(!message)return;appendChat('Ты',message);input.value='';try{const result=await api('/ai/chat',{message});appendChat('AI',result.reply);}catch(e){appendChat('AI', 'ИИ-наставник пока не подключён к серверному API. Для реальных ответов владелец проекта должен добавить GEMINI_API_KEY в настройки сервера.');}}
+    function appendChat(who,msg){const c=document.getElementById('chatMessages'),d=document.createElement('div');d.className='bg-white p-3 rounded-2xl border border-blush text-mauve';d.innerHTML=`<b>${escapeHtml(who)}</b><p class="mt-1">${escapeHtml(msg)}</p>`;c.appendChild(d);c.scrollTop=c.scrollHeight;}
+    function exportVisionBoard(){if(!window.html2canvas){showToast('Экспорт временно недоступен');return;}html2canvas(document.getElementById('visionCanvasContainer')).then(canvas=>{const a=document.createElement('a');a.download='future-self-vision-board.png';a.href=canvas.toDataURL('image/png');a.click();}).catch(()=>showToast('Не удалось экспортировать карту'));}
+    async function openAdminPanel(){if(!isAdmin){showToast('Нет прав администратора');return;}document.getElementById('adminModal').classList.remove('hidden');loadFriendUsers();}
+    async function grantFriendAccess(){const id=document.getElementById('friendTelegramId').value.trim(),days=Number(document.getElementById('friendDuration').value);if(!/^\d{5,15}$/.test(id)){showToast('Проверь Telegram ID');return;}try{await api('/admin/grant',{telegramId:id,durationDays:days});document.getElementById('friendTelegramId').value='';showToast('Полный доступ FRIENDS выдан');loadFriendUsers();}catch(e){showToast(e.message);}}
+    async function revokeFriendAccess(id){try{await api('/admin/revoke',{telegramId:id});showToast('Доступ отозван');loadFriendUsers();}catch(e){showToast(e.message);}}
+    async function loadFriendUsers(){const c=document.getElementById('friendUsersList');try{const data=await api('/admin/users');c.innerHTML=data.users.length?data.users.map(u=>`<div class="flex items-center justify-between bg-milk rounded-xl p-2"><div><b>${escapeHtml(u.name||'Пользователь')}</b><p>ID: ${escapeHtml(u.telegramId)} · ${escapeHtml(u.access)}${u.expiresAt?' · до '+new Date(u.expiresAt).toLocaleDateString('ru-RU'):''}</p></div><button onclick="revokeFriendAccess('${u.telegramId}')" class="text-red-700 underline">Отозвать</button></div>`).join(''):'<p>Пока нет выданных доступов.</p>';}catch(e){c.innerHTML='<p>'+escapeHtml(e.message)+'</p>';}}
+    function simulateTelegramPay(){showToast('Оплата пока не подключена. Платёжную систему Telegram Stars настроим отдельно.');}
+    window.addEventListener('load',async()=>{renderVisionBoard();renderGoals();renderGratitude();const f=appState.futureScript||{};document.getElementById('idealDayText').value=f.idealDay||'';document.getElementById('identityText').value=f.identity||'';document.getElementById('leavingBehindText').value=f.leavingBehind||'';await initAccount();});
+  </script>
+</body>
+</html>
