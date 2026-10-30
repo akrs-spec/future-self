@@ -8,7 +8,7 @@ const { Pool, types } = pg;
 types.setTypeParser(20, value => Number(value)); // BIGINT timestamps are safe as JS numbers.
 
 const app = express();
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ limit: '12mb' }));
 
 // Allow the GitHub Pages Mini App to call this Render API.
 app.use((req, res, next) => {
