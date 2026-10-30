@@ -548,11 +548,11 @@
         </div>
         <div class="rounded-2xl bg-milk/80 border border-blush p-3 space-y-3">
           <div class="flex items-center gap-3"><span class="w-9 h-9 rounded-full bg-mauve text-blush-light flex items-center justify-center"><i class="fa-solid fa-headphones"></i></span><div class="min-w-0 flex-1"><p id="meditationTrackTitle" class="text-xs font-bold text-mauve">Встреча с собой через 5 лет</p><p id="meditationTrackDesc" class="text-[10px] text-mauve-light mt-1">Мягкая голосовая практика</p></div></div>
-          <p id="meditationVoiceStatus" class="text-[10px] text-mauve-light">Подбираем мягкий женский голос на русском языке…</p>
+          <p id="meditationVoiceStatus" class="text-[10px] text-mauve-light">Готовим естественный женский голос на русском языке…</p>
           <div class="flex gap-2"><button id="meditationPlayBtn" onclick="toggleMeditationPlay()" class="flex-1 py-3 rounded-xl bg-mauve text-white text-xs font-bold"><i id="meditationPlayIcon" class="fa-solid fa-play mr-2"></i><span id="meditationPlayText">Начать практику</span></button><button onclick="stopMeditation()" class="px-4 rounded-xl bg-white border border-blush text-mauve text-xs font-semibold">Стоп</button></div>
           <p id="meditationProgress" class="text-[10px] text-mauve-light text-center">Практика готова</p>
         </div>
-        <p class="text-[9px] text-mauve-light leading-relaxed">Голос синтезируется устройством: приложение выберет русский женский вариант, если он доступен. Наличие и звучание голосов зависит от телефона.</p>
+        <p class="text-[9px] text-mauve-light leading-relaxed">Озвучка создаётся нейросетью ElevenLabs. Голос и качество звучания не зависят от настроек телефона.</p>
       </div>
     </section>
 
@@ -895,16 +895,101 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
         'Сделай ещё один спокойный вдох и выдох. Почувствуй опору под собой. Возвращайся в настоящий момент и возьми с собой одну мысль, которая поддерживает тебя.'
       ]}
     ];
-    let selectedTrack=0,meditationPartIndex=0,meditationVoice=null,meditationVoicesReady=false;
-    function getRussianVoice(){if(!('speechSynthesis' in window))return null;const voices=window.speechSynthesis.getVoices()||[];const ru=voices.filter(v=>/^ru([_-]|$)/i.test(v.lang||''));const femaleHints=/female|жен|milena|алёна|alena|alyona|ирина|irina|анна|anna|катя|katya|светлана|svetlana|юлия|yulia|олга|olga/i;return ru.find(v=>femaleHints.test(v.name||''))||ru.find(v=>/google/i.test(v.name||''))||ru[0]||null;}
-    function refreshMeditationVoice(){meditationVoice=getRussianVoice();meditationVoicesReady=true;const status=document.getElementById('meditationVoiceStatus');if(status)status.innerText=meditationVoice?'Голос: '+meditationVoice.name+' · '+meditationVoice.lang+' (мягкий темп)':'Русский голос не найден. Проверь, доступны ли русские голоса в настройках устройства.';}
-    if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=refreshMeditationVoice;setTimeout(refreshMeditationVoice,300);}
-    function selectMeditationTrack(i){if(!meditationTracks[i])return;if('speechSynthesis' in window)window.speechSynthesis.cancel();selectedTrack=i;meditationPartIndex=0;document.getElementById('meditationTrackTitle').innerText=meditationTracks[i].title;document.getElementById('meditationTrackDesc').innerText=meditationTracks[i].desc;[0,1].forEach(n=>{const b=document.getElementById('meditationTrack'+n);if(b)b.className='w-full p-3 rounded-2xl border '+(n===i?'border-blush bg-milk':'border-blush bg-white')+' text-left flex items-center gap-3';});document.getElementById('meditationProgress').innerText='Практика готова';document.getElementById('meditationPlayText').innerText='Начать практику';document.getElementById('meditationPlayIcon').className='fa-solid fa-play mr-2';}
+    let selectedTrack=0,meditationPartIndex=0,meditationPlaying=false,meditationPauseTimer=null;
+    let meditationAudioElement=new Audio(),meditationAudioUrl=null,meditationRequestToken=0,meditationLoading=false;
     function updateMeditationProgress(){const t=meditationTracks[selectedTrack];const p=document.getElementById('meditationProgress');if(p)p.innerText='Часть '+(meditationPartIndex+1)+' из '+t.parts.length;}
-    function speakMeditationPart(){const t=meditationTracks[selectedTrack];if(meditationPartIndex>=t.parts.length){meditationPlaying=false;recordPracticeCompletion('Аудио-визуализация: '+t.title);document.getElementById('meditationProgress').innerText='Практика завершена. Побудь немного в тишине.';document.getElementById('meditationPlayText').innerText='Повторить практику';document.getElementById('meditationPlayIcon').className='fa-solid fa-rotate mr-2';return;}const utterance=new SpeechSynthesisUtterance(t.parts[meditationPartIndex]);utterance.lang='ru-RU';utterance.rate=0.82;utterance.pitch=1.08;utterance.volume=0.92;if(meditationVoice)utterance.voice=meditationVoice;utterance.onstart=updateMeditationProgress;utterance.onend=()=>{meditationPartIndex++;if(meditationPartIndex<t.parts.length){const pause=window.setTimeout(()=>{if(meditationPlaying)speakMeditationPart();},1800);meditationPauseTimer=pause;}else{speakMeditationPart();}};utterance.onerror=()=>{meditationPlaying=false;document.getElementById('meditationPlayText').innerText='Попробовать снова';showToast('Не удалось воспроизвести голос на этом устройстве');};window.speechSynthesis.speak(utterance);}
-    let meditationPlaying=false,meditationPauseTimer=null;
-    function toggleMeditationPlay(){if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){showToast('Голосовое воспроизведение не поддерживается в этом окне.');return;}if(window.speechSynthesis.paused){window.speechSynthesis.resume();meditationPlaying=true;document.getElementById('meditationPlayText').innerText='Пауза';document.getElementById('meditationPlayIcon').className='fa-solid fa-pause mr-2';return;}if(meditationPlaying){window.speechSynthesis.pause();meditationPlaying=false;clearTimeout(meditationPauseTimer);document.getElementById('meditationPlayText').innerText='Продолжить';document.getElementById('meditationPlayIcon').className='fa-solid fa-play mr-2';return;}if(meditationPartIndex>=meditationTracks[selectedTrack].parts.length)meditationPartIndex=0;refreshMeditationVoice();meditationPlaying=true;document.getElementById('meditationPlayText').innerText='Пауза';document.getElementById('meditationPlayIcon').className='fa-solid fa-pause mr-2';speakMeditationPart();}
-    function stopMeditation(){if('speechSynthesis' in window)window.speechSynthesis.cancel();clearTimeout(meditationPauseTimer);meditationPlaying=false;meditationPartIndex=0;document.getElementById('meditationPlayText').innerText='Начать практику';document.getElementById('meditationPlayIcon').className='fa-solid fa-play mr-2';document.getElementById('meditationProgress').innerText='Практика остановлена';}
+    function setMeditationButton(text,icon){document.getElementById('meditationPlayText').innerText=text;document.getElementById('meditationPlayIcon').className='fa-solid '+icon+' mr-2';}
+    function selectMeditationTrack(i){
+      if(!meditationTracks[i])return;
+      stopMeditation();
+      selectedTrack=i;meditationPartIndex=0;
+      document.getElementById('meditationTrackTitle').innerText=meditationTracks[i].title;
+      document.getElementById('meditationTrackDesc').innerText=meditationTracks[i].desc;
+      [0,1].forEach(n=>{const b=document.getElementById('meditationTrack'+n);if(b)b.className='w-full p-3 rounded-2xl border '+(n===i?'border-blush bg-milk':'border-blush bg-white')+' text-left flex items-center gap-3';});
+      document.getElementById('meditationProgress').innerText='Практика готова';
+      setMeditationButton('Начать практику','fa-play');
+    }
+    async function speakMeditationPart(){
+      const track=meditationTracks[selectedTrack];
+      if(meditationPartIndex>=track.parts.length){
+        meditationPlaying=false;meditationLoading=false;
+        recordPracticeCompletion('Аудио-визуализация: '+track.title);
+        document.getElementById('meditationProgress').innerText='Практика завершена. Побудь немного в тишине.';
+        setMeditationButton('Повторить практику','fa-rotate');
+        return;
+      }
+      const partIndex=meditationPartIndex;
+      const requestToken=++meditationRequestToken;
+      meditationLoading=true;
+      updateMeditationProgress();
+      document.getElementById('meditationVoiceStatus').innerText='Создаём естественную озвучку…';
+      try{
+        const response=await fetch(API+'/meditation/audio',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','X-Telegram-Init-Data':initData},
+          body:JSON.stringify({trackIndex:selectedTrack,partIndex})
+        });
+        if(!response.ok){
+          const data=await response.json().catch(()=>({}));
+          throw new Error(data.error||'Не удалось загрузить аудио');
+        }
+        const blob=await response.blob();
+        if(requestToken!==meditationRequestToken||!meditationPlaying)return;
+        if(meditationAudioUrl)URL.revokeObjectURL(meditationAudioUrl);
+        meditationAudioUrl=URL.createObjectURL(blob);
+        meditationAudioElement.src=meditationAudioUrl;
+        meditationAudioElement.dataset.track=String(selectedTrack);
+        meditationAudioElement.dataset.part=String(partIndex);
+        meditationAudioElement.onended=()=>{
+          if(!meditationPlaying||requestToken!==meditationRequestToken)return;
+          meditationPartIndex++;
+          if(meditationPartIndex<meditationTracks[selectedTrack].parts.length){
+            meditationPauseTimer=window.setTimeout(()=>{if(meditationPlaying)speakMeditationPart();},1800);
+          }else speakMeditationPart();
+        };
+        meditationAudioElement.onerror=()=>{
+          if(requestToken!==meditationRequestToken)return;
+          meditationPlaying=false;meditationLoading=false;
+          setMeditationButton('Попробовать снова','fa-play');
+          showToast('Не удалось воспроизвести аудио на устройстве');
+        };
+        meditationLoading=false;
+        document.getElementById('meditationVoiceStatus').innerText='Естественный женский голос · ElevenLabs';
+        await meditationAudioElement.play();
+      }catch(error){
+        if(requestToken!==meditationRequestToken)return;
+        meditationLoading=false;meditationPlaying=false;
+        setMeditationButton('Попробовать снова','fa-play');
+        document.getElementById('meditationVoiceStatus').innerText='Голосовая практика временно недоступна';
+        showToast(error.message||'Не удалось создать озвучку');
+      }
+    }
+    function toggleMeditationPlay(){
+      if(meditationPlaying){
+        meditationPlaying=false;
+        clearTimeout(meditationPauseTimer);
+        if(meditationLoading){meditationRequestToken++;meditationLoading=false;}
+        meditationAudioElement.pause();
+        setMeditationButton('Продолжить','fa-play');
+        return;
+      }
+      meditationPlaying=true;
+      setMeditationButton('Пауза','fa-pause');
+      const samePart=meditationAudioElement.src&&meditationAudioElement.dataset.track===String(selectedTrack)&&meditationAudioElement.dataset.part===String(meditationPartIndex)&&!meditationAudioElement.ended;
+      if(samePart&&meditationAudioElement.readyState>=2){
+        meditationAudioElement.play().catch(()=>{meditationPlaying=false;setMeditationButton('Продолжить','fa-play');showToast('Не удалось продолжить воспроизведение');});
+      }else speakMeditationPart();
+    }
+    function stopMeditation(){
+      meditationRequestToken++;meditationLoading=false;
+      clearTimeout(meditationPauseTimer);
+      meditationPlaying=false;meditationAudioElement.pause();
+      meditationAudioElement.removeAttribute('src');meditationAudioElement.load();
+      if(meditationAudioUrl){URL.revokeObjectURL(meditationAudioUrl);meditationAudioUrl=null;}
+      meditationPartIndex=0;
+      setMeditationButton('Начать практику','fa-play');
+      const progress=document.getElementById('meditationProgress');if(progress)progress.innerText='Практика остановлена';
+    }
     function exportVisionBoard(){if(!window.html2canvas){showToast('Экспорт временно недоступен');return;}html2canvas(document.getElementById('visionCanvasContainer')).then(canvas=>{const a=document.createElement('a');a.download='future-self-vision-board.png';a.href=canvas.toDataURL('image/png');a.click();}).catch(()=>showToast('Не удалось экспортировать карту'));}
     async function openAdminPanel(){if(!isAdmin){showToast('Нет прав администратора');return;}document.getElementById('adminModal').classList.remove('hidden');loadFriendUsers();}
     async function createAccessInvite(){const days=Number(document.getElementById('friendDuration').value);try{const result=await api('/admin/invites',{durationDays:days});document.getElementById('createdInviteUrl').value=result.inviteUrl;document.getElementById('inviteLinkResult').classList.remove('hidden');showToast('Новая ссылка создана');}catch(e){showToast(e.message);}}
