@@ -586,7 +586,7 @@
     window.addEventListener('resize', syncAppViewportHeight);
     window.visualViewport?.addEventListener('resize', syncAppViewportHeight);
 
-    const API = '/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
+    const API = 'https://future-self-server-weuq.onrender.com/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
     const DEFAULT_STATE = {
       user: { name: 'Гость', isPremium: false, access: 'FREE' },
       boardElements: [
