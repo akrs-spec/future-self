@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS payments (
 `);
 const ADMIN_ID = String(process.env.ADMIN_TELEGRAM_ID || '7738464404');
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-6.1-terra';
 const WEBHOOK_SECRET = process.env.BOT_WEBHOOK_SECRET;
 
 function verifyInitData(initData) {
@@ -73,20 +74,22 @@ app.get('/api/me', auth, (req, res) => {
 app.post('/api/ai/chat', auth, async (req, res) => {
   try {
     if (!['PRO','FRIENDS','ADMIN'].includes(getRole(req.telegramUser.id))) return res.status(403).json({error:'AI доступен в PRO'});
-    if (!GEMINI_API_KEY) return res.status(503).json({error:'AI provider is not configured'});
+    if (!OPENAI_API_KEY) return res.status(503).json({error:'OPENAI_API_KEY is not configured on the server'});
     const message = String(req.body?.message || '').trim().slice(0, 6000);
     if (!message) return res.status(400).json({error:'Message is empty'});
     const history = Array.isArray(req.body?.history) ? req.body.history.slice(-12) : [];
-    const contents = [...history.map(x => ({role: x.role === 'assistant' ? 'model' : 'user', parts:[{text:String(x.content || '').slice(0,4000)}]})), {role:'user',parts:[{text:message}]}];
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`, {
-      method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({systemInstruction:{parts:[{text:'Ты — бережный, практичный AI-наставник FUTURE SELF. Помогай формулировать цели, превращать их в конкретные шаги, вести рефлексию. Не обещай магических результатов и не подменяй врача, психолога, юриста или финансового специалиста.'}]},contents,generationConfig:{temperature:0.7,maxOutputTokens:1200}})
+    const input = [...history.filter(x => x && ['user','assistant'].includes(x.role)).map(x => ({role:x.role, content:String(x.content || '').slice(0,4000)})), {role:'user', content:message}];
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method:'POST',
+      headers:{'content-type':'application/json','Authorization':`Bearer ${OPENAI_API_KEY}`},
+      body:JSON.stringify({model:OPENAI_MODEL,instructions:'Ты — бережный, практичный AI-наставник FUTURE SELF. Помогай формулировать цели, превращать их в конкретные шаги, вести рефлексию. Не обещай магических результатов и не подменяй врача, психолога, юриста или финансового специалиста.',input,max_output_tokens:1200})
     });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error?.message || 'AI provider error');
-    const reply = data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n').trim();
-    if (!reply) throw new Error('AI returned an empty response');
+    if (!response.ok) throw new Error(data.error?.message || `OpenAI API error (${response.status})`);
+    const reply = (data.output || []).flatMap(item => item.content || []).filter(part => part.type === 'output_text').map(part => part.text || '').join('\n').trim() || String(data.output_text || '').trim();
+    if (!reply) throw new Error('OpenAI returned an empty response');
     res.json({reply});
-  } catch(e) { res.status(502).json({error:e.message}); }
+  } catch(e) { console.error('OpenAI chat error:',e); res.status(502).json({error:e.message}); }
 });
 app.post('/api/payments/create-invoice', auth, async (req, res) => {
   try {
