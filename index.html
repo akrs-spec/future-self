@@ -298,8 +298,8 @@
         <p class="text-[10px] font-bold uppercase tracking-widest text-dusty px-1">Ещё немного для себя</p>
         <div class="grid grid-cols-2 gap-2">
           <button onclick="openDailySection('question')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">❔</span><p class="text-xs font-bold text-mauve mt-2">Вопрос дня</p><p class="text-[9px] text-mauve-light mt-1">Один вопрос для себя</p></button>
-          <button onclick="openDailySection('delayed')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">✉️</span><p class="text-xs font-bold text-mauve mt-2">Отложенное письмо</p><p class="text-[9px] text-mauve-light mt-1">Открой в нужный день</p></button>
           <button onclick="openDailySection('fills')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">☀️</span><p class="text-xs font-bold text-mauve mt-2">Что меня наполняет</p><p class="text-[9px] text-mauve-light mt-1">Твои источники энергии</p></button>
+          <button onclick="openDailySection('capsule')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">⏳</span><p class="text-xs font-bold text-mauve mt-2">Капсула времени</p><p class="text-[9px] text-mauve-light mt-1">Послание себе в будущее</p></button>
 
 
 
@@ -473,17 +473,6 @@
         <div id="dailyQuestionHistory" class="space-y-2"></div>
       </div>
 
-      <div id="dailySection-delayed" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <div class="rounded-3xl p-5 text-center" style="background:linear-gradient(145deg,#F8E9EB,#E8C5C8)"><div class="text-3xl">✉</div><h3 class="text-xl font-extrabold text-mauve mt-2">Письмо себе</h3><p class="text-xs text-mauve-light mt-2">Напиши то, что хочешь прочитать в определённый день. До этого момента письмо останется закрытым.</p></div>
-        <div class="glass-card rounded-2xl border border-blush p-4 space-y-3">
-          <textarea id="delayedLetterText" rows="5" placeholder="Что ты хочешь сказать себе будущей?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y"></textarea>
-          <label class="block text-[10px] font-bold text-mauve">Дата открытия</label><input id="delayedLetterDate" type="date" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve">
-          <button onclick="saveDelayedLetter()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Запечатать письмо</button>
-        </div>
-        <div id="delayedLetterList" class="space-y-2"></div>
-      </div>
-
       <div id="dailySection-fills" class="hidden space-y-4">
         <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
         <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Мои ресурсы</span><h3 class="text-xl font-extrabold text-mauve">Что меня наполняет</h3><p class="text-xs text-mauve-light mt-1">Собери личный список того, что возвращает тебе силы, интерес и ощущение себя.</p></div>
@@ -494,11 +483,17 @@
         <div id="fillsMeList" class="space-y-2"></div>
       </div>
 
-      
 
-      
-
-      
+      <div id="dailySection-capsule" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <div class="rounded-3xl p-5 text-center" style="background:linear-gradient(145deg,#F8E9EB,#E8C5C8)"><div class="text-3xl">⏳</div><h3 class="text-xl font-extrabold text-mauve mt-2">Капсула времени</h3><p class="text-xs text-mauve-light mt-2">Оставь послание себе в будущее. Выбери дату, когда захочешь к нему вернуться — до этого дня содержимое останется запечатанным.</p></div>
+        <div class="glass-card rounded-2xl border border-blush p-4 space-y-3">
+          <textarea id="timeCapsuleText" rows="5" placeholder="О чём ты хочешь напомнить себе будущей?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y"></textarea>
+          <label class="block text-[10px] font-bold text-mauve" for="timeCapsuleDate">Дата открытия</label><input id="timeCapsuleDate" type="date" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve">
+          <button onclick="saveTimeCapsule()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Запечатать капсулу</button>
+        </div>
+        <div id="timeCapsuleList" class="space-y-2"></div>
+      </div>
 
       <div id="dailySection-search" class="hidden space-y-4">
         <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
@@ -930,8 +925,6 @@
     }
     function saveDailyQuestionAnswer(){const answer=document.getElementById('dailyQuestionAnswer').value.trim();if(!answer){showToast('Запиши хотя бы пару слов');return;}const today=localDayKey();appState.dailyQuestionAnswers=appState.dailyQuestionAnswers||{};appState.dailyQuestionAnswers[today]={question:dailyQuestionFor(today),answer,updatedAt:new Date().toISOString()};saveState();document.getElementById('dailyQuestionSaved').textContent='Ответ сохранён. Бережно сохранила его в твоём дневнике.';renderQuestionOfDay();showToast('Ответ сохранён');}
     function dateIsDue(date){return !!date&&date<=localDayKey();}
-    function saveDelayedLetter(){const text=document.getElementById('delayedLetterText').value.trim(),date=document.getElementById('delayedLetterDate').value;if(!text||!date){showToast('Напиши письмо и выбери дату');return;}if(date<=localDayKey()){showToast('Выбери дату хотя бы на завтра');return;}appState.delayedLetters=appState.delayedLetters||[];appState.delayedLetters.unshift({id:String(Date.now()),text,date,createdAt:new Date().toISOString()});document.getElementById('delayedLetterText').value='';document.getElementById('delayedLetterDate').value='';saveState();renderDelayedLetters();showToast('Письмо запечатано');}
-    function renderDelayedLetters(){const c=document.getElementById('delayedLetterList');if(!c)return;const entries=appState.delayedLetters||[];c.innerHTML=entries.length?entries.map(e=>{const opened=dateIsDue(e.date);return '<div class="glass-card rounded-2xl border border-blush p-4 space-y-2"><div class="flex items-center justify-between"><p class="text-[10px] font-bold text-dusty">'+(opened?'Можно открыть':'Откроется '+escapeHtml(new Date(e.date+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'})))+'</p><button onclick="deleteSavedItem(\'delayedLetters\',\''+escapeHtml(e.id)+'\',renderDelayedLetters)" class="text-dusty p-1" aria-label="Удалить письмо">×</button></div><p class="text-xs text-mauve">'+(opened?escapeHtml(e.text):'✉️ Письмо запечатано до выбранной даты')+'</p></div>';}).join(''):'<p class="text-center text-xs text-mauve-light py-4">Пока нет запечатанных писем.</p>';}
     function addFillsMeItem(){const input=document.getElementById('fillsMeInput'),text=input.value.trim();if(!text){showToast('Добавь то, что тебя наполняет');return;}appState.fillsMe=appState.fillsMe||[];appState.fillsMe.unshift({id:String(Date.now()),text,createdAt:new Date().toISOString()});input.value='';saveState();renderFillsMe();}
     function renderFillsMe(){const c=document.getElementById('fillsMeList');if(!c)return;const entries=appState.fillsMe||[];c.innerHTML=entries.length?entries.map(e=>'<div class="glass-card rounded-xl border border-blush p-3 flex items-center gap-2"><span class="text-dusty">✧</span><p class="flex-1 text-xs text-mauve">'+escapeHtml(e.text)+'</p><button onclick="deleteSavedItem(\'fillsMe\',\''+escapeHtml(e.id)+'\',renderFillsMe)" class="text-dusty p-1" aria-label="Удалить">×</button></div>').join(''):'<p class="text-center text-xs text-mauve-light py-4">Здесь постепенно соберётся твой личный список.</p>';}
     function saveTimeCapsule(){const text=document.getElementById('timeCapsuleText').value.trim(),date=document.getElementById('timeCapsuleDate').value;if(!text||!date){showToast('Напиши послание и выбери дату');return;}if(date<=localDayKey()){showToast('Капсулу можно открыть только в будущем — выбери более позднюю дату');return;}appState.timeCapsules=appState.timeCapsules||[];appState.timeCapsules.unshift({id:String(Date.now()),text,date,createdAt:new Date().toISOString()});document.getElementById('timeCapsuleText').value='';document.getElementById('timeCapsuleDate').value='';saveState();renderTimeCapsules();showToast('Капсула сохранена');}
@@ -956,7 +949,7 @@
     function searchDiary(){const q=(document.getElementById('diarySearchInput')?.value||'').trim().toLowerCase(),c=document.getElementById('diarySearchResults');if(!c)return;if(!q){c.innerHTML='<p class="text-[10px] text-mauve-light text-center">Начни вводить запрос.</p>';return;}const rows=[];const add=(type,title,body,date)=>{if((title+' '+body).toLowerCase().includes(q))rows.push({type,title,body,date});};(appState.gratitudes||[]).forEach(x=>add('Благодарность','Дневник благодарности',(x.items||[]).join(' · '),x.date));(appState.feelings||[]).forEach(x=>add('Чувства',x.mood||'Запись',x.note||'',x.date));(appState.fillsMe||[]).forEach(x=>add('Что меня наполняет','Мой ресурс',x.text,x.createdAt));(appState.futureScriptHistory||[]).forEach(x=>add('Письмо в будущее','Письмо себе',[x.idealDay,x.identity,x.leavingBehind].filter(Boolean).join(' · '),x.createdAt));Object.entries(appState.dailyQuestionAnswers||{}).forEach(([date,x])=>add('Вопрос дня',x.question,x.answer,date));(appState.delayedLetters||[]).filter(x=>dateIsDue(x.date)).forEach(x=>add('Отложенное письмо','Письмо себе',x.text,x.date));(appState.timeCapsules||[]).filter(x=>dateIsDue(x.date)).forEach(x=>add('Капсула времени','Послание себе',x.text,x.date));c.innerHTML=rows.length?rows.slice(0,50).map(x=>'<div class="glass-card rounded-xl border border-blush p-3"><p class="text-[9px] text-dusty">'+escapeHtml(x.type)+' · '+escapeHtml(x.date||'')+'</p><p class="text-xs font-bold text-mauve mt-1">'+escapeHtml(x.title)+'</p><p class="text-xs text-mauve-light mt-1 whitespace-pre-wrap">'+escapeHtml(x.body)+'</p></div>').join(''):'<p class="text-center text-xs text-mauve-light py-4">Ничего не нашлось. Попробуй другое слово.</p>';}
     let activityMonth=new Date();
     function changeActivityMonth(delta){activityMonth=new Date(activityMonth.getFullYear(),activityMonth.getMonth()+delta,1);renderActivityCalendar();}
-    function activityDateSet(){const dates=new Set();const add=x=>{const d=String(x.createdAt||'').slice(0,10);if(/^\d{4}-\d{2}-\d{2}$/.test(d))dates.add(d);};['gratitudes','feelings','futureScriptHistory','delayedLetters','fillsMe','timeCapsules'].forEach(k=>(appState[k]||[]).forEach(add));Object.keys(appState.dailyQuestionAnswers||{}).forEach(d=>dates.add(d));return dates;}
+    function activityDateSet(){const dates=new Set();const add=x=>{const d=String(x.createdAt||'').slice(0,10);if(/^\d{4}-\d{2}-\d{2}$/.test(d))dates.add(d);};['gratitudes','feelings','futureScriptHistory','fillsMe','timeCapsules'].forEach(k=>(appState[k]||[]).forEach(add));Object.keys(appState.dailyQuestionAnswers||{}).forEach(d=>dates.add(d));return dates;}
     function renderActivityCalendar(){const grid=document.getElementById('activityCalendarGrid');if(!grid)return;const y=activityMonth.getFullYear(),m=activityMonth.getMonth(),first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),offset=(first.getDay()+6)%7,active=activityDateSet(),today=localDayKey();document.getElementById('activityMonthTitle').textContent=first.toLocaleDateString('ru-RU',{month:'long',year:'numeric'});let html='';for(let i=0;i<offset;i++)html+='<span></span>';for(let day=1;day<=days;day++){const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0'),yes=active.has(key);html+='<div class="py-2 rounded-lg text-[11px] '+(yes?'bg-blush text-mauve font-extrabold':'text-mauve-light')+(key===today?' ring-1 ring-mauve':'')+'">'+day+(yes?'<span class="block text-[7px]">•</span>':'<span class="block text-[7px]">&nbsp;</span>')+'</div>';}grid.innerHTML=html;document.getElementById('activityCalendarSummary').textContent='Активных дней в этом месяце: '+[...active].filter(d=>d.startsWith(y+'-'+String(m+1).padStart(2,'0'))).length;}
     let shareCardTheme='rose';
     function setShareCardTheme(theme){shareCardTheme=theme;renderShareCard();}
@@ -995,7 +988,7 @@
       if (key === 'gratitude') renderGratitude();
       if (key === 'feelings') renderFeelings();
       if (key === 'question') renderQuestionOfDay();
-      if (key === 'delayed') renderDelayedLetters();
+      if (key === 'capsule') renderTimeCapsules();
       if (key === 'fills') renderFillsMe();
       if (key === 'search') searchDiary();
       if (key === 'calendar') renderActivityCalendar();
