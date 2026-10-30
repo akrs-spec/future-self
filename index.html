@@ -603,13 +603,15 @@
   </nav>
 
   <!-- MODALS -->
-  <div id="addBoardModal" class="fixed inset-0 bg-mauve/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-cream w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-blush space-y-4">
+  <div id="addBoardModal" class="fixed inset-0 bg-[#493C36]/55 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-[#F8F5F0] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-[#E9E0D7] space-y-4 max-h-[88vh] overflow-y-auto">
       <div class="flex justify-between items-center">
-        <h3 class="font-sans text-base font-extrabold text-mauve">Готовые образы</h3>
-        <button onclick="closeModal('addBoardModal')" class="text-mauve-light"><i class="fa-solid fa-xmark"></i></button>
+        <div><p class="text-[9px] tracking-[.24em] uppercase text-[#9A8175] font-semibold">FUTURE SELF · INSPO</p><h3 class="font-serif text-xl text-[#493C36]">Собери своё настроение</h3></div>
+        <button onclick="closeModal('addBoardModal')" class="w-8 h-8 rounded-full bg-white text-[#806D63]"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <p class="text-[11px] text-mauve-light">Можно использовать подборку или загрузить свои фотографии с устройства.</p><div id="curatedImagesGrid" class="grid grid-cols-3 gap-2 max-h-56 overflow-y-auto"></div>
+      <p class="text-[11px] text-[#8B7A70] leading-relaxed">Эстетичные фотографии для твоей доски — как сохранённые пины: выбирай то, что откликается.</p>
+      <div id="curatedImageFilters" class="flex gap-2 overflow-x-auto pb-1"></div>
+      <div id="curatedImagesGrid" class="grid grid-cols-2 gap-3 max-h-[58vh] overflow-y-auto pr-1"></div>
     </div>
   </div>
 
@@ -765,7 +767,24 @@
     function updateSelectedBoardCaption(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(item){if(item.type==='text')item.text=value;else item.title=value;saveState();renderVisionBoard();}}
     function deleteSelectedBoardItem(){appState.boardElements=appState.boardElements.filter(x=>x.id!==selectedBoardItemId);selectedBoardItemId=null;document.getElementById('boardElementTools').classList.add('hidden');saveState();renderVisionBoard();}
     function addBoardText(){const text=prompt('Напиши фразу или аффирмацию для карты:');if(!text?.trim())return;const id=String(Date.now());appState.boardElements.push({id,type:'text',text:text.trim(),x:20+(appState.boardElements.length%2)*130,y:20+Math.floor(appState.boardElements.length/2)*100,width:150});saveState();renderVisionBoard();selectBoardItem(id);}
-    function openAddElementModal(){const grid=document.getElementById('curatedImagesGrid');const images=[['Море','https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500'],['Дом','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500'],['Путешествие','https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500'],['Стиль жизни','https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500'],['Финансы','https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=500'],['Здоровье','https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500']];grid.innerHTML=images.map(([name,url])=>`<button onclick="addBoardImage('${url}','${name}')" class="rounded-xl overflow-hidden border border-blush"><img src="${url}" class="w-full h-20 object-cover"><span class="block p-1 text-[10px] text-mauve">${name}</span></button>`).join('');document.getElementById('addBoardModal').classList.remove('hidden');}
+    const curatedBoardImages=[
+      {name:'Тихое утро',category:'Настроение',url:'https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=700&auto=format&fit=crop&q=85',height:190},
+      {name:'Медленный ритм',category:'Настроение',url:'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=700&auto=format&fit=crop&q=85',height:145},
+      {name:'Дом мечты',category:'Пространство',url:'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=700&auto=format&fit=crop&q=85',height:190},
+      {name:'Тёплый интерьер',category:'Пространство',url:'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=700&auto=format&fit=crop&q=85',height:150},
+      {name:'Море и свобода',category:'Путешествия',url:'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=700&auto=format&fit=crop&q=85',height:190},
+      {name:'Уехать к океану',category:'Путешествия',url:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=700&auto=format&fit=crop&q=85',height:150},
+      {name:'Личный стиль',category:'Стиль',url:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&auto=format&fit=crop&q=85',height:190},
+      {name:'Детали образа',category:'Стиль',url:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700&auto=format&fit=crop&q=85',height:150},
+      {name:'Баланс и забота',category:'Состояние',url:'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=700&auto=format&fit=crop&q=85',height:190},
+      {name:'Своя энергия',category:'Состояние',url:'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=700&auto=format&fit=crop&q=85',height:150},
+      {name:'Дело по любви',category:'Реализация',url:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=700&auto=format&fit=crop&q=85',height:190},
+      {name:'Новая глава',category:'Реализация',url:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&auto=format&fit=crop&q=85',height:150}
+    ];
+    let curatedBoardFilter='Все';
+    function renderCuratedBoardImages(){const grid=document.getElementById('curatedImagesGrid'),filters=document.getElementById('curatedImageFilters');if(!grid||!filters)return;const cats=['Все',...new Set(curatedBoardImages.map(x=>x.category))];filters.innerHTML=cats.map(cat=>'<button onclick="setCuratedBoardFilter(\''+cat+'\')" class="shrink-0 px-3 py-1.5 rounded-full text-[10px] font-semibold '+(curatedBoardFilter===cat?'bg-[#57463F] text-white':'bg-white text-[#806D63] border border-[#E9E0D7]')+'">'+cat+'</button>').join('');const list=curatedBoardFilter==='Все'?curatedBoardImages:curatedBoardImages.filter(x=>x.category===curatedBoardFilter);grid.innerHTML=list.map(item=>'<button onclick="addBoardImage(\''+item.url+'\',\''+item.name+'\')" class="group relative rounded-[1.1rem] overflow-hidden bg-[#E8DED5] text-left shadow-sm"><img loading="lazy" src="'+item.url+'" alt="'+item.name+'" class="w-full object-cover transition duration-500 group-hover:scale-105" style="height:'+item.height+'px"><span class="absolute inset-x-0 bottom-0 p-3 pt-8 text-white text-[11px] font-semibold" style="background:linear-gradient(transparent,rgba(35,27,23,.62))">'+item.name+'</span><span class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 text-[#57463F] flex items-center justify-center text-xs">＋</span></button>').join('');}
+    function setCuratedBoardFilter(category){curatedBoardFilter=category;renderCuratedBoardImages();}
+    function openAddElementModal(){curatedBoardFilter='Все';renderCuratedBoardImages();document.getElementById('addBoardModal').classList.remove('hidden');}
     function addBoardImage(url,title){const width=95+Math.round(Math.random()*55),pos=boardPlacement(width);appState.boardElements.push({id:String(Date.now()+Math.random()),type:'image',url,title,...pos,width,style:Math.random()<.5?'framed':'free'});saveState();renderVisionBoard();closeModal('addBoardModal');showToast('Добавлено на карту!');}
     function handleBoardPhotoUpload(event){const files=Array.from(event.target.files||[]);if(!files.length)return;let done=0;files.forEach(file=>{if(!file.type.startsWith('image/')){done++;return;}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);const data=canvas.toDataURL('image/jpeg',.78),width=95+Math.round(Math.random()*55),pos=boardPlacement(width);appState.boardElements.push({id:String(Date.now()+done+Math.random()),type:'image',url:data,title:file.name.replace(/\.[^.]+$/,''),...pos,width,style:Math.random()<.5?'framed':'free'});done++;if(done===files.length){saveState();renderVisionBoard();showToast('Фотографии добавлены на карту');}};img.onerror=()=>{done++;if(done===files.length)showToast('Не удалось загрузить некоторые фото');};img.src=reader.result;};reader.readAsDataURL(file);});event.target.value='';}
     let breathInterval=null,isBreathingActive=false,activeBreathKey='box',breathHapticsEnabled=true;
