@@ -578,6 +578,68 @@
         </div>
       </div>
 
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleFolder('mirror')" aria-expanded="false" aria-controls="oracleFolderMirrorContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
+            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8DDE8,#D9C6D9)">◉</span>
+            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Незнакомка в зеркале</span><span class="block text-[10px] text-mauve-light mt-1">Узнай, какую сторону себя ты редко замечаешь</span></span>
+            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div id="oracleFolderMirrorContent" class="hidden space-y-3">
+            <div class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#47353F,#765B68 60%,#B18B98);color:#FFF8F8">
+              <div class="mx-auto w-28 h-32 rounded-[48%] border border-white/40 flex items-center justify-center text-5xl" style="background:radial-gradient(ellipse at 50% 40%,#F5E6E8 0%,#C6AAB5 48%,#604956 100%);box-shadow:0 0 35px #F5DDE566">◉</div>
+              <p class="text-[9px] tracking-[.25em] font-bold">THE OTHER SIDE OF YOU</p>
+              <h3 class="text-lg font-extrabold">Ты уверена, что знаешь себя?</h3>
+              <p class="text-[11px] leading-relaxed text-white/80">Ответь на 7 вопросов. В конце зеркало покажет не ярлык, а возможный портрет твоего нынешнего внутреннего состояния.</p>
+              <button id="mirrorStartBtn" type="button" onclick="startMirrorJourney()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5DDE3;color:#563F49">Посмотреть в зеркало</button>
+            </div>
+            <div id="mirrorQuiz" class="hidden glass-card rounded-3xl border border-blush p-4 space-y-4">
+              <div class="flex items-center justify-between"><span id="mirrorStepLabel" class="text-[10px] font-bold text-dusty uppercase tracking-widest">Вопрос 1 из 7</span><span id="mirrorProgressLabel" class="text-[10px] text-mauve-light">0%</span></div>
+              <div class="h-1.5 rounded-full bg-blush/50 overflow-hidden"><div id="mirrorProgress" class="h-full rounded-full" style="width:0%;background:#A77E8B"></div></div>
+              <h3 id="mirrorQuestion" class="text-base font-extrabold text-mauve leading-snug"></h3>
+              <div id="mirrorAnswers" class="space-y-2"></div>
+            </div>
+            <div id="mirrorResult" class="hidden glass-card rounded-3xl border border-blush p-4 space-y-3">
+              <p class="text-[9px] tracking-[.2em] font-bold text-dusty uppercase">Твоё отражение</p>
+              <h3 id="mirrorResultTitle" class="text-xl font-extrabold text-mauve"></h3>
+              <p id="mirrorResultIntro" class="text-xs leading-relaxed text-mauve"></p>
+              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Твоя сильная сторона</p><p id="mirrorStrength" class="text-xs text-mauve"></p></div>
+              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Что может оставаться в тени</p><p id="mirrorShadow" class="text-xs text-mauve"></p></div>
+              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Вопрос для себя</p><p id="mirrorReflection" class="text-xs italic text-mauve"></p></div>
+              <button type="button" onclick="startMirrorJourney()" class="w-full py-3 rounded-xl text-xs font-bold bg-mauve text-white">Посмотреть ещё раз</button>
+            </div>
+            <div id="mirrorHistory" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleFolder('rooms')" aria-expanded="false" aria-controls="oracleFolderRoomsContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
+            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8E0EF,#CFC0DD)">⌘</span>
+            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Комната выбора</span><span class="block text-[10px] text-mauve-light mt-1">Каждый раз — новая история и другие двери</span></span>
+            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div id="oracleFolderRoomsContent" class="hidden space-y-3">
+            <div class="space-y-1"><h3 class="text-lg font-extrabold text-mauve">Куда сегодня приведёт тебя выбор?</h3><p class="text-[11px] text-mauve-light">Выбери комнату. В каждой спрятаны разные истории, развилки и несколько вариантов финала.</p></div>
+            <div id="oracleRoomsGrid" class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="enterOracleRoom('library')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#F2E6E4,#DCC7C5)"><span class="text-2xl">⌑</span><span><b class="block text-xs text-mauve">Забытая библиотека</b><small class="text-[9px] text-mauve-light">Тайны и воспоминания</small></span></button>
+              <button type="button" onclick="enterOracleRoom('forest')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E3E9E0,#C3D0C2)"><span class="text-2xl">♧</span><span><b class="block text-xs text-mauve">Лес без названия</b><small class="text-[9px] text-mauve-light">Интуиция и неизвестность</small></span></button>
+              <button type="button" onclick="enterOracleRoom('house')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E8DFE7,#CDBBCB)"><span class="text-2xl">⌂</span><span><b class="block text-xs text-mauve">Дом незнакомца</b><small class="text-[9px] text-mauve-light">Отношения и скрытые желания</small></span></button>
+              <button type="button" onclick="enterOracleRoom('train')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E9E2D8,#D1C2AA)"><span class="text-2xl">↠</span><span><b class="block text-xs text-mauve">Последний поезд</b><small class="text-[9px] text-mauve-light">Перемены и решения</small></span></button>
+            </div>
+            <div id="oracleStory" class="hidden rounded-3xl p-4 space-y-3 border border-blush" style="background:linear-gradient(160deg,#FBF4F1,#F0E2E5)">
+              <div class="flex items-center justify-between"><span id="oracleStoryRoom" class="text-[9px] font-bold tracking-widest text-dusty uppercase"></span><button type="button" onclick="leaveOracleStory()" class="text-xs text-mauve-light">К комнатам ×</button></div>
+              <h3 id="oracleStoryTitle" class="text-lg font-extrabold text-mauve"></h3>
+              <p id="oracleStoryText" class="text-xs leading-relaxed text-mauve"></p>
+              <div id="oracleStoryChoices" class="space-y-2"></div>
+              <div id="oracleStoryEnding" class="hidden space-y-3">
+                <div class="rounded-2xl p-3 space-y-2" style="background:#FFF9F8"><p class="text-[9px] tracking-widest font-bold text-dusty uppercase">Твой финал</p><p id="oracleStoryEndingText" class="text-xs leading-relaxed text-mauve"></p></div>
+                <p id="oracleStoryQuestion" class="text-xs italic text-mauve"></p>
+                <button type="button" onclick="leaveOracleStory()" class="w-full py-3 rounded-xl text-xs font-bold bg-mauve text-white">Вернуться в комнаты</button>
+              </div>
+            </div>
+            <p id="oracleRoomHistoryNote" class="text-[9px] text-mauve-light text-center">Истории сохраняются в твоих прохождениях. Новые сюжеты будут появляться без повторов, пока не закончится подборка комнаты.</p>
+          </div>
+        </div>
+
 </section>
 
     <section id="tab-goals" class="tab-content hidden space-y-4">
@@ -1245,21 +1307,106 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
     function openTarotArchiveCard(date){const entry=(appState.dailyTarot||[]).find(x=>x.date===date);if(!entry)return;const card=tarotDeck[entry.index];if(!card)return;document.getElementById('tarotArchiveSymbol').textContent=card.symbol;document.getElementById('tarotArchiveNumber').textContent='АРХЕТИП '+card.number;document.getElementById('tarotArchiveName').textContent=card.name;document.getElementById('tarotArchiveDate').textContent=new Date(date+'T12:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});document.getElementById('tarotArchiveMessage').textContent=card.message;document.getElementById('tarotArchiveFocus').textContent=card.focus;document.getElementById('tarotArchiveQuestion').textContent=card.question;const modal=document.getElementById('dailyTarotArchiveModal');modal.classList.remove('hidden');modal.classList.add('flex');}
     function closeTarotArchiveCard(){const modal=document.getElementById('dailyTarotArchiveModal');if(!modal)return;modal.classList.add('hidden');modal.classList.remove('flex');}
     function toggleOracleFolder(which){
-  const panels={daily:document.getElementById('oracleFolderDailyContent'),yesno:document.getElementById('oracleFolderYesNoContent')};
+  const keys=['daily','yesno','mirror','rooms'];
+  const panels=Object.fromEntries(keys.map(key=>[key,document.getElementById('oracleFolder'+key.charAt(0).toUpperCase()+key.slice(1)+'Content')]));
   const buttons=document.querySelectorAll('#tab-future button[aria-controls^="oracleFolder"]');
-  const target=panels[which];
-  if(!target)return;
+  const target=panels[which];if(!target)return;
   const willOpen=target.classList.contains('hidden');
-  Object.entries(panels).forEach(([key,panel])=>{
-    if(panel)panel.classList.toggle('hidden',key!==which||!willOpen);
-  });
-  buttons.forEach(button=>{
-    const active=button.getAttribute('aria-controls')===(which==='daily'?'oracleFolderDailyContent':'oracleFolderYesNoContent')&&willOpen;
-    button.setAttribute('aria-expanded',String(active));
-    const chevron=button.querySelector('.oracle-folder-chevron');
-    if(chevron)chevron.textContent=active?'⌃':'⌄';
-  });
+  Object.entries(panels).forEach(([key,panel])=>{if(panel)panel.classList.toggle('hidden',key!==which||!willOpen);});
+  buttons.forEach(button=>{const active=button.getAttribute('aria-controls')==='oracleFolder'+which.charAt(0).toUpperCase()+which.slice(1)+'Content'&&willOpen;button.setAttribute('aria-expanded',String(active));const chevron=button.querySelector('.oracle-folder-chevron');if(chevron)chevron.textContent=active?'⌃':'⌄';});
 }
+
+const mirrorQuestionBank=[
+ {q:'Когда ты остаёшься наедине с собой, что происходит чаще?',a:[['Я наконец выдыхаю и слышу себя','quiet'],['Начинаю прокручивать мысли и искать ответы','seeker'],['Мне хочется заполнить тишину чем-нибудь','sensitive']]},
+ {q:'Что задевает тебя сильнее всего?',a:[['Когда меня ограничивают или решают за меня','free'],['Когда меня не понимают или не замечают','sensitive'],['Когда я сама не оправдываю свои ожидания','seeker']]},
+ {q:'Как ты обычно поступаешь перед важным выбором?',a:[['Собираю факты и долго всё обдумываю','seeker'],['Прислушиваюсь к внутреннему ощущению','quiet'],['Представляю, как решение повлияет на близких','sensitive']]},
+ {q:'Какую свою сторону ты чаще прячешь?',a:[['Уязвимость и потребность в поддержке','sensitive'],['Амбиции и желание большего','free'],['Несогласие — проще промолчать','quiet']]},
+ {q:'Что тебе труднее всего разрешить себе?',a:[['Не контролировать всё','seeker'],['Быть неудобной для других','sensitive'],['Начать сначала и изменить направление','free']]},
+ {q:'В какой момент ты чувствуешь себя наиболее живой?',a:[['Когда открываю что-то новое','free'],['Когда меня по-настоящему понимают','sensitive'],['Когда получается разобраться в сложном','seeker']]},
+ {q:'Если бы никто не оценивал твой выбор, что бы ты сделала?',a:[['Выбрала бы больше свободы и перемен','free'],['Замедлилась бы и занялась собой','quiet'],['Честно поговорила бы о том, что чувствую','sensitive']]},
+ {q:'Что тебе сейчас нужнее всего?',a:[['Тишина и пространство','quiet'],['Ясность и направление','seeker'],['Тепло и ощущение связи','sensitive']]}
+];
+const mirrorProfiles={
+ quiet:{title:'Тихая глубина',intro:'Ты можешь многое переживать внутри, не спеша показывать это окружающим. Тебе важно пространство, в котором не нужно постоянно объяснять себя. Иногда за внешним спокойствием скрывается больше чувств, чем кажется.',strength:'Наблюдательность, способность замечать нюансы и слышать собственные ощущения.',shadow:'Есть риск слишком долго оставлять важные мысли внутри и ждать, что другие сами догадаются, что тебе нужно.',question:'Где мне пора не только понимать себя, но и позволить другим увидеть меня настоящую?'},
+ seeker:{title:'Та, что ищет ответы',intro:'Тебе важно понимать, что происходит и почему. Ты склонна искать закономерности, анализировать и докапываться до сути. Это помогает расти, но иногда превращает поиск ясности в бесконечное обдумывание.',strength:'Любознательность, способность учиться, замечать связи и пересматривать свои взгляды.',shadow:'Можно так долго искать идеальный ответ, что становится трудно довериться себе и просто попробовать.',question:'Какой шаг я уже могу сделать, даже если пока не знаю всех ответов?'},
+ sensitive:{title:'Чуткая наблюдательница',intro:'Ты тонко замечаешь атмосферу, интонации и перемены в отношениях. Связь с людьми может быть для тебя очень значимой. Важно только не терять собственные желания, стараясь понять каждого вокруг.',strength:'Эмпатия, внимательность к людям и способность создавать эмоциональную близость.',shadow:'Есть риск брать на себя чужие чувства и подстраиваться, чтобы не разочаровать или не потерять связь.',question:'Что я чувствую сама, если на время перестану учитывать ожидания остальных?'},
+ free:{title:'Свободный дух',intro:'Тебе важно ощущать, что у тебя есть выбор и возможность менять маршрут. Новизна, самостоятельность и движение могут давать тебе энергию. Иногда за стремлением к свободе прячется желание не сталкиваться с ограничениями и сложными чувствами.',strength:'Инициативность, смелость пробовать новое и способность видеть альтернативы.',shadow:'Можно резко уходить от того, что стало сложным, хотя именно там иногда начинается важный рост.',question:'Что я выбираю потому, что действительно хочу, а от чего бегу ради ощущения свободы?'}
+};
+let mirrorRun=[];
+function startMirrorJourney(){
+ const quiz=document.getElementById('mirrorQuiz'),result=document.getElementById('mirrorResult');
+ if(!quiz||!result)return;
+ mirrorRun=mirrorQuestionBank.map((q,i)=>({...q,index:i,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).slice(0,7).map(({q,a,index})=>({q,a,index}));
+ quiz.classList.remove('hidden');result.classList.add('hidden');document.getElementById('mirrorStartBtn').classList.add('hidden');
+ renderMirrorQuestion(0);
+}
+function renderMirrorQuestion(step){
+ const q=mirrorRun[step];if(!q)return;
+ document.getElementById('mirrorStepLabel').textContent='Вопрос '+(step+1)+' из '+mirrorRun.length;
+ document.getElementById('mirrorProgressLabel').textContent=Math.round(step/mirrorRun.length*100)+'%';
+ document.getElementById('mirrorProgress').style.width=(step/mirrorRun.length*100)+'%';
+ document.getElementById('mirrorQuestion').textContent=q.q;
+ document.getElementById('mirrorAnswers').innerHTML=q.a.map((a,i)=>'<button type="button" onclick="answerMirrorQuestion(\''+a[1]+'\')" class="w-full text-left rounded-2xl p-3 border border-blush bg-white/70 text-xs text-mauve">'+String.fromCharCode(65+i)+'. '+a[0]+'</button>').join('');
+}
+function answerMirrorQuestion(type){
+ const step=mirrorRun.findIndex(q=>!q.answer);if(step<0)return;
+ mirrorRun[step].answer=type;
+ const next=mirrorRun.findIndex(q=>!q.answer);
+ if(next>=0){renderMirrorQuestion(next);return;}
+ const counts={quiet:0,seeker:0,sensitive:0,free:0};mirrorRun.forEach(q=>counts[q.answer]=(counts[q.answer]||0)+1);
+ const winner=Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0],p=mirrorProfiles[winner];
+ document.getElementById('mirrorQuiz').classList.add('hidden');document.getElementById('mirrorResult').classList.remove('hidden');document.getElementById('mirrorStartBtn').classList.remove('hidden');
+ document.getElementById('mirrorProgress').style.width='100%';document.getElementById('mirrorProgressLabel').textContent='100%';
+ document.getElementById('mirrorResultTitle').textContent=p.title;document.getElementById('mirrorResultIntro').textContent=p.intro;document.getElementById('mirrorStrength').textContent=p.strength;document.getElementById('mirrorShadow').textContent=p.shadow;document.getElementById('mirrorReflection').textContent=p.question;
+ appState.mirrorHistory=appState.mirrorHistory||[];appState.mirrorHistory.unshift({id:String(Date.now()),date:new Date().toLocaleDateString('ru-RU'),title:p.title,question:p.question});appState.mirrorHistory=appState.mirrorHistory.slice(0,10);saveState();renderMirrorHistory();
+}
+function renderMirrorHistory(){const el=document.getElementById('mirrorHistory');if(!el)return;const items=appState.mirrorHistory||[];el.innerHTML=items.length?'<p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Твои прошлые отражения</p>'+items.map(x=>'<div class="rounded-xl border border-blush p-3 flex justify-between gap-2"><span class="text-xs font-bold text-mauve">'+escapeHtml(x.title)+'</span><span class="text-[9px] text-mauve-light">'+escapeHtml(x.date)+'</span></div>').join(''):'';}
+const oracleRoomData={
+ library:{name:'Забытая библиотека',stories:[
+  {title:'Книга без названия',text:'В глубине библиотеки ты находишь книгу без названия. На первой странице написано: «Здесь хранится то, что ты давно хотела себе разрешить». Что ты сделаешь?',choices:[['Открою её сразу','Ты перелистываешь страницы и находишь историю, похожую на твою, но с другим финалом.','Ты готова встретиться с тем, что давно откладывала.'],['Сначала осмотрю обложку','На обложке проступает знакомый символ. Он напоминает о желании, которое ты когда-то отложила.','Тебе важно почувствовать опору, прежде чем делать следующий шаг.'],['Оставлю книгу на месте','Когда ты отходишь, книга тихо раскрывается сама. На странице — вопрос, от которого не получается отмахнуться.','Иногда даже отказ от выбора показывает, что тема уже просит внимания.']]},
+  {title:'Письмо между страниц',text:'Из старого тома выпадает письмо, адресованное тебе. Почерк кажется знакомым, но дата стёрта. Ты можешь прочитать его, сохранить или попытаться найти отправителя.',choices:[['Прочитаю письмо','Внутри не инструкция, а признание: «Ты уже знаешь, чего хочешь, но ждёшь разрешения».','Возможно, сейчас тебе важнее услышать собственный голос, чем получить чужой совет.'],['Спрячу письмо в карман','Ты решаешь вернуться к нему позже. Сам факт, что ты не выбросила его, уже становится обещанием себе.','Не всякий ответ должен быть найден немедленно.'],['Найду автора','За дальним столом лежит раскрытая книга с твоими заметками. Похоже, автором была ты сама.','То, что кажется внешней загадкой, иногда ведёт к собственным забытым мыслям.']]},
+  {title:'Комната невзятых книг',text:'За стеллажом открывается маленькая комната. На полках стоят книги о жизнях, которые могли бы стать твоими. Какую ты возьмёшь?',choices:[['О жизни, полной перемен','Страницы пахнут дождём и дорогой. Ты видишь не готовый ответ, а несколько новых маршрутов.','Тебя может притягивать возможность начать иначе. Подумай, какую перемену можно попробовать безопасно.'],['О спокойной жизни','В книге много пустых страниц — будто покой ещё предстоит наполнить твоими решениями.','Возможно, сейчас тебе нужна не новая гонка, а устойчивость и пространство.'],['О смелом выборе','На последней странице написано: «Не обязательно быть бесстрашной, чтобы выбрать себя».','Смелость может быть маленьким действием, а не резким поворотом судьбы.']]}
+ ]},
+ forest:{name:'Лес без названия',stories:[
+  {title:'Тропа из светлячков',text:'Сумерки. Между деревьями загорается цепочка огоньков. Она ведёт вглубь леса, но рядом есть и обычная тропа. Куда пойдёшь?',choices:[['За огоньками','Тропа выводит к озеру, в котором отражается не небо, а твои мысли.','Тебе может быть интересно исследовать неизвестное, если ты оставляешь себе право остановиться.'],['По знакомой тропе','Ты находишь небольшой домик и понимаешь, что знакомый путь тоже способен привести к неожиданному.','Опора и предсказуемость не обязательно мешают открытиям.'],['Останусь и прислушаюсь','Ветер приносит звук колокольчика. Ты замечаешь третью тропу, которой раньше не было.','Пауза иногда помогает увидеть варианты, которые теряются в спешке.']]},
+  {title:'Дерево с твоим именем',text:'На поляне стоит огромное дерево. На коре вырезано твоё имя и рядом три символа: корни, ветви и цветы. К чему прикоснёшься?',choices:[['К корням','Земля под ногами теплеет, и вспоминаются люди и места, которые дали тебе опору.','Вернуться к своим основаниям — не значит отступить назад.'],['К ветвям','Ветки тянутся к свету и показывают множество направлений.','Твоё любопытство может подсказать, куда хочется расти дальше.'],['К цветам','Лепестки раскрываются, и поляна наполняется ароматом весны.','Не забывай замечать то, что уже расцветает в твоей жизни.']]},
+  {title:'Голос из тумана',text:'Из тумана доносится голос: «Если хочешь найти выход, оставь здесь одну вещь». Что ты готова оставить?',choices:[['Старый страх','Туман становится прозрачнее, но дорога всё ещё требует твоего участия.','Необязательно ждать полного отсутствия страха, чтобы двигаться.'],['Чужие ожидания','Становится легче дышать, и ты слышишь собственные шаги.','Проверь, какие решения ты принимаешь ради одобрения.'],['Привычку всё контролировать','Впереди появляется мост, которого раньше не было.','Иногда достаточно ослабить контроль, не отказываясь от ответственности.']]}
+ ]},
+ house:{name:'Дом незнакомца',stories:[
+  {title:'Накрытый на двоих стол',text:'Ты входишь в незнакомый дом. На столе стоят две чашки, а на стуле лежит записка: «Ты можешь задать только один вопрос». О чём спросишь?',choices:[['Почему меня пригласили?','В ответ слышишь: «Потому что ты давно не спрашивала себя, чего хочешь от этой встречи».','Любопытство к чужим мотивам иногда скрывает важный вопрос к себе.'],['Кто здесь живёт?','За дверью слышится смех, но никто не выходит. Ты понимаешь, что можешь уйти или остаться.','Неопределённость не всегда требует немедленного ответа.'],['Что мне здесь нужно увидеть?','На столе появляется зеркало, в котором отражается не комната, а твоё лицо.','Возможно, смысл ситуации связан с тем, что ты сама в неё приносишь.']]},
+  {title:'Комната чужих вещей',text:'В шкафу лежат три предмета: старый ключ, фотография без лица и билет в один конец. Какой возьмёшь?',choices:[['Ключ','Он подходит к двери наверху, за которой оказывается светлая пустая комната.','Ты можешь быть готова открыть новую возможность, даже если пока не знаешь, что за ней.'],['Фотографию','На снимке постепенно проступает пейзаж, который вызывает странное чувство узнавания.','Память и прошлый опыт могут подсказать, что для тебя по-настоящему важно.'],['Билет','На билете нет пункта назначения, только сегодняшняя дата.','Тебя может притягивать движение. Подумай, куда хочется направиться на самом деле.']]},
+  {title:'Дверь, которую не замечали',text:'В коридоре появляется дверь, которой не было минуту назад. За ней слышится музыка. Ты можешь постучать, открыть или уйти.',choices:[['Постучу','Музыка стихает, и из-за двери спрашивают: «Ты пришла за ответом или за разрешением?»','Иногда важно понять, чего именно ты ждёшь от других.'],['Открою','За дверью — комната, похожая на ту, которую ты когда-то представляла для себя.','Твои желания могут быть ближе, чем кажется, если дать им конкретную форму.'],['Уйду','На выходе ты находишь записку: «Можно вернуться, когда будешь готова».','Не каждый момент подходит для решения. Пауза тоже может быть выбором.']]}
+ ]},
+ train:{name:'Последний поезд',stories:[
+  {title:'Платформа без расписания',text:'На пустой платформе стоит поезд. На табло нет времени отправления, только три направления: назад, дальше и неизвестно. Что выберешь?',choices:[['Назад','В вагоне ты находишь не прошлое, а возможность посмотреть на него без прежней спешки.','Возвращение к прошлому полезно, если оно помогает понять настоящее, а не застрять в нём.'],['Дальше','За окном постепенно появляется незнакомый город. Ты ещё не знаешь, что там будет, но уже едешь.','Ты можешь быть готова к движению без полной гарантии результата.'],['Неизвестно','Проводник улыбается: «Иногда маршрут появляется после первого шага».','Неопределённость можно исследовать постепенно, не требуя от себя идеального плана.']]},
+  {title:'Свободное место у окна',text:'В вагоне три свободных места: рядом с незнакомцем, у окна и в отдельном купе. Где сядешь?',choices:[['Рядом с незнакомцем','Разговор неожиданно помогает взглянуть на привычную ситуацию иначе.','Новый взгляд иногда приходит через контакт, если ты готова быть открытой.'],['У окна','Пейзаж меняется, и ты замечаешь детали, которые раньше пропускала.','Тебе может быть нужно пространство, чтобы услышать собственные мысли.'],['В отдельном купе','Тишина помогает сформулировать, куда ты хочешь приехать.','Самостоятельность становится опорой, когда ты используешь её не для изоляции, а для ясности.']]},
+  {title:'Билет без даты',text:'Проводник протягивает тебе билет без даты. Он действителен, но только если ты сама впишешь одно слово. Какое слово появится на билете?',choices:[['Начать','Билет становится тёплым в руках. Похоже, решение уже созрело, осталось выбрать первый шаг.','Начало не обязано быть масштабным. Иногда достаточно одного действия.'],['Отпустить','За окном остаётся станция, на которой ты слишком долго ждала.','Освобождение места для нового начинается с честного признания того, что больше не подходит.'],['Остаться','Поезд не трогается, но ты впервые замечаешь, что можешь выбрать время отправления сама.','Остаться — тоже выбор, если он сделан осознанно, а не только из страха.']]}
+ ]}
+};
+let currentOracleStory=null;
+function enterOracleRoom(roomKey){
+ const room=oracleRoomData[roomKey];if(!room)return;
+ appState.oracleRoomSeen=appState.oracleRoomSeen||{};
+ const seen=appState.oracleRoomSeen[roomKey]||[];
+ let available=room.stories.filter((s,i)=>!seen.includes(i));
+ if(!available.length){appState.oracleRoomSeen[roomKey]=[];available=room.stories.slice();}
+ const chosen=available[Math.floor(Math.random()*available.length)],index=room.stories.indexOf(chosen);
+ currentOracleStory={roomKey,index,choice:null};
+ const story=document.getElementById('oracleStory');story.classList.remove('hidden');document.getElementById('oracleRoomsGrid').classList.add('hidden');
+ document.getElementById('oracleStoryRoom').textContent=room.name;document.getElementById('oracleStoryTitle').textContent=chosen.title;document.getElementById('oracleStoryText').textContent=chosen.text;
+ document.getElementById('oracleStoryEnding').classList.add('hidden');
+ document.getElementById('oracleStoryChoices').innerHTML=chosen.choices.map((x,i)=>'<button type="button" onclick="chooseOracleStory('+i+')" class="w-full rounded-2xl p-3 text-left border border-blush bg-white/75 text-xs text-mauve">'+x[0]+'</button>').join('');
+}
+function chooseOracleStory(choiceIndex){
+ if(!currentOracleStory)return;
+ const room=oracleRoomData[currentOracleStory.roomKey],story=room.stories[currentOracleStory.index],choice=story.choices[choiceIndex];if(!choice)return;
+ appState.oracleRoomSeen=appState.oracleRoomSeen||{};appState.oracleRoomSeen[currentOracleStory.roomKey]=appState.oracleRoomSeen[currentOracleStory.roomKey]||[];
+ if(!appState.oracleRoomSeen[currentOracleStory.roomKey].includes(currentOracleStory.index))appState.oracleRoomSeen[currentOracleStory.roomKey].push(currentOracleStory.index);
+ appState.oracleStoryHistory=appState.oracleStoryHistory||[];appState.oracleStoryHistory.unshift({id:String(Date.now()),room:room.name,title:story.title,choice:choice[0],date:new Date().toLocaleDateString('ru-RU')});appState.oracleStoryHistory=appState.oracleStoryHistory.slice(0,30);saveState();
+ document.getElementById('oracleStoryChoices').classList.add('hidden');document.getElementById('oracleStoryEnding').classList.remove('hidden');document.getElementById('oracleStoryEndingText').textContent=choice[1]+' '+choice[2];document.getElementById('oracleStoryQuestion').textContent='Вопрос тебе: '+(choiceIndex===0?'Что я давно готова исследовать?':choiceIndex===1?'Что мне важно сохранить?':'Какой следующий шаг я могу выбрать сама?');
+}
+function leaveOracleStory(){currentOracleStory=null;document.getElementById('oracleStory').classList.add('hidden');document.getElementById('oracleRoomsGrid').classList.remove('hidden');document.getElementById('oracleStoryChoices').classList.remove('hidden');document.getElementById('oracleStoryEnding').classList.add('hidden');}
+
 function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const today=localDayKey();if(appState.dailyTarot.some(x=>x.date===today)){renderDailyTarot();return;}const index=dailyTarotIndex(today);appState.dailyTarot.unshift({date:today,index,revealed:true});appState.dailyTarot=appState.dailyTarot.slice(0,30);saveState();renderDailyTarot();showToast('Твоя карта дня открыта');}
 
     let editingGratitudeIndex=null,editingFeelingIndex=null,editingFutureLetterIndex=null;
