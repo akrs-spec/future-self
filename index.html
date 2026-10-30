@@ -988,7 +988,7 @@
        const today=localDayKey(),question=dailyQuestionFor(today),answers=appState.dailyQuestionAnswers||{};
        const text=document.getElementById('dailyQuestionText'),date=document.getElementById('dailyQuestionDate'),input=document.getElementById('dailyQuestionAnswer'),saved=document.getElementById('dailyQuestionSaved');
        if(!text||!input)return;text.textContent=question;date.textContent=new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
-       input.value=answers[today]?.answer||'';saved.textContent=answers[today]?'Ответ за сегодня уже сохранён. Его можно дополнить и сохранить обновлённую версию.':'';
+       input.value='';saved.textContent=answers[today]?'Ответ за сегодня уже сохранён и доступен в истории.':'';
        const hist=document.getElementById('dailyQuestionHistory');
        const history=Array.isArray(appState.dailyQuestionHistory)?appState.dailyQuestionHistory.slice():[];
        const known=new Set(history.map(v=>String(v.date||String(v.createdAt||'').slice(0,10))+'|'+String(v.answer||'')));
@@ -1009,7 +1009,7 @@
        saveState();
        const stored=JSON.parse(localStorage.getItem(storageKey)||'{}');
        if(stored.dailyQuestionAnswers?.[today]?.answer!==answer){showToast('Не удалось подтвердить сохранение. Попробуй ещё раз');return;}
-       renderQuestionOfDay();showToast('Ответ сохранён в истории');
+       renderQuestionOfDay();input.value='';showToast('Ответ сохранён в истории');
      }
     function dateIsDue(date){return !!date&&date<=localDayKey();}
     function addFillsMeItem(){const input=document.getElementById('fillsMeInput'),text=input.value.trim();if(!text){showToast('Добавь то, что тебя наполняет');return;}appState.fillsMe=appState.fillsMe||[];appState.fillsMe.unshift({id:String(Date.now()),text,createdAt:new Date().toISOString()});input.value='';saveState();renderFillsMe();}
