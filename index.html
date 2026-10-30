@@ -395,8 +395,10 @@
         </button>
       </div>
 
+      <div id="futureScriptHistory" class="space-y-3">
+        <!-- Сохранённые письма с датами появятся здесь -->
+      </div>
 
-      
 
 
       </div>
@@ -598,10 +600,6 @@
       <i class="fa-solid fa-book-open text-base"></i>
       <span class="text-[9px] font-bold mt-1">Дневник</span>
     </button>
-    <button onclick="switchTab('future')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="future">
-      <i class="fa-solid fa-moon text-base"></i>
-      <span class="text-[9px] font-bold mt-1">Оракул</span>
-    </button>
     <button onclick="switchTab('goals')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="goals">
       <i class="fa-solid fa-bullseye text-base"></i>
       <span class="text-[9px] font-bold mt-1">Цели</span>
@@ -609,6 +607,10 @@
     <button onclick="switchTab('practices')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="practices">
       <i class="fa-solid fa-wind text-base"></i>
       <span class="text-[9px] font-bold mt-1">Практики</span>
+    </button>
+    <button onclick="switchTab('future')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="future">
+      <i class="fa-solid fa-moon text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Оракул</span>
     </button>
     
 
@@ -798,7 +800,36 @@
     function toggleGoal(id){const g=appState.goals.find(x=>x.id===id);if(g){g.completed=!g.completed;saveState();renderGoals();}}
     function openAddGoalModal(){document.getElementById('addGoalModal').classList.remove('hidden');} function openPremiumModal(){document.getElementById('premiumModal').classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');}
     function saveNewGoal(){const title=document.getElementById('goalTitleInput').value.trim(),cat=document.getElementById('goalCategorySelect').value;if(!title)return;appState.goals.push({id:String(Date.now()),title,cat,completed:false});saveState();renderGoals();document.getElementById('goalTitleInput').value='';closeModal('addGoalModal');showToast('Цель добавлена!');}
-    function saveFutureSelfScript(){appState.futureScript={idealDay:document.getElementById('idealDayText').value,identity:document.getElementById('identityText').value,leavingBehind:document.getElementById('leavingBehindText').value};saveState();showToast('Видение сохранено ✨');}
+    function saveFutureSelfScript(){
+      const entry={
+        id:String(Date.now()),
+        createdAt:new Date().toISOString(),
+        idealDay:document.getElementById('idealDayText').value.trim(),
+        identity:document.getElementById('identityText').value.trim(),
+        leavingBehind:document.getElementById('leavingBehindText').value.trim()
+      };
+      if(!entry.idealDay&&!entry.identity&&!entry.leavingBehind){showToast('Сначала заполни хотя бы один ответ');return;}
+      appState.futureScript={idealDay:entry.idealDay,identity:entry.identity,leavingBehind:entry.leavingBehind};
+      appState.futureScriptHistory=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+      appState.futureScriptHistory.unshift(entry);
+      appState.futureScriptHistory=appState.futureScriptHistory.slice(0,100);
+      saveState();
+      renderFutureScriptHistory();
+      showToast('Письмо сохранено с датой ✨');
+    }
+    function renderFutureScriptHistory(){
+      const c=document.getElementById('futureScriptHistory');
+      if(!c)return;
+      const entries=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+      c.innerHTML=entries.length
+        ? '<div class="pt-2"><h3 class="text-sm font-extrabold text-mauve">Сохранённые письма</h3><p class="text-[10px] text-mauve-light mt-1">Каждая запись хранится отдельно — к ней можно вернуться позже.</p></div>'+entries.map((entry,index)=>{
+            const date=entry.createdAt?new Date(entry.createdAt):null;
+            const dateLabel=date&&!Number.isNaN(date.getTime())?date.toLocaleString('ru-RU',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):(entry.legacy?'Дата предыдущей записи не сохранилась':'Дата не указана');
+            const fields=[['Идеальный день',entry.idealDay],['Кем я являюсь',entry.identity],['Что я оставляю в прошлом',entry.leavingBehind]].filter(x=>x[1]);
+            return '<details class="glass-card rounded-2xl border border-blush p-3" '+(index===0?'open':'')+'><summary class="cursor-pointer list-none flex items-center justify-between gap-2"><span class="text-xs font-bold text-mauve">'+escapeHtml(dateLabel)+'</span><i class="fa-solid fa-chevron-down text-[10px] text-dusty"></i></summary><div class="space-y-3 mt-3">'+fields.map(([label,value])=>'<div><p class="text-[10px] font-bold text-dusty mb-1">'+escapeHtml(label)+'</p><p class="text-xs leading-relaxed text-mauve whitespace-pre-wrap">'+escapeHtml(value)+'</p></div>').join('')+'</div></details>';
+          }).join('')
+        : '<div class="glass-card rounded-2xl p-4 border border-blush text-center"><p class="text-xs font-bold text-mauve">Здесь будут твои письма</p><p class="text-[10px] text-mauve-light mt-1">Сохрани ответы, и они появятся в истории с датой и временем.</p></div>';
+    }
 
     const tarotMajors = [
       ['Шут','Свобода начинается там, где ты перестаёшь требовать от себя гарантий. Необязательно знать весь маршрут, чтобы сделать первый шаг.','Заметь, где любопытство сильнее страха, а где ты называешь страх здравым смыслом.','Что бы ты попробовала, если бы не требовала от себя идеального результата?','✧'],
@@ -885,7 +916,20 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
     async function revokeFriendAccess(id){try{await api('/admin/revoke',{telegramId:id});showToast('Доступ отозван');loadFriendUsers();}catch(e){showToast(e.message);}}
     async function loadFriendUsers(){const c=document.getElementById('friendUsersList');try{const data=await api('/admin/users');c.innerHTML=data.users.length?data.users.map(u=>`<div class="flex items-center justify-between bg-milk rounded-xl p-2"><div><b>${escapeHtml(u.name||'Пользователь')}</b><p>ID: ${escapeHtml(u.telegramId)} · ${escapeHtml(u.access)}${u.expiresAt?' · до '+new Date(u.expiresAt).toLocaleDateString('ru-RU'):''}</p></div><button onclick="revokeFriendAccess('${u.telegramId}')" class="text-red-700 underline">Отозвать</button></div>`).join(''):'<p>Пока нет выданных доступов.</p>';}catch(e){c.innerHTML='<p>'+escapeHtml(e.message)+'</p>';}}
     async function simulateTelegramPay(){try{const result=await api('/payments/create-invoice',{plan:'pro_monthly'});if(!result.invoiceLink)throw new Error('Сервер не вернул ссылку на оплату');if(tg?.openInvoice)tg.openInvoice(result.invoiceLink,(status)=>{if(status==='paid'){showToast('Оплата подтверждена. Обновляю доступ…');initAccount();}else if(status==='cancelled')showToast('Оплата отменена');else showToast('Платёж не завершён');});else window.open(result.invoiceLink,'_blank');}catch(e){showToast(e.message || 'Не удалось создать счёт на оплату. Попробуй ещё раз.');}}
-    window.addEventListener('load',async()=>{renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();renderFateBall();const f=appState.futureScript||{};document.getElementById('idealDayText').value=f.idealDay||'';document.getElementById('identityText').value=f.identity||'';document.getElementById('leavingBehindText').value=f.leavingBehind||'';await initAccount();});
+    window.addEventListener('load',async()=>{
+      renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();renderFateBall();
+      appState.futureScriptHistory=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+      const f=appState.futureScript||{};
+      if(!appState.futureScriptHistory.length&&(f.idealDay||f.identity||f.leavingBehind)){
+        appState.futureScriptHistory.push({id:'legacy-future-script',legacy:true,idealDay:f.idealDay||'',identity:f.identity||'',leavingBehind:f.leavingBehind||''});
+        saveState();
+      }
+      document.getElementById('idealDayText').value=f.idealDay||'';
+      document.getElementById('identityText').value=f.identity||'';
+      document.getElementById('leavingBehindText').value=f.leavingBehind||'';
+      renderFutureScriptHistory();
+      await initAccount();
+    });
   </script>
 </body>
 </html>
