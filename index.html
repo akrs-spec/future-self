@@ -54,13 +54,44 @@
   </script>
 
   <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      overscroll-behavior: none;
+    }
+
     body {
       background-color: #FFF9F9;
       color: #4A3236;
       font-family: 'Inter', -apple-system, sans-serif;
+      height: var(--app-viewport-height, 100dvh);
+      min-height: 0;
+      overflow: hidden;
       overflow-x: hidden;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+      padding-top: max(8px, env(safe-area-inset-top));
+    }
+
+    body > header {
+      flex: 0 0 auto;
+    }
+
+    body > main {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      padding-bottom: calc(104px + env(safe-area-inset-bottom));
+      scroll-padding-bottom: calc(104px + env(safe-area-inset-bottom));
+    }
+
+    body > nav {
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
     }
 
     .glass-card {
@@ -496,7 +527,20 @@
   <!-- JAVASCRIPT APP LOGIC -->
   <script>
     const tg = window.Telegram?.WebApp;
-    tg?.ready(); tg?.expand();
+    tg?.ready();
+    tg?.expand();
+
+    function syncAppViewportHeight() {
+      const telegramHeight = Number(tg?.viewportHeight || 0);
+      const visualHeight = Number(window.visualViewport?.height || 0);
+      const height = telegramHeight > 0 ? telegramHeight : visualHeight > 0 ? visualHeight : window.innerHeight;
+      if (height > 0) document.documentElement.style.setProperty('--app-viewport-height', height + 'px');
+    }
+    syncAppViewportHeight();
+    tg?.onEvent?.('viewportChanged', syncAppViewportHeight);
+    window.addEventListener('resize', syncAppViewportHeight);
+    window.visualViewport?.addEventListener('resize', syncAppViewportHeight);
+
     const API = '/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
     const DEFAULT_STATE = {
       user: { name: 'Гость', isPremium: false, access: 'FREE' },
