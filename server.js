@@ -113,6 +113,9 @@ async function initializeDatabase() {
         imported_payments INTEGER NOT NULL DEFAULT 0,
         imported_invites INTEGER NOT NULL DEFAULT 0
       );
+      CREATE TABLE IF NOT EXISTS app_states (
+        telegram_id TEXT PRIMARY KEY, state_json TEXT NOT NULL, updated_at BIGINT NOT NULL
+      );
     `);
 
     // Import the existing SQLite data once. The source database is never modified or deleted.
@@ -182,6 +185,9 @@ async function initializeDatabase() {
       token TEXT PRIMARY KEY, duration_days INTEGER NOT NULL, created_by TEXT NOT NULL,
       created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL, used_at INTEGER, used_by TEXT
     );
+    CREATE TABLE IF NOT EXISTS app_states (
+      telegram_id TEXT PRIMARY KEY, state_json TEXT NOT NULL, updated_at INTEGER NOT NULL
+    );
   `);
 }
 
@@ -239,6 +245,39 @@ async function telegram(method, payload) {
   if (!data.ok) throw new Error(data.description || `Telegram ${method} failed`);
   return data.result;
 }
+
+app.get('/api/state', auth, async (req, res) => {
+  try {
+    const result = await query('SELECT state_json,updated_at FROM app_states WHERE telegram_id=?', [String(req.telegramUser.id)]);
+    const row = result.rows[0];
+    res.json({ state: row ? JSON.parse(row.state_json) : null, updatedAt: row ? Number(row.updated_at) : null });
+  } catch (e) {
+    console.error('Load app state error:', e);
+    res.status(500).json({ error: 'Не удалось загрузить сохранённые данные' });
+  }
+});
+
+app.post('/api/state', auth, async (req, res) => {
+  try {
+    const state = req.body?.state;
+    if (!state || typeof state !== 'object' || Array.isArray(state)) {
+      return res.status(400).json({ error: 'Некорректные данные приложения' });
+    }
+    const stateJson = JSON.stringify(state);
+    if (Buffer.byteLength(stateJson, 'utf8') > 10 * 1024 * 1024) {
+      return res.status(413).json({ error: 'Слишком большой объём данных для сохранения' });
+    }
+    const updatedAt = Date.now();
+    await query(
+      'INSERT INTO app_states(telegram_id,state_json,updated_at) VALUES(?,?,?) ON CONFLICT(telegram_id) DO UPDATE SET state_json=excluded.state_json,updated_at=excluded.updated_at',
+      [String(req.telegramUser.id), stateJson, updatedAt]
+    );
+    res.json({ ok: true, updatedAt });
+  } catch (e) {
+    console.error('Save app state error:', e);
+    res.status(500).json({ error: 'Не удалось сохранить данные на сервере' });
+  }
+});
 
 app.get('/api/me', auth, async (req, res) => {
   try {
