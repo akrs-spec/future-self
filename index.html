@@ -790,36 +790,27 @@
     function openAddGoalModal(){document.getElementById('addGoalModal').classList.remove('hidden');} function openPremiumModal(){document.getElementById('premiumModal').classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');}
     function saveNewGoal(){const title=document.getElementById('goalTitleInput').value.trim(),cat=document.getElementById('goalCategorySelect').value;if(!title)return;appState.goals.push({id:String(Date.now()),title,cat,completed:false});saveState();renderGoals();document.getElementById('goalTitleInput').value='';closeModal('addGoalModal');showToast('Цель добавлена!');}
     function saveFutureSelfScript(){
-      const entry={
-        id:String(Date.now()),
-        createdAt:new Date().toISOString(),
-        idealDay:document.getElementById('idealDayText').value.trim(),
-        identity:document.getElementById('identityText').value.trim(),
-        leavingBehind:document.getElementById('leavingBehindText').value.trim()
-      };
+      const entry={id:String(Date.now()),createdAt:new Date().toISOString(),idealDay:document.getElementById('idealDayText').value.trim(),identity:document.getElementById('identityText').value.trim(),leavingBehind:document.getElementById('leavingBehindText').value.trim()};
       if(!entry.idealDay&&!entry.identity&&!entry.leavingBehind){showToast('Сначала заполни хотя бы один ответ');return;}
       appState.futureScript={idealDay:entry.idealDay,identity:entry.identity,leavingBehind:entry.leavingBehind};
       appState.futureScriptHistory=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
-      appState.futureScriptHistory.unshift(entry);
-      appState.futureScriptHistory=appState.futureScriptHistory.slice(0,100);
-      saveState();
-      renderFutureScriptHistory();
-      showToast('Письмо сохранено с датой ✨');
+      if(editingFutureLetterIndex!==null){const old=appState.futureScriptHistory[editingFutureLetterIndex];if(old){entry.id=old.id||entry.id;entry.createdAt=old.createdAt||entry.createdAt;entry.updatedAt=new Date().toISOString();appState.futureScriptHistory[editingFutureLetterIndex]=entry;}editingFutureLetterIndex=null;showToast('Письмо обновлено ✨');}
+      else{appState.futureScriptHistory.unshift(entry);appState.futureScriptHistory=appState.futureScriptHistory.slice(0,100);showToast('Письмо сохранено с датой ✨');}
+      const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить письмо ✨';
+      saveState();renderFutureScriptHistory();
     }
+    function editFutureLetter(index){const entry=appState.futureScriptHistory?.[index];if(!entry)return;editingFutureLetterIndex=index;document.getElementById('idealDayText').value=entry.idealDay||'';document.getElementById('identityText').value=entry.identity||'';document.getElementById('leavingBehindText').value=entry.leavingBehind||'';const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить изменения ✨';document.getElementById('dailySection-letter').scrollIntoView({behavior:'smooth',block:'start'});}
+    function deleteFutureLetter(index){if(!confirm('Удалить это письмо в будущее?'))return;appState.futureScriptHistory.splice(index,1);if(editingFutureLetterIndex===index){editingFutureLetterIndex=null;['idealDayText','identityText','leavingBehindText'].forEach(id=>document.getElementById(id).value='');const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить письмо ✨';}saveState();renderFutureScriptHistory();showToast('Письмо удалено');}
     function renderFutureScriptHistory(){
-      const c=document.getElementById('futureScriptHistory');
-      if(!c)return;
+      const c=document.getElementById('futureScriptHistory');if(!c)return;
       const entries=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
-      c.innerHTML=entries.length
-        ? '<div class="pt-2"><h3 class="text-sm font-extrabold text-mauve">Сохранённые письма</h3><p class="text-[10px] text-mauve-light mt-1">Каждая запись хранится отдельно — к ней можно вернуться позже.</p></div>'+entries.map((entry,index)=>{
-            const date=entry.createdAt?new Date(entry.createdAt):null;
-            const dateLabel=date&&!Number.isNaN(date.getTime())?date.toLocaleString('ru-RU',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):(entry.legacy?'Дата предыдущей записи не сохранилась':'Дата не указана');
-            const fields=[['Идеальный день',entry.idealDay],['Кем я являюсь',entry.identity],['Что я оставляю в прошлом',entry.leavingBehind]].filter(x=>x[1]);
-            return '<details class="glass-card rounded-2xl border border-blush p-3" '+(index===0?'open':'')+'><summary class="cursor-pointer list-none flex items-center justify-between gap-2"><span class="text-xs font-bold text-mauve">'+escapeHtml(dateLabel)+'</span><i class="fa-solid fa-chevron-down text-[10px] text-dusty"></i></summary><div class="space-y-3 mt-3">'+fields.map(([label,value])=>'<div><p class="text-[10px] font-bold text-dusty mb-1">'+escapeHtml(label)+'</p><p class="text-xs leading-relaxed text-mauve whitespace-pre-wrap">'+escapeHtml(value)+'</p></div>').join('')+'</div></details>';
-          }).join('')
-        : '<div class="glass-card rounded-2xl p-4 border border-blush text-center"><p class="text-xs font-bold text-mauve">Здесь будут твои письма</p><p class="text-[10px] text-mauve-light mt-1">Сохрани ответы, и они появятся в истории с датой и временем.</p></div>';
+      c.innerHTML=entries.length?'<div class="pt-2"><h3 class="text-sm font-extrabold text-mauve">Сохранённые письма</h3><p class="text-[10px] text-mauve-light mt-1">Каждая запись хранится отдельно — к ней можно вернуться позже.</p></div>'+entries.map((entry,index)=>{
+        const date=entry.createdAt?new Date(entry.createdAt):null;
+        const dateLabel=date&&!Number.isNaN(date.getTime())?date.toLocaleString('ru-RU',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):(entry.legacy?'Дата предыдущей записи не сохранилась':'Дата не указана');
+        const fields=[['Идеальный день',entry.idealDay],['Кем я являюсь',entry.identity],['Что я оставляю в прошлом',entry.leavingBehind]].filter(x=>x[1]);
+        return '<details class="glass-card rounded-2xl border border-blush p-3" '+(index===0?'open':'')+'><summary class="cursor-pointer list-none flex items-center justify-between gap-2"><span class="text-xs font-bold text-mauve">'+escapeHtml(dateLabel)+'</span><i class="fa-solid fa-chevron-down text-[10px] text-dusty"></i></summary><div class="space-y-3 mt-3">'+fields.map(([label,value])=>'<div><p class="text-[10px] font-bold text-dusty mb-1">'+escapeHtml(label)+'</p><p class="text-xs leading-relaxed text-mauve whitespace-pre-wrap">'+escapeHtml(value)+'</p></div>').join('')+'<div class="flex gap-3 pt-1"><button onclick="editFutureLetter('+index+')" class="text-[10px] font-bold text-dusty underline">Редактировать</button><button onclick="deleteFutureLetter('+index+')" class="text-[10px] font-bold text-red-400 underline">Удалить</button></div></div></details>';
+      }).join(''):'<div class="glass-card rounded-2xl p-4 border border-blush text-center"><p class="text-xs font-bold text-mauve">Здесь будут твои письма</p><p class="text-[10px] text-mauve-light mt-1">Сохрани ответы, и они появятся в истории с датой и временем.</p></div>';
     }
-
     const tarotMajors = [
       ['Шут','Свобода начинается там, где ты перестаёшь требовать от себя гарантий. Необязательно знать весь маршрут, чтобы сделать первый шаг.','Заметь, где любопытство сильнее страха, а где ты называешь страх здравым смыслом.','Что бы ты попробовала, если бы не требовала от себя идеального результата?','✧'],
       ['Маг','У тебя уже есть больше инструментов, чем ты себе засчитываешь. Сейчас вопрос не в ещё одной подготовке, а в том, как ты распорядишься тем, что есть.','Где ты ждёшь разрешения, хотя можешь начать сама?','Какой один ресурс я могу использовать уже сегодня?','✦'],
