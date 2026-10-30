@@ -223,100 +223,7 @@
     </section>
 
     <!-- 2. FUTURE SELF NARRATIVE SCRIPTING -->
-    <section id="tab-daily" class="tab-content hidden space-y-4">
-      <div>
-        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Рефлексия</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
-      </div>
 
-      <!-- Future Self: scripting -->
-
-      <div>
-        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Письмо в будущее</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Мой Идеальный День</h2>
-      </div>
-
-      <!-- Ambient Audio Focus Player -->
-      <div class="glass-card rounded-2xl p-3 border border-blush flex items-center justify-between shadow-sm">
-        <div class="flex items-center space-x-3">
-          <button onclick="toggleAmbientAudio()" class="w-9 h-9 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-sm">
-            <i id="ambientIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
-          </button>
-          <div>
-            <p class="text-xs font-bold text-mauve">Атмосфера Сосредоточения</p>
-            <p id="ambientStatus" class="text-[10px] text-mauve-light">Мягкие медитативные волны</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Questionnaire Wizard -->
-      <div class="space-y-3">
-        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
-          <label class="block text-xs font-bold text-mauve">Как выглядит твой идеальный день через 3 года?</label>
-          <textarea id="idealDayText" rows="3" placeholder="Я просыпаюсь в светлой комнате с видом на море..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
-        </div>
-
-        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
-          <label class="block text-xs font-bold text-mauve">Кем ты являешься? Каковы твои привычки?</label>
-          <textarea id="identityText" rows="2" placeholder="Я уверенная, спокойная, занимаюсь любимым делом..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
-        </div>
-
-        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
-          <label class="block text-xs font-bold text-mauve">Что ты оставляешь в прошлом?</label>
-          <textarea id="leavingBehindText" rows="2" placeholder="Страх проявления, сомнения, синдром самозванца..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
-        </div>
-
-        <button onclick="saveFutureSelfScript()" class="w-full py-3 bg-mauve text-blush-light text-xs font-bold rounded-2xl shadow-md hover:bg-mauve-light transition">
-          Сохранить Видение Будущего ✨
-        </button>
-      </div>
-
-
-
-
-      <!-- Daily Affirmation Card -->
-      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
-        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
-        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
-        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
-      </div>
-
-      <!-- Gratitude Form -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
-        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
-      </div>
-
-      <div id="gratitudeHistoryContainer" class="space-y-2">
-        <!-- Rendered via JS -->
-      </div>
-
-      <!-- Feelings Journal -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <div>
-          <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">Дневник чувств</h3>
-          <p class="text-[10px] text-mauve-light mt-1">Отметь, что ты чувствуешь сейчас. Здесь нет правильных или неправильных эмоций.</p>
-        </div>
-        <select id="feelingMood" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none">
-          <option value="Радость">😊 Радость</option>
-          <option value="Спокойствие">😌 Спокойствие</option>
-          <option value="Благодарность">🤍 Благодарность</option>
-          <option value="Вдохновение">✨ Вдохновение</option>
-          <option value="Тревога">🌧️ Тревога</option>
-          <option value="Грусть">💧 Грусть</option>
-          <option value="Злость">🔥 Злость</option>
-          <option value="Усталость">🌙 Усталость</option>
-          <option value="Одиночество">🫂 Одиночество</option>
-          <option value="Растерянность">🌀 Растерянность</option>
-        </select>
-        <textarea id="feelingNote" rows="3" placeholder="Что повлияло на это состояние? О чём хочется себе сказать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none resize-y"></textarea>
-        <button onclick="saveFeelingEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить запись</button>
-      </div>
-      <div id="feelingHistoryContainer" class="space-y-2"></div>
-    </section>
 
         <!-- 3. GOAL PLANNER -->
     <section id="tab-goals" class="tab-content hidden space-y-4">
@@ -462,36 +369,54 @@
         <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
       </div>
 
-      <!-- FUTURE SELF DAILY CARD -->
-      <div class="space-y-3">
-        <div class="flex items-end justify-between">
-          <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Точка внимания</span><h3 class="text-lg font-extrabold text-mauve">Карта дня</h3></div>
-          <span class="text-[9px] text-mauve-light">78 архетипов • один день</span>
-        </div>
-        <p class="text-[11px] leading-relaxed text-mauve-light">Не предсказание и не приговор. Просто символ, через который можно посмотреть на себя и на то, что сейчас происходит.</p>
-        <div id="dailyTarotCard" class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#5A3D42,#846066 58%,#C98B93);color:#FFF9F9;min-height:260px">
-          <div id="dailyTarotBack" class="mx-auto w-36 h-48 rounded-2xl border border-white/40 flex flex-col items-center justify-center p-4" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.07),rgba(255,255,255,.07) 2px,transparent 2px,transparent 9px),linear-gradient(145deg,#846066,#3D272A);box-shadow:0 12px 28px #3D272A66">
-            <div class="w-16 h-16 rounded-full border border-blush-light/70 flex items-center justify-center text-3xl">✧</div>
-            <p class="mt-4 text-[10px] tracking-[.25em] font-bold">FUTURE SELF</p><p class="text-[9px] tracking-widest mt-1">YOUR DAILY SYMBOL</p>
-          </div>
-          <div id="dailyTarotReveal" class="hidden space-y-3">
-            <div class="mx-auto w-36 min-h-48 rounded-2xl border border-white/40 p-3 flex flex-col items-center justify-center" style="background:linear-gradient(155deg,#FDF2F4,#E8C5C8);color:#5A3D42;box-shadow:0 12px 28px #3D272A66">
-              <span id="dailyTarotNumber" class="text-[9px] tracking-widest"></span><div class="text-4xl my-4" id="dailyTarotSymbol">✧</div><p id="dailyTarotCardName" class="text-xs font-extrabold uppercase tracking-wide"></p><p class="text-[8px] tracking-widest mt-2">FUTURE SELF</p>
-            </div>
-            <div class="text-left rounded-2xl p-3 space-y-2" style="background:#FFF9F9;color:#5A3D42">
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Главная мысль</p>
-              <p id="dailyTarotMessage" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">На что обратить внимание</p>
-              <p id="dailyTarotFocus" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">Вопрос себе</p>
-              <p id="dailyTarotQuestion" class="text-xs leading-relaxed italic"></p>
-            </div>
-          </div>
-          <button id="dailyTarotDrawBtn" onclick="drawDailyTarotCard()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5D5DA;color:#5A3D42">Открыть карту дня</button>
-          <p id="dailyTarotFootnote" class="text-[9px] text-white/70">Карта останется с тобой до конца дня</p>
-        </div>
-        <div id="dailyTarotHistory" class="space-y-2"></div>
+      <!-- Future Self: scripting -->
+
+
+      <div>
+        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Письмо в будущее</span>
+        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Мой Идеальный День</h2>
       </div>
+
+      <!-- Ambient Audio Focus Player -->
+      <div class="glass-card rounded-2xl p-3 border border-blush flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+          <button onclick="toggleAmbientAudio()" class="w-9 h-9 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-sm">
+            <i id="ambientIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
+          </button>
+          <div>
+            <p class="text-xs font-bold text-mauve">Атмосфера Сосредоточения</p>
+            <p id="ambientStatus" class="text-[10px] text-mauve-light">Мягкие медитативные волны</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Questionnaire Wizard -->
+      <div class="space-y-3">
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Как выглядит твой идеальный день через 3 года?</label>
+          <textarea id="idealDayText" rows="3" placeholder="Я просыпаюсь в светлой комнате с видом на море..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Кем ты являешься? Каковы твои привычки?</label>
+          <textarea id="identityText" rows="2" placeholder="Я уверенная, спокойная, занимаюсь любимым делом..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Что ты оставляешь в прошлом?</label>
+          <textarea id="leavingBehindText" rows="2" placeholder="Страх проявления, сомнения, синдром самозванца..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <button onclick="saveFutureSelfScript()" class="w-full py-3 bg-mauve text-blush-light text-xs font-bold rounded-2xl shadow-md hover:bg-mauve-light transition">
+          Сохранить Видение Будущего ✨
+        </button>
+      </div>
+
+
+
+
+
+
 
       <!-- Daily Affirmation Card -->
       <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
@@ -1304,7 +1229,7 @@
     async function revokeFriendAccess(id){try{await api('/admin/revoke',{telegramId:id});showToast('Доступ отозван');loadFriendUsers();}catch(e){showToast(e.message);}}
     async function loadFriendUsers(){const c=document.getElementById('friendUsersList');try{const data=await api('/admin/users');c.innerHTML=data.users.length?data.users.map(u=>`<div class="flex items-center justify-between bg-milk rounded-xl p-2"><div><b>${escapeHtml(u.name||'Пользователь')}</b><p>ID: ${escapeHtml(u.telegramId)} · ${escapeHtml(u.access)}${u.expiresAt?' · до '+new Date(u.expiresAt).toLocaleDateString('ru-RU'):''}</p></div><button onclick="revokeFriendAccess('${u.telegramId}')" class="text-red-700 underline">Отозвать</button></div>`).join(''):'<p>Пока нет выданных доступов.</p>';}catch(e){c.innerHTML='<p>'+escapeHtml(e.message)+'</p>';}}
     async function simulateTelegramPay(){try{const result=await api('/payments/create-invoice',{plan:'pro_monthly'});if(!result.invoiceLink)throw new Error('Сервер не вернул ссылку на оплату');if(tg?.openInvoice)tg.openInvoice(result.invoiceLink,(status)=>{if(status==='paid'){showToast('Оплата подтверждена. Обновляю доступ…');initAccount();}else if(status==='cancelled')showToast('Оплата отменена');else showToast('Платёж не завершён');});else window.open(result.invoiceLink,'_blank');}catch(e){showToast(e.message || 'Не удалось создать счёт на оплату. Попробуй ещё раз.');}}
-    window.addEventListener('load',async()=>{renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderDailyTarot();const f=appState.futureScript||{};document.getElementById('idealDayText').value=f.idealDay||'';document.getElementById('identityText').value=f.identity||'';document.getElementById('leavingBehindText').value=f.leavingBehind||'';await initAccount();});
+    window.addEventListener('load',async()=>{renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();const f=appState.futureScript||{};document.getElementById('idealDayText').value=f.idealDay||'';document.getElementById('identityText').value=f.identity||'';document.getElementById('leavingBehindText').value=f.leavingBehind||'';await initAccount();});
   </script>
 </body>
 </html>
