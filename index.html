@@ -212,9 +212,7 @@
           <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Vision Board</h2>
         </div>
         <div class="flex space-x-2">
-          <button onclick="openAddElementModal()" class="w-8 h-8 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-md hover:bg-mauve-light transition">
-            <i class="fa-solid fa-plus text-xs"></i>
-          </button>
+          
           <button onclick="exportVisionBoard()" class="w-8 h-8 rounded-full bg-milk border border-blush text-mauve flex items-center justify-center shadow-sm">
             <i class="fa-solid fa-download text-xs"></i>
           </button>
@@ -224,7 +222,6 @@
       <p class="text-[11px] leading-relaxed text-mauve-light">Собирай свою карту из собственных фотографий и образов. Нажми на элемент, чтобы изменить его размер или удалить; перетаскивай, чтобы расположить так, как нравится.</p>
       <div class="flex flex-wrap gap-2">
         <button onclick="document.getElementById('boardPhotoInput').click()" class="px-3 py-2 rounded-xl bg-mauve text-white text-[11px] font-bold"><i class="fa-solid fa-image mr-1"></i> Загрузить фото</button>
-        <button onclick="openAddElementModal()" class="px-3 py-2 rounded-xl bg-white border border-blush text-mauve text-[11px] font-bold">Готовые образы</button>
         <button onclick="addBoardText()" class="px-3 py-2 rounded-xl bg-white border border-blush text-mauve text-[11px] font-bold">Добавить текст</button>
         <input id="boardPhotoInput" type="file" accept="image/*" multiple class="hidden" onchange="handleBoardPhotoUpload(event)">
       </div>
@@ -537,35 +534,20 @@
         </div>
       </div>
 
-      <!-- AUDIO MEDITATION PLAYER -->
-      <div class="glass-card rounded-3xl p-4 border border-blush space-y-3">
-        <h3 class="font-sans text-xs font-bold text-mauve uppercase tracking-wider">Аудио-Визуализации</h3>
-        
-        <div class="bg-milk/80 rounded-2xl p-3 border border-blush space-y-2">
-          <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-mauve text-blush-light flex items-center justify-center text-sm shrink-0">
-              🧘‍♀️
-            </div>
-            <div class="flex-1 min-w-0">
-              <h4 id="meditationTrackTitle" class="text-xs font-bold text-mauve truncate">Встреча с Собой через 5 лет</h4>
-              <p id="meditationTrackDesc" class="text-[10px] text-mauve-light truncate">Глубокое соединение с идеальным Я</p>
-            </div>
-            <button onclick="toggleMeditationPlay()" id="meditationPlayBtn" class="w-8 h-8 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-md shrink-0">
-              <i id="meditationPlayIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
-            </button>
-          </div>
+      <!-- GUIDED AUDIO VISUALIZATIONS -->
+      <div class="glass-card rounded-3xl p-4 border border-blush space-y-4">
+        <div><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Голосовое сопровождение</p><h3 class="font-sans text-base font-extrabold text-mauve mt-1">Аудио-визуализации</h3><p class="text-[10px] text-mauve-light mt-1">Закрой глаза, устройся удобно и следуй за голосом. Темп речи намеренно спокойный.</p></div>
+        <div class="space-y-2">
+          <button id="meditationTrack0" onclick="selectMeditationTrack(0)" class="w-full p-3 rounded-2xl border border-blush bg-milk text-left flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-lg">🌅</span><span class="flex-1"><span class="block text-xs font-bold text-mauve">Встреча с собой через 5 лет</span><span class="block text-[10px] text-mauve-light mt-1">Представь свою жизнь и поговори с будущей собой</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
+          <button id="meditationTrack1" onclick="selectMeditationTrack(1)" class="w-full p-3 rounded-2xl border border-blush bg-white text-left flex items-center gap-3"><span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">🌿</span><span class="flex-1"><span class="block text-xs font-bold text-mauve">Безопасность и внутреннее изобилие</span><span class="block text-[10px] text-mauve-light mt-1">Верни внимание к опоре, ресурсам и возможностям</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
         </div>
-
-        <div class="space-y-1.5">
-          <div onclick="selectMeditationTrack(0)" class="p-2 rounded-xl bg-milk/50 border border-blush/60 flex items-center justify-between cursor-pointer hover:bg-powder/40 transition">
-            <span class="text-xs font-bold text-mauve">1. Встреча с Собой через 5 лет</span>
-            <span class="text-[9px] text-mauve-light font-mono">10 мин</span>
-          </div>
-          <div onclick="selectMeditationTrack(1)" class="p-2 rounded-xl bg-milk/50 border border-blush/60 flex items-center justify-between cursor-pointer hover:bg-powder/40 transition">
-            <span class="text-xs font-bold text-mauve">2. Активация Изобилия</span>
-            <span class="text-[9px] text-mauve-light font-mono">8 мин</span>
-          </div>
+        <div class="rounded-2xl bg-milk/80 border border-blush p-3 space-y-3">
+          <div class="flex items-center gap-3"><span class="w-9 h-9 rounded-full bg-mauve text-blush-light flex items-center justify-center"><i class="fa-solid fa-headphones"></i></span><div class="min-w-0 flex-1"><p id="meditationTrackTitle" class="text-xs font-bold text-mauve">Встреча с собой через 5 лет</p><p id="meditationTrackDesc" class="text-[10px] text-mauve-light mt-1">Мягкая голосовая практика</p></div></div>
+          <p id="meditationVoiceStatus" class="text-[10px] text-mauve-light">Подбираем мягкий женский голос на русском языке…</p>
+          <div class="flex gap-2"><button id="meditationPlayBtn" onclick="toggleMeditationPlay()" class="flex-1 py-3 rounded-xl bg-mauve text-white text-xs font-bold"><i id="meditationPlayIcon" class="fa-solid fa-play mr-2"></i><span id="meditationPlayText">Начать практику</span></button><button onclick="stopMeditation()" class="px-4 rounded-xl bg-white border border-blush text-mauve text-xs font-semibold">Стоп</button></div>
+          <p id="meditationProgress" class="text-[10px] text-mauve-light text-center">Практика готова</p>
         </div>
+        <p class="text-[9px] text-mauve-light leading-relaxed">Голос синтезируется устройством: приложение выберет русский женский вариант, если он доступен. Наличие и звучание голосов зависит от телефона.</p>
       </div>
     </section>
 
@@ -603,18 +585,6 @@
   </nav>
 
   <!-- MODALS -->
-  <div id="addBoardModal" class="fixed inset-0 bg-[#493C36]/55 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-[#F8F5F0] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-[#E9E0D7] space-y-4 max-h-[88vh] overflow-y-auto">
-      <div class="flex justify-between items-center">
-        <div><p class="text-[9px] tracking-[.24em] uppercase text-[#9A8175] font-semibold">FUTURE SELF · INSPO</p><h3 class="font-serif text-xl text-[#493C36]">Собери своё настроение</h3></div>
-        <button onclick="closeModal('addBoardModal')" class="w-8 h-8 rounded-full bg-white text-[#806D63]"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <p class="text-[11px] text-[#8B7A70] leading-relaxed">Эстетичные фотографии для твоей доски — как сохранённые пины: выбирай то, что откликается.</p>
-      <div id="curatedImageFilters" class="flex gap-2 overflow-x-auto pb-1"></div>
-      <div id="curatedImagesGrid" class="grid grid-cols-2 gap-3 max-h-[58vh] overflow-y-auto pr-1"></div>
-    </div>
-  </div>
-
   <div id="addGoalModal" class="fixed inset-0 bg-mauve/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-cream w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-blush space-y-3">
       <div class="flex justify-between items-center">
@@ -767,25 +737,6 @@
     function updateSelectedBoardCaption(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(item){if(item.type==='text')item.text=value;else item.title=value;saveState();renderVisionBoard();}}
     function deleteSelectedBoardItem(){appState.boardElements=appState.boardElements.filter(x=>x.id!==selectedBoardItemId);selectedBoardItemId=null;document.getElementById('boardElementTools').classList.add('hidden');saveState();renderVisionBoard();}
     function addBoardText(){const text=prompt('Напиши фразу или аффирмацию для карты:');if(!text?.trim())return;const id=String(Date.now());appState.boardElements.push({id,type:'text',text:text.trim(),x:20+(appState.boardElements.length%2)*130,y:20+Math.floor(appState.boardElements.length/2)*100,width:150});saveState();renderVisionBoard();selectBoardItem(id);}
-    const curatedBoardImages=[
-      {name:'Тихое утро',category:'Настроение',url:'https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=700&auto=format&fit=crop&q=85',height:190},
-      {name:'Медленный ритм',category:'Настроение',url:'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=700&auto=format&fit=crop&q=85',height:145},
-      {name:'Дом мечты',category:'Пространство',url:'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=700&auto=format&fit=crop&q=85',height:190},
-      {name:'Тёплый интерьер',category:'Пространство',url:'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=700&auto=format&fit=crop&q=85',height:150},
-      {name:'Море и свобода',category:'Путешествия',url:'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=700&auto=format&fit=crop&q=85',height:190},
-      {name:'Уехать к океану',category:'Путешествия',url:'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=700&auto=format&fit=crop&q=85',height:150},
-      {name:'Личный стиль',category:'Стиль',url:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&auto=format&fit=crop&q=85',height:190},
-      {name:'Детали образа',category:'Стиль',url:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700&auto=format&fit=crop&q=85',height:150},
-      {name:'Баланс и забота',category:'Состояние',url:'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=700&auto=format&fit=crop&q=85',height:190},
-      {name:'Своя энергия',category:'Состояние',url:'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=700&auto=format&fit=crop&q=85',height:150},
-      {name:'Дело по любви',category:'Реализация',url:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=700&auto=format&fit=crop&q=85',height:190},
-      {name:'Новая глава',category:'Реализация',url:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&auto=format&fit=crop&q=85',height:150}
-    ];
-    let curatedBoardFilter='Все';
-    function renderCuratedBoardImages(){const grid=document.getElementById('curatedImagesGrid'),filters=document.getElementById('curatedImageFilters');if(!grid||!filters)return;const cats=['Все',...new Set(curatedBoardImages.map(x=>x.category))];filters.innerHTML=cats.map(cat=>'<button onclick="setCuratedBoardFilter(\''+cat+'\')" class="shrink-0 px-3 py-1.5 rounded-full text-[10px] font-semibold '+(curatedBoardFilter===cat?'bg-[#57463F] text-white':'bg-white text-[#806D63] border border-[#E9E0D7]')+'">'+cat+'</button>').join('');const list=curatedBoardFilter==='Все'?curatedBoardImages:curatedBoardImages.filter(x=>x.category===curatedBoardFilter);grid.innerHTML=list.map(item=>'<button onclick="addBoardImage(\''+item.url+'\',\''+item.name+'\')" class="group relative rounded-[1.1rem] overflow-hidden bg-[#E8DED5] text-left shadow-sm"><img loading="lazy" src="'+item.url+'" alt="'+item.name+'" class="w-full object-cover transition duration-500 group-hover:scale-105" style="height:'+item.height+'px"><span class="absolute inset-x-0 bottom-0 p-3 pt-8 text-white text-[11px] font-semibold" style="background:linear-gradient(transparent,rgba(35,27,23,.62))">'+item.name+'</span><span class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 text-[#57463F] flex items-center justify-center text-xs">＋</span></button>').join('');}
-    function setCuratedBoardFilter(category){curatedBoardFilter=category;renderCuratedBoardImages();}
-    function openAddElementModal(){curatedBoardFilter='Все';renderCuratedBoardImages();document.getElementById('addBoardModal').classList.remove('hidden');}
-    function addBoardImage(url,title){const width=95+Math.round(Math.random()*55),pos=boardPlacement(width);appState.boardElements.push({id:String(Date.now()+Math.random()),type:'image',url,title,...pos,width,style:Math.random()<.5?'framed':'free'});saveState();renderVisionBoard();closeModal('addBoardModal');showToast('Добавлено на карту!');}
     function handleBoardPhotoUpload(event){const files=Array.from(event.target.files||[]);if(!files.length)return;let done=0;files.forEach(file=>{if(!file.type.startsWith('image/')){done++;return;}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);const data=canvas.toDataURL('image/jpeg',.78),width=95+Math.round(Math.random()*55),pos=boardPlacement(width);appState.boardElements.push({id:String(Date.now()+done+Math.random()),type:'image',url:data,title:file.name.replace(/\.[^.]+$/,''),...pos,width,style:Math.random()<.5?'framed':'free'});done++;if(done===files.length){saveState();renderVisionBoard();showToast('Фотографии добавлены на карту');}};img.onerror=()=>{done++;if(done===files.length)showToast('Не удалось загрузить некоторые фото');};img.src=reader.result;};reader.readAsDataURL(file);});event.target.value='';}
     let breathInterval=null,isBreathingActive=false,activeBreathKey='box',breathHapticsEnabled=true;
     let breathSoundType='forest',breathSoundOn=false;
@@ -921,7 +872,34 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
     function renderFeelings(){const c=document.getElementById('feelingHistoryContainer');if(!c)return;const entries=appState.feelings||[];c.innerHTML=entries.length?entries.map((e,i)=>'<div class="glass-card p-3 rounded-xl border border-blush space-y-2"><div class="flex items-center justify-between gap-2"><p class="text-xs font-bold text-mauve">'+escapeHtml(e.mood||'Состояние')+'</p><p class="text-[9px] text-dusty">'+escapeHtml(e.date||'Дата не указана')+'</p></div>'+(e.note?'<p class="text-xs text-mauve-light whitespace-pre-wrap">'+escapeHtml(e.note)+'</p>':'')+'<div class="flex gap-3 pt-1"><button onclick="editFeelingEntry('+i+')" class="text-[10px] font-bold text-dusty underline">Редактировать</button><button onclick="deleteFeelingEntry('+i+')" class="text-[10px] font-bold text-red-400 underline">Удалить</button></div></div>').join(''):'<p class="text-[10px] text-mauve-light text-center py-3">Пока нет сохранённых записей.</p>';}
     const affirmations=['Я создаю жизнь, в которой мне хорошо.','Мои ежедневные действия приближают меня к важному.','Я могу двигаться к своим целям в собственном темпе.','Я достойна заботы, уважения и возможностей.','Я разрешаю себе расти без спешки и сравнения.','Я выбираю решения, которые поддерживают моё будущее.','Я могу начинать заново столько раз, сколько мне нужно.','Я замечаю возможности и смело делаю шаг навстречу им.','Моя ценность не зависит от чужого одобрения.','Я создаю устойчивость маленькими действиями каждый день.','Я достойна жизни, в которой есть место радости и покою.','Я доверяю себе и учусь слышать собственные желания.'];function renderAffirmation(){const el=document.getElementById('dailyAffirmationText');if(!el)return;if(!appState.dailyAffirmation){appState.dailyAffirmation=affirmations[0];saveState();}el.innerText=appState.dailyAffirmation;}function generateNewAffirmation(){const choices=affirmations.filter(x=>x!==appState.dailyAffirmation);appState.dailyAffirmation=choices[Math.floor(Math.random()*choices.length)];saveState();renderAffirmation();}
     let ambientOn=false;function toggleAmbientAudio(){const a=document.getElementById('ambientAudio');if(ambientOn){a.pause();ambientOn=false;document.getElementById('ambientIcon').className='fa-solid fa-play text-xs ml-0.5';document.getElementById('ambientStatus').innerText='Пауза';}else{a.play().then(()=>{ambientOn=true;document.getElementById('ambientIcon').className='fa-solid fa-pause text-xs';document.getElementById('ambientStatus').innerText='Воспроизведение';}).catch(()=>showToast('Не удалось запустить аудио'));}}
-    const tracks=[['Встреча с Собой через 5 лет','Глубокое соединение с идеальным Я'],['Активация Изобилия','Практика фокуса на возможностях']];let selectedTrack=0;function selectMeditationTrack(i){selectedTrack=i;document.getElementById('meditationTrackTitle').innerText=tracks[i][0];document.getElementById('meditationTrackDesc').innerText=tracks[i][1];showToast('Трек выбран. Добавь аудиофайл для воспроизведения.');}function toggleMeditationPlay(){showToast('Для воспроизведения медитации нужно подключить аудиофайл.');}
+    const meditationTracks=[
+      {title:'Встреча с собой через 5 лет',desc:'Мягкая практика знакомства с будущей собой',parts:[
+        'Сделай спокойный вдох… и медленный выдох. Устройся так, чтобы телу было удобно. Тебе не нужно ничего доказывать и никуда спешить. Если захочется, просто прикрой глаза.',
+        'Представь, что прошло пять лет. Ты просыпаешься в своей жизни. Не пытайся сделать картинку идеальной. Заметь первое, что появляется: свет за окном, пространство вокруг, звуки, ощущение в теле.',
+        'Посмотри на себя в этой будущей жизни. Как ты держишься? Как разговариваешь с собой? Что стало для тебя привычной заботой, а что больше не занимает столько места в мыслях?',
+        'Представь, что будущая ты садится рядом. В ней нет осуждения. Она знает, через что тебе пришлось пройти, и не требует от тебя мгновенных перемен.',
+        'Спроси её: какой один небольшой шаг действительно приблизит меня к этой жизни? Не ищи грандиозный ответ. Позволь появиться простой мысли, слову или ощущению.',
+        'Поблагодари себя будущую за эту встречу. Сделай вдох, почувствуй опору под телом и возвращай внимание в комнату. Когда будешь готова, мягко открой глаза. Запомни один шаг, который хочешь сделать.'
+      ]},
+      {title:'Безопасность и внутреннее изобилие',desc:'Практика опоры, ресурсов и возможностей',parts:[
+        'Найди удобное положение. Почувствуй, как поверхность поддерживает твоё тело. Медленно вдохни… и спокойно выдохни. Сейчас не нужно решать все вопросы сразу.',
+        'Вспомни место, реальное или воображаемое, где тебе спокойно. Рассмотри его в деталях: какой там свет, какие цвета, какая температура воздуха. Позволь этому образу стать немного яснее.',
+        'Переведи внимание на то, что уже есть в твоей жизни. Навыки, опыт, люди, идеи, способность учиться и начинать снова. Не обесценивай небольшое. Ресурс не всегда выглядит как что-то большое.',
+        'Представь, что перед тобой открывается несколько дорог. Не обязательно выбирать все. Какая из них вызывает тихий интерес? Какое действие может сделать эту возможность чуть реальнее?',
+        'Скажи себе: я могу замечать возможности и проверять их маленькими шагами. Мне не нужно контролировать всё будущее, чтобы двигаться вперёд.',
+        'Сделай ещё один спокойный вдох и выдох. Почувствуй опору под собой. Возвращайся в настоящий момент и возьми с собой одну мысль, которая поддерживает тебя.'
+      ]}
+    ];
+    let selectedTrack=0,meditationPartIndex=0,meditationVoice=null,meditationVoicesReady=false;
+    function getRussianVoice(){if(!('speechSynthesis' in window))return null;const voices=window.speechSynthesis.getVoices()||[];const ru=voices.filter(v=>/^ru([_-]|$)/i.test(v.lang||''));const femaleHints=/female|жен|milena|алёна|alena|alyona|ирина|irina|анна|anna|катя|katya|светлана|svetlana|юлия|yulia|олга|olga/i;return ru.find(v=>femaleHints.test(v.name||''))||ru.find(v=>/google/i.test(v.name||''))||ru[0]||null;}
+    function refreshMeditationVoice(){meditationVoice=getRussianVoice();meditationVoicesReady=true;const status=document.getElementById('meditationVoiceStatus');if(status)status.innerText=meditationVoice?'Голос: '+meditationVoice.name+' · '+meditationVoice.lang+' (мягкий темп)':'Русский голос не найден. Проверь, доступны ли русские голоса в настройках устройства.';}
+    if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=refreshMeditationVoice;setTimeout(refreshMeditationVoice,300);}
+    function selectMeditationTrack(i){if(!meditationTracks[i])return;if('speechSynthesis' in window)window.speechSynthesis.cancel();selectedTrack=i;meditationPartIndex=0;document.getElementById('meditationTrackTitle').innerText=meditationTracks[i].title;document.getElementById('meditationTrackDesc').innerText=meditationTracks[i].desc;[0,1].forEach(n=>{const b=document.getElementById('meditationTrack'+n);if(b)b.className='w-full p-3 rounded-2xl border '+(n===i?'border-blush bg-milk':'border-blush bg-white')+' text-left flex items-center gap-3';});document.getElementById('meditationProgress').innerText='Практика готова';document.getElementById('meditationPlayText').innerText='Начать практику';document.getElementById('meditationPlayIcon').className='fa-solid fa-play mr-2';}
+    function updateMeditationProgress(){const t=meditationTracks[selectedTrack];const p=document.getElementById('meditationProgress');if(p)p.innerText='Часть '+(meditationPartIndex+1)+' из '+t.parts.length;}
+    function speakMeditationPart(){const t=meditationTracks[selectedTrack];if(meditationPartIndex>=t.parts.length){meditationPlaying=false;document.getElementById('meditationProgress').innerText='Практика завершена. Побудь немного в тишине.';document.getElementById('meditationPlayText').innerText='Повторить практику';document.getElementById('meditationPlayIcon').className='fa-solid fa-rotate mr-2';return;}const utterance=new SpeechSynthesisUtterance(t.parts[meditationPartIndex]);utterance.lang='ru-RU';utterance.rate=0.82;utterance.pitch=1.08;utterance.volume=0.92;if(meditationVoice)utterance.voice=meditationVoice;utterance.onstart=updateMeditationProgress;utterance.onend=()=>{meditationPartIndex++;if(meditationPartIndex<t.parts.length){const pause=window.setTimeout(()=>{if(meditationPlaying)speakMeditationPart();},1800);meditationPauseTimer=pause;}else{speakMeditationPart();}};utterance.onerror=()=>{meditationPlaying=false;document.getElementById('meditationPlayText').innerText='Попробовать снова';showToast('Не удалось воспроизвести голос на этом устройстве');};window.speechSynthesis.speak(utterance);}
+    let meditationPlaying=false,meditationPauseTimer=null;
+    function toggleMeditationPlay(){if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){showToast('Голосовое воспроизведение не поддерживается в этом окне.');return;}if(window.speechSynthesis.paused){window.speechSynthesis.resume();meditationPlaying=true;document.getElementById('meditationPlayText').innerText='Пауза';document.getElementById('meditationPlayIcon').className='fa-solid fa-pause mr-2';return;}if(meditationPlaying){window.speechSynthesis.pause();meditationPlaying=false;clearTimeout(meditationPauseTimer);document.getElementById('meditationPlayText').innerText='Продолжить';document.getElementById('meditationPlayIcon').className='fa-solid fa-play mr-2';return;}if(meditationPartIndex>=meditationTracks[selectedTrack].parts.length)meditationPartIndex=0;refreshMeditationVoice();meditationPlaying=true;document.getElementById('meditationPlayText').innerText='Пауза';document.getElementById('meditationPlayIcon').className='fa-solid fa-pause mr-2';speakMeditationPart();}
+    function stopMeditation(){if('speechSynthesis' in window)window.speechSynthesis.cancel();clearTimeout(meditationPauseTimer);meditationPlaying=false;meditationPartIndex=0;document.getElementById('meditationPlayText').innerText='Начать практику';document.getElementById('meditationPlayIcon').className='fa-solid fa-play mr-2';document.getElementById('meditationProgress').innerText='Практика остановлена';}
     function exportVisionBoard(){if(!window.html2canvas){showToast('Экспорт временно недоступен');return;}html2canvas(document.getElementById('visionCanvasContainer')).then(canvas=>{const a=document.createElement('a');a.download='future-self-vision-board.png';a.href=canvas.toDataURL('image/png');a.click();}).catch(()=>showToast('Не удалось экспортировать карту'));}
     async function openAdminPanel(){if(!isAdmin){showToast('Нет прав администратора');return;}document.getElementById('adminModal').classList.remove('hidden');loadFriendUsers();}
     async function createAccessInvite(){const days=Number(document.getElementById('friendDuration').value);try{const result=await api('/admin/invites',{durationDays:days});document.getElementById('createdInviteUrl').value=result.inviteUrl;document.getElementById('inviteLinkResult').classList.remove('hidden');showToast('Новая ссылка создана');}catch(e){showToast(e.message);}}
