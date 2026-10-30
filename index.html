@@ -291,6 +291,11 @@
           <span class="flex-1"><span class="block text-xs font-bold text-mauve">Дневник благодарности</span><span class="block text-[10px] text-mauve-light mt-1">Три вещи, за которые ты благодарна сегодня</span></span>
           <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
         </button>
+        <button onclick="openDailySection('letter')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
+          <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">✉</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Послание себе в будущее</span><span class="block text-[10px] text-mauve-light mt-1">Опиши жизнь, к которой стремишься</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
         <button onclick="openDailySection('feelings')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
           <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">☁</span>
           <span class="flex-1"><span class="block text-xs font-bold text-mauve">Дневник чувств</span><span class="block text-[10px] text-mauve-light mt-1">Отметь своё состояние и сохрани мысли</span></span>
@@ -369,6 +374,35 @@
     
 
 
+      </div>
+
+      <div id="dailySection-letter" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <div>
+          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Твоя будущая жизнь</span>
+          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Послание себе</h2>
+          <p class="text-[11px] text-mauve-light mt-1">Представь себя через три года и запиши, какой стала твоя жизнь.</p>
+        </div>
+        <div class="glass-card rounded-2xl p-3 border border-blush flex items-center gap-3">
+          <span class="w-9 h-9 rounded-full bg-milk flex items-center justify-center text-mauve">♫</span>
+          <div><p class="text-xs font-bold text-mauve">Тихое пространство</p><p class="text-[10px] text-mauve-light">Останься наедине со своими мыслями</p></div>
+        </div>
+        <div class="space-y-3">
+          <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+            <label class="block text-xs font-bold text-mauve">Как выглядит твой идеальный день через 3 года?</label>
+            <textarea id="idealDayText" rows="3" placeholder="Я просыпаюсь в месте, где мне хорошо..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none resize-none"></textarea>
+          </div>
+          <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+            <label class="block text-xs font-bold text-mauve">Кем ты стала? Как живёшь и что чувствуешь?</label>
+            <textarea id="identityText" rows="2" placeholder="Мои привычки, отношения, работа, внутреннее состояние..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none resize-none"></textarea>
+          </div>
+          <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+            <label class="block text-xs font-bold text-mauve">Что ты оставила в прошлом?</label>
+            <textarea id="leavingBehindText" rows="2" placeholder="Страхи, сомнения, привычки, которые больше не нужны..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none resize-none"></textarea>
+          </div>
+          <button onclick="saveFutureSelfScript()" class="w-full py-3 bg-mauve text-blush-light text-xs font-bold rounded-2xl shadow-md">Сохранить послание ✨</button>
+        </div>
+        <div id="futureScriptHistory" class="space-y-3"></div>
       </div>
 
       <div id="dailySection-pause" class="hidden space-y-4">
@@ -910,7 +944,7 @@
     function removeFavorite(index){appState.favorites.splice(index,1);saveState();renderFavorites();renderGratitude();renderFeelings();}
     let activityMonth=new Date();
     function changeActivityMonth(delta){activityMonth=new Date(activityMonth.getFullYear(),activityMonth.getMonth()+delta,1);renderActivityCalendar();}
-    function activityDateSet(){const dates=new Set();const add=x=>{const d=String(x.createdAt||'').slice(0,10);if(/^\d{4}-\d{2}-\d{2}$/.test(d))dates.add(d);};['gratitudes','feelings','fillsMe','timeCapsules'].forEach(k=>(appState[k]||[]).forEach(add));Object.keys(appState.dailyQuestionAnswers||{}).forEach(d=>dates.add(d));return dates;}
+    function activityDateSet(){const dates=new Set();const add=x=>{const d=String(x.createdAt||'').slice(0,10);if(/^\d{4}-\d{2}-\d{2}$/.test(d))dates.add(d);};['gratitudes','feelings','futureScriptHistory','fillsMe','timeCapsules'].forEach(k=>(appState[k]||[]).forEach(add));Object.keys(appState.dailyQuestionAnswers||{}).forEach(d=>dates.add(d));return dates;}
     function renderActivityCalendar(){const grid=document.getElementById('activityCalendarGrid');if(!grid)return;const y=activityMonth.getFullYear(),m=activityMonth.getMonth(),first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),offset=(first.getDay()+6)%7,active=activityDateSet(),today=localDayKey();document.getElementById('activityMonthTitle').textContent=first.toLocaleDateString('ru-RU',{month:'long',year:'numeric'});let html='';for(let i=0;i<offset;i++)html+='<span></span>';for(let day=1;day<=days;day++){const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0'),yes=active.has(key);html+='<div class="py-2 rounded-lg text-[11px] '+(yes?'bg-blush text-mauve font-extrabold':'text-mauve-light')+(key===today?' ring-1 ring-mauve':'')+'">'+day+(yes?'<span class="block text-[7px]">•</span>':'<span class="block text-[7px]">&nbsp;</span>')+'</div>';}grid.innerHTML=html;document.getElementById('activityCalendarSummary').textContent='Активных дней в этом месяце: '+[...active].filter(d=>d.startsWith(y+'-'+String(m+1).padStart(2,'0'))).length;}
     let shareCardTheme='rose';
     function setShareCardTheme(theme){shareCardTheme=theme;renderShareCard();}
@@ -949,6 +983,7 @@
       if (key === 'affirmation') renderAffirmation();
       if (key === 'gratitude') renderGratitude();
       if (key === 'feelings') renderFeelings();
+      if (key === 'letter') renderFutureScriptHistory();
       if (key === 'question') renderQuestionOfDay();
       if (key === 'capsule') renderTimeCapsules();
       if (key === 'fills') renderFillsMe();
@@ -1007,6 +1042,44 @@
     function toggleGoal(id){const g=appState.goals.find(x=>x.id===id);if(g){g.completed=!g.completed;saveState();renderGoals();}}
     function openAddGoalModal(){document.getElementById('addGoalModal').classList.remove('hidden');} function openPremiumModal(){document.getElementById('premiumModal').classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');}
     function saveNewGoal(){const title=document.getElementById('goalTitleInput').value.trim(),cat=document.getElementById('goalCategorySelect').value;if(!title)return;appState.goals.push({id:String(Date.now()),title,cat,completed:false});saveState();renderGoals();document.getElementById('goalTitleInput').value='';closeModal('addGoalModal');showToast('Цель добавлена!');}
+    let editingFutureLetterId=null;
+    function saveFutureSelfScript(){
+      const fields=['idealDayText','identityText','leavingBehindText'];
+      const entry={id:editingFutureLetterId||('future-'+Date.now()),createdAt:new Date().toISOString(),idealDay:document.getElementById('idealDayText').value.trim(),identity:document.getElementById('identityText').value.trim(),leavingBehind:document.getElementById('leavingBehindText').value.trim()};
+      if(!entry.idealDay&&!entry.identity&&!entry.leavingBehind){showToast('Заполни хотя бы одно поле');return;}
+      appState.futureScriptHistory=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+      const existing=appState.futureScriptHistory.findIndex(x=>String(x.id)===String(editingFutureLetterId));
+      if(existing>=0){entry.createdAt=appState.futureScriptHistory[existing].createdAt||entry.createdAt;appState.futureScriptHistory[existing]=entry;showToast('Послание обновлено');}
+      else{appState.futureScriptHistory.unshift(entry);appState.futureScriptHistory=appState.futureScriptHistory.slice(0,100);showToast('Послание сохранено');}
+      editingFutureLetterId=null;fields.forEach(id=>document.getElementById(id).value='');
+      const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить послание ✨';
+      saveState();renderFutureScriptHistory();
+    }
+    function editFutureLetter(id){const entry=(appState.futureScriptHistory||[]).find(x=>String(x.id)===String(id));if(!entry)return;editingFutureLetterId=String(entry.id);document.getElementById('idealDayText').value=entry.idealDay||'';document.getElementById('identityText').value=entry.identity||'';document.getElementById('leavingBehindText').value=entry.leavingBehind||'';const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить изменения ✨';document.getElementById('dailySection-letter').scrollIntoView({behavior:'smooth',block:'start'});}
+    function deleteFutureLetter(id){
+      const key=String(id),before=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+      const next=before.filter(entry=>String(entry.id)!==key);
+      if(next.length===before.length){showToast('Это послание уже удалено');renderFutureScriptHistory();return;}
+      const removed=before.find(entry=>String(entry.id)===key);
+      appState.futureScriptHistory=next;
+      appState.favorites=(appState.favorites||[]).filter(f=>!(f.type==='Послание себе в будущее'&&String(f.id)===key));
+      if(editingFutureLetterId===key){editingFutureLetterId=null;['idealDayText','identityText','leavingBehindText'].forEach(id=>document.getElementById(id).value='');}
+      try{localStorage.setItem(storageKey,JSON.stringify(appState));const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');if((saved.futureScriptHistory||[]).some(entry=>String(entry.id)===key)){appState.futureScriptHistory=before;showToast('Не удалось удалить. Попробуй ещё раз');return;}}catch(e){appState.futureScriptHistory=before;showToast('Не удалось сохранить удаление');return;}
+      const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить послание ✨';
+      renderFutureScriptHistory();showToast('Послание удалено');
+    }
+    function toggleFutureLetterFavorite(id){const e=(appState.futureScriptHistory||[]).find(x=>String(x.id)===String(id));if(!e)return;const body=[e.idealDay,e.identity,e.leavingBehind].filter(Boolean).join('\n\n');toggleFavorite('Послание себе в будущее',e.id,'Послание себе в будущее',body,e.createdAt||'');}
+    function renderFutureScriptHistory(){
+      const c=document.getElementById('futureScriptHistory');if(!c)return;
+      const entries=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+      c.innerHTML=entries.length?'<div class="pt-2"><h3 class="text-sm font-extrabold text-mauve">Сохранённые послания</h3><p class="text-[10px] text-mauve-light mt-1">Каждое хранится отдельно. Ненужное можно удалить.</p></div>'+entries.map(entry=>{
+        const date=entry.createdAt?new Date(entry.createdAt):null;
+        const dateLabel=date&&!Number.isNaN(date.getTime())?date.toLocaleString('ru-RU',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Дата не указана';
+        const fields=[['Идеальный день',entry.idealDay],['Моя будущая версия',entry.identity],['Что осталось в прошлом',entry.leavingBehind]].filter(x=>x[1]);
+        const id=String(entry.id||'');
+        return '<details class="glass-card rounded-2xl border border-blush p-3"><summary class="cursor-pointer list-none flex items-center justify-between gap-2"><span class="text-xs font-bold text-mauve">'+escapeHtml(dateLabel)+'</span><i class="fa-solid fa-chevron-down text-[10px] text-dusty"></i></summary><div class="space-y-3 mt-3">'+fields.map(([label,value])=>'<div><p class="text-[10px] font-bold text-dusty mb-1">'+escapeHtml(label)+'</p><p class="text-xs leading-relaxed text-mauve whitespace-pre-wrap">'+escapeHtml(value)+'</p></div>').join('')+'<div class="flex items-center justify-end gap-2 pt-1"><button type="button" onclick="toggleFutureLetterFavorite(\''+escapeHtml(id)+'\')" aria-label="В избранное" class="w-8 h-8 rounded-full bg-milk border border-blush text-dusty">♡</button><button type="button" onclick="editFutureLetter(\''+escapeHtml(id)+'\')" aria-label="Редактировать" class="w-8 h-8 rounded-full bg-milk border border-blush text-dusty"><i class="fa-solid fa-pen text-xs"></i></button><button type="button" onclick="deleteFutureLetter(\''+escapeHtml(id)+'\')" aria-label="Удалить" class="w-8 h-8 rounded-full bg-white border border-red-100 text-red-400"><i class="fa-regular fa-trash-can"></i></button></div></div></details>';
+      }).join(''):'<div class="glass-card rounded-2xl p-4 border border-blush text-center"><p class="text-xs font-bold text-mauve">Пока здесь пусто</p><p class="text-[10px] text-mauve-light mt-1">Сохрани первое послание себе в будущее.</p></div>';
+    }
     const tarotMajors = [
       ['Шут','Свобода начинается там, где ты перестаёшь требовать от себя гарантий. Необязательно знать весь маршрут, чтобы сделать первый шаг.','Заметь, где любопытство сильнее страха, а где ты называешь страх здравым смыслом.','Что бы ты попробовала, если бы не требовала от себя идеального результата?','✧'],
       ['Маг','У тебя уже есть больше инструментов, чем ты себе засчитываешь. Сейчас вопрос не в ещё одной подготовке, а в том, как ты распорядишься тем, что есть.','Где ты ждёшь разрешения, хотя можешь начать сама?','Какой один ресурс я могу использовать уже сегодня?','✦'],
