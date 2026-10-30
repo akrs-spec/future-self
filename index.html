@@ -827,10 +827,21 @@
     }
     async function loadCloudState() {
       if(!initData)return;
+      const localDeletedIds=Array.isArray(appState.deletedFutureLetterIds)?appState.deletedFutureLetterIds.map(String):[];
       const data=await api('/state');
       if(data.state&&typeof data.state==='object'&&!Array.isArray(data.state)){
-        appState={...DEFAULT_STATE,...data.state,user:{...DEFAULT_STATE.user,...(data.state.user||{})}};
+        const remote=data.state;
+        const deletedIds=[...new Set([...localDeletedIds,...(Array.isArray(remote.deletedFutureLetterIds)?remote.deletedFutureLetterIds.map(String):[])])];
+        appState={...DEFAULT_STATE,...remote,user:{...DEFAULT_STATE.user,...(remote.user||{})}};
+        appState.deletedFutureLetterIds=deletedIds;
+        appState.futureScriptHistory=(Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[]).filter(entry=>!deletedIds.includes(String(entry.id)));
+        appState.futureScript={idealDay:'',identity:'',leavingBehind:''};
+        appState.futureScriptLegacyMigrationDone=true;
         try{localStorage.setItem(storageKey,JSON.stringify(appState));}catch(e){console.warn('Local cache unavailable:',e);}
+        if(JSON.stringify(deletedIds)!==JSON.stringify(remote.deletedFutureLetterIds||[])||(remote.futureScript||{}).idealDay||(remote.futureScript||{}).identity||(remote.futureScript||{}).leavingBehind||(remote.futureScriptHistory||[]).some(entry=>deletedIds.includes(String(entry.id)))){
+          cloudStateReady=true;
+          scheduleCloudStateSave();
+        }
       }
       cloudStateReady=true;
       if(!data.state){
@@ -1124,6 +1135,9 @@
       const next=before.filter(entry=>String(entry.id)!==key);
       if(next.length===before.length){showToast('Это послание уже удалено');renderFutureScriptHistory();return;}
       appState.futureScriptHistory=next;
+      appState.deletedFutureLetterIds=Array.isArray(appState.deletedFutureLetterIds)?appState.deletedFutureLetterIds.map(String):[];
+      if(!appState.deletedFutureLetterIds.includes(key))appState.deletedFutureLetterIds.push(key);
+      appState.futureScriptLegacyMigrationDone=true;
       appState.futureScript={idealDay:'',identity:'',leavingBehind:''};
       appState.favorites=(appState.favorites||[]).filter(f=>!(f.type==='Послание себе в будущее'&&String(f.id)===key));
       if(editingFutureLetterId===key){editingFutureLetterId=null;['idealDayText','identityText','leavingBehindText'].forEach(id=>document.getElementById(id).value='');}
@@ -1362,11 +1376,16 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
       if(telegramUser){appState.user=appState.user||{};appState.user.name=telegramUser.first_name||'Пользователь';}
       setAccess(accessRole);
       appState.futureScriptHistory=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+      appState.deletedFutureLetterIds=Array.isArray(appState.deletedFutureLetterIds)?appState.deletedFutureLetterIds.map(String):[];
       const f=appState.futureScript||{};
-      if(!appState.futureScriptHistory.length&&(f.idealDay||f.identity||f.leavingBehind)){
-        appState.futureScriptHistory.push({id:'legacy-future-script',legacy:true,idealDay:f.idealDay||'',identity:f.identity||'',leavingBehind:f.leavingBehind||''});
+      if(!appState.futureScriptLegacyMigrationDone){
+        if(!appState.futureScriptHistory.length&&(f.idealDay||f.identity||f.leavingBehind)&&!appState.deletedFutureLetterIds.includes('legacy-future-script')){
+          appState.futureScriptHistory.push({id:'legacy-future-script',legacy:true,idealDay:f.idealDay||'',identity:f.identity||'',leavingBehind:f.leavingBehind||''});
+        }
+        appState.futureScriptLegacyMigrationDone=true;
+        appState.futureScript={idealDay:'',identity:'',leavingBehind:''};
+        saveState();
       }
-      if(f.idealDay||f.identity||f.leavingBehind){appState.futureScript={idealDay:'',identity:'',leavingBehind:''};saveState();}
       renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();renderFateBall();renderFutureScriptHistory();
     });
   </script>
