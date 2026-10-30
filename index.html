@@ -232,17 +232,12 @@
       </div>
       <div id="boardElementTools" class="hidden glass-card rounded-xl p-3 border border-blush space-y-2">
         <div class="flex items-center justify-between"><span id="selectedBoardItemName" class="text-[11px] font-bold text-mauve">Элемент выбран</span><button onclick="deleteSelectedBoardItem()" class="text-[11px] text-red-700 font-bold">Удалить</button></div>
-        <label class="block text-[10px] text-mauve-light">Размер изображения</label>
-        <input id="boardSizeControl" type="range" min="55" max="260" value="135" class="w-full" oninput="resizeSelectedBoardItem(this.value)">
         <div id="boardImageStyleTools" class="hidden space-y-1">
           <label class="block text-[10px] text-mauve-light">Оформление</label>
           <div class="grid grid-cols-2 gap-2">
             <button id="boardStyleFramed" onclick="setSelectedBoardStyle('framed')" class="px-2 py-2 rounded-lg bg-mauve text-white text-[10px] font-bold">С рамкой</button>
             <button id="boardStyleFree" onclick="setSelectedBoardStyle('free')" class="px-2 py-2 rounded-lg bg-white border border-blush text-mauve text-[10px] font-bold">Без рамки</button>
           </div>
-          <label class="block text-[10px] text-mauve-light">Поворот: <span id="boardRotationValue">0°</span></label>
-          <input id="boardRotationControl" type="range" min="-180" max="180" value="0" class="w-full" oninput="rotateSelectedBoardItem(this.value)">
-          <div class="flex justify-between text-[9px] text-mauve-light"><span>−180°</span><button onclick="rotateSelectedBoardItem(0)" class="underline">Сбросить</button><span>+180°</span></div>
         </div>
         <input id="boardCaptionControl" type="text" placeholder="Подпись или аффирмация" class="w-full bg-white border border-blush rounded-lg px-3 py-2 text-xs text-mauve" oninput="updateSelectedBoardCaption(this.value)">
       </div>
