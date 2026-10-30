@@ -386,48 +386,6 @@
       </div>
     </section>
 
-    <!-- 5. AI VISION ASSISTANT SECTION -->
-    <section id="tab-ai" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center">
-        <div>
-          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">AI Наставник</span>
-          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">AI Assistant</h2>
-        </div>
-        <span class="px-2.5 py-1 bg-powder text-dusty text-[10px] font-bold rounded-full border border-blush">AI • PRO</span>
-      </div>
-
-      <p class="text-[11px] text-mauve-light">Персональный помощник по целям, привычкам и планированию. Ответы появятся после подключения защищённого AI-сервера.</p>
-      <!-- Quick AI Prompts -->
-      <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
-        <button onclick="sendQuickPrompt('Составь пошаговый план достижения цели на 30 дней')" class="px-3 py-1.5 bg-milk border border-blush rounded-xl text-xs text-mauve font-medium shrink-0">
-          🗓️ План на 30 дней
-        </button>
-        <button onclick="sendQuickPrompt('Переформулируй мой страх в силу и аффирмацию')" class="px-3 py-1.5 bg-milk border border-blush rounded-xl text-xs text-mauve font-medium shrink-0">
-          ✨ Трансформация страха
-        </button>
-      </div>
-
-      <!-- Chat Container -->
-      <div class="glass-card rounded-2xl p-4 border border-blush h-[360px] flex flex-col justify-between shadow-inner">
-        <div id="chatMessages" class="overflow-y-auto space-y-3 pr-1 text-xs">
-          <div class="flex items-start space-x-2.5">
-            <div class="w-7 h-7 rounded-full bg-mauve text-blush-light flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
-            <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-blush text-mauve space-y-1">
-              <p class="font-bold">Привет! Я твой AI-архитектор будущего.</p>
-              <p class="text-mauve-light">Расскажи о своей цели, и я составлю план её достижения.</p>
-            </div>
-          </div>
-        </div>
-
-        <form onsubmit="handleAIChatSubmit(event)" class="mt-3 flex items-center space-x-2">
-          <input id="aiChatInput" type="text" placeholder="Спроси ИИ о своей цели..." class="flex-1 bg-cream border border-blush rounded-xl px-3 py-2 text-xs text-mauve focus:outline-none focus:border-dusty">
-          <button type="submit" class="w-8 h-8 rounded-xl bg-mauve text-blush-light flex items-center justify-center shrink-0 shadow-md">
-            <i class="fa-solid fa-paper-plane text-xs"></i>
-          </button>
-        </form>
-      </div>
-    </section>
-
     <!-- 6. DAILY INSPIRATION & JOURNAL -->
     <section id="tab-daily" class="tab-content hidden space-y-4">
       <div>
@@ -499,10 +457,7 @@
       <i class="fa-solid fa-wind text-base"></i>
       <span class="text-[9px] font-bold mt-1">Практики</span>
     </button>
-    <button onclick="switchTab('ai')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="ai">
-      <i class="fa-solid fa-robot text-base"></i>
-      <span class="text-[9px] font-bold mt-1">ИИ</span>
-    </button>
+    
     <button onclick="switchTab('daily')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="daily">
       <i class="fa-solid fa-book-open text-base"></i>
       <span class="text-[9px] font-bold mt-1">Дневник</span>
@@ -683,9 +638,7 @@
     const affirmations=['Я создаю жизнь, в которой мне хорошо.','Мои ежедневные действия приближают меня к важному.','Я могу двигаться к своим целям в собственном темпе.','Я достойна заботы, уважения и возможностей.'];function generateNewAffirmation(){document.getElementById('dailyAffirmationText').innerText='“'+affirmations[Math.floor(Math.random()*affirmations.length)]+'”';}
     let ambientOn=false;function toggleAmbientAudio(){const a=document.getElementById('ambientAudio');if(ambientOn){a.pause();ambientOn=false;document.getElementById('ambientIcon').className='fa-solid fa-play text-xs ml-0.5';document.getElementById('ambientStatus').innerText='Пауза';}else{a.play().then(()=>{ambientOn=true;document.getElementById('ambientIcon').className='fa-solid fa-pause text-xs';document.getElementById('ambientStatus').innerText='Воспроизведение';}).catch(()=>showToast('Не удалось запустить аудио'));}}
     const tracks=[['Встреча с Собой через 5 лет','Глубокое соединение с идеальным Я'],['Активация Изобилия','Практика фокуса на возможностях']];let selectedTrack=0;function selectMeditationTrack(i){selectedTrack=i;document.getElementById('meditationTrackTitle').innerText=tracks[i][0];document.getElementById('meditationTrackDesc').innerText=tracks[i][1];showToast('Трек выбран. Добавь аудиофайл для воспроизведения.');}function toggleMeditationPlay(){showToast('Для воспроизведения медитации нужно подключить аудиофайл.');}
-    function sendQuickPrompt(text){document.getElementById('aiChatInput').value=text;document.getElementById('aiChatInput').focus();}
-    async function handleAIChatSubmit(event){event.preventDefault();const input=document.getElementById('aiChatInput'),message=input.value.trim();if(!message)return;appendChat('Ты',message);input.value='';try{const result=await api('/ai/chat',{message,history:appState.aiHistory||[]});const reply=result.reply||'Сервер не вернул ответ.';appendChat('FUTURE AI',reply);appState.aiHistory=[...(appState.aiHistory||[]),{role:'user',content:message},{role:'assistant',content:reply}].slice(-30);saveState();}catch(e){appendChat('FUTURE AI', 'Ошибка подключения: '+(e?.message || 'неизвестная ошибка')+'. Пришли мне этот текст, и я исправлю причину.');}}
-    function appendChat(who,msg){const c=document.getElementById('chatMessages'),d=document.createElement('div');d.className='bg-white p-3 rounded-2xl border border-blush text-mauve';d.innerHTML=`<b>${escapeHtml(who)}</b><p class="mt-1">${escapeHtml(msg)}</p>`;c.appendChild(d);c.scrollTop=c.scrollHeight;}
+    function handleAIChatSubmit(event){event.preventDefault();const input=document.getElementById('aiChatInput'),message=input.value.trim();if(!message)return;appendChat('Ты',message);input.value='';try{const result=await api('/ai/chat',{message,history:appState.aiHistory||[]});const reply=result.reply||'Сервер не вернул ответ.';appendChat('FUTURE AI',reply);appState.aiHistory=[...(appState.aiHistory||[]),{role:'user',content:message},{role:'assistant',content:reply}].slice(-30);saveState();}catch(e){appendChat('FUTURE AI', 'Ошибка подключения: '+(e?.message || 'неизвестная ошибка')+'. Пришли мне этот текст, и я исправлю причину.');}}
     function exportVisionBoard(){if(!window.html2canvas){showToast('Экспорт временно недоступен');return;}html2canvas(document.getElementById('visionCanvasContainer')).then(canvas=>{const a=document.createElement('a');a.download='future-self-vision-board.png';a.href=canvas.toDataURL('image/png');a.click();}).catch(()=>showToast('Не удалось экспортировать карту'));}
     async function openAdminPanel(){if(!isAdmin){showToast('Нет прав администратора');return;}document.getElementById('adminModal').classList.remove('hidden');loadFriendUsers();}
     async function grantFriendAccess(){const id=document.getElementById('friendTelegramId').value.trim(),days=Number(document.getElementById('friendDuration').value);if(!/^\d{5,15}$/.test(id)){showToast('Проверь Telegram ID');return;}try{await api('/admin/grant',{telegramId:id,durationDays:days});document.getElementById('friendTelegramId').value='';showToast('Полный доступ FRIENDS выдан');loadFriendUsers();}catch(e){showToast(e.message);}}
