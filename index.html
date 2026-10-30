@@ -986,11 +986,31 @@
     async function downloadShareCard(){try{const blob=await makeShareCardBlob();if(!blob)throw new Error('Не удалось создать изображение');const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='future-self-card.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);showToast('Карточка сохранена');}catch(e){showToast(e.message);}}
     async function shareShareCard(){try{const blob=await makeShareCardBlob();if(!blob)throw new Error('Не удалось создать изображение');const file=new File([blob],'future-self-card.png',{type:'image/png'});if(navigator.canShare?.({files:[file]})&&navigator.share){await navigator.share({files:[file],title:'FUTURE SELF'});}else{await downloadShareCard();}}catch(e){if(e.name!=='AbortError')showToast('Не удалось открыть меню отправки. Можно сохранить изображение.');}}
 
+    function setDailyPanelVisible(element, visible) {
+      if (!element) return;
+      element.classList.toggle('hidden', !visible);
+      element.hidden = !visible;
+      if (visible) {
+        element.style.removeProperty('display');
+        element.setAttribute('aria-hidden', 'false');
+      } else {
+        element.style.setProperty('display', 'none', 'important');
+        element.setAttribute('aria-hidden', 'true');
+      }
+    }
     function openDailySection(key) {
-      document.getElementById('dailyJournalHome')?.classList.add('hidden');
-      document.getElementById('dailyToolsHome')?.classList.add('hidden');
-      document.querySelectorAll('[id^="dailySection-"]').forEach(section => section.classList.add('hidden'));
-      document.getElementById('dailySection-' + key)?.classList.remove('hidden');
+      const panels = document.querySelectorAll('[id^="dailySection-"]');
+      panels.forEach(panel => setDailyPanelVisible(panel, false));
+      setDailyPanelVisible(document.getElementById('dailyJournalHome'), false);
+      setDailyPanelVisible(document.getElementById('dailyToolsHome'), false);
+
+      const activePanel = document.getElementById('dailySection-' + key);
+      if (!activePanel) {
+        closeDailySection();
+        return;
+      }
+      setDailyPanelVisible(activePanel, true);
+
       if (key === 'card') { renderDailyTarot(); renderFateBall(); }
       if (key === 'affirmation') renderAffirmation();
       if (key === 'gratitude') renderGratitude();
@@ -1007,9 +1027,9 @@
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
     }
     function closeDailySection() {
-      document.querySelectorAll('[id^="dailySection-"]').forEach(section => section.classList.add('hidden'));
-      document.getElementById('dailyJournalHome')?.classList.remove('hidden');
-      document.getElementById('dailyToolsHome')?.classList.remove('hidden');
+      document.querySelectorAll('[id^="dailySection-"]').forEach(panel => setDailyPanelVisible(panel, false));
+      setDailyPanelVisible(document.getElementById('dailyJournalHome'), true);
+      setDailyPanelVisible(document.getElementById('dailyToolsHome'), true);
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
     }
     let selectedBoardItemId=null;
