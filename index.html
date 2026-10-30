@@ -72,7 +72,7 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
-      padding-top: max(8px, env(safe-area-inset-top));
+      padding-top: calc(max(env(safe-area-inset-top), var(--telegram-safe-top, 0px)) + 8px);
     }
 
     body > header {
@@ -560,9 +560,19 @@
       const visualHeight = Number(window.visualViewport?.height || 0);
       const height = telegramHeight > 0 ? telegramHeight : visualHeight > 0 ? visualHeight : window.innerHeight;
       if (height > 0) document.documentElement.style.setProperty('--app-viewport-height', height + 'px');
+
+      // Telegram fullscreen can extend beneath the iPhone status bar/notch.
+      // Respect both device and Telegram content safe areas before placing the header.
+      const deviceTop = Number(tg?.safeAreaInset?.top || 0);
+      const contentTop = Number(tg?.contentSafeAreaInset?.top || 0);
+      const telegramSafeTop = deviceTop + contentTop;
+      document.documentElement.style.setProperty('--telegram-safe-top', telegramSafeTop + 'px');
     }
     syncAppViewportHeight();
     tg?.onEvent?.('viewportChanged', syncAppViewportHeight);
+    tg?.onEvent?.('safeAreaChanged', syncAppViewportHeight);
+    tg?.onEvent?.('contentSafeAreaChanged', syncAppViewportHeight);
+    tg?.onEvent?.('fullscreenChanged', syncAppViewportHeight);
     window.addEventListener('resize', syncAppViewportHeight);
     window.visualViewport?.addEventListener('resize', syncAppViewportHeight);
 
