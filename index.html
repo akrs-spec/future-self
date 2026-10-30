@@ -223,9 +223,101 @@
     </section>
 
     <!-- 2. FUTURE SELF NARRATIVE SCRIPTING -->
+    <section id="tab-daily" class="tab-content hidden space-y-4">
+      <div>
+        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Рефлексия</span>
+        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
+      </div>
 
 
-        <!-- 3. GOAL PLANNER -->
+      <!-- Future Self: scripting -->
+
+      <div>
+        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Письмо в будущее</span>
+        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Мой Идеальный День</h2>
+      </div>
+
+      <!-- Ambient Audio Focus Player -->
+      <div class="glass-card rounded-2xl p-3 border border-blush flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+          <button onclick="toggleAmbientAudio()" class="w-9 h-9 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-sm">
+            <i id="ambientIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
+          </button>
+          <div>
+            <p class="text-xs font-bold text-mauve">Атмосфера Сосредоточения</p>
+            <p id="ambientStatus" class="text-[10px] text-mauve-light">Мягкие медитативные волны</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Questionnaire Wizard -->
+      <div class="space-y-3">
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Как выглядит твой идеальный день через 3 года?</label>
+          <textarea id="idealDayText" rows="3" placeholder="Я просыпаюсь в светлой комнате с видом на море..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Кем ты являешься? Каковы твои привычки?</label>
+          <textarea id="identityText" rows="2" placeholder="Я уверенная, спокойная, занимаюсь любимым делом..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
+          <label class="block text-xs font-bold text-mauve">Что ты оставляешь в прошлом?</label>
+          <textarea id="leavingBehindText" rows="2" placeholder="Страх проявления, сомнения, синдром самозванца..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
+        </div>
+
+        <button onclick="saveFutureSelfScript()" class="w-full py-3 bg-mauve text-blush-light text-xs font-bold rounded-2xl shadow-md hover:bg-mauve-light transition">
+          Сохранить Видение Будущего ✨
+        </button>
+      </div>
+
+
+      <!-- Daily Affirmation Card -->
+      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
+        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
+        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
+        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
+      </div>
+
+      <!-- Gratitude Form -->
+      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
+        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
+        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
+      </div>
+
+      <div id="gratitudeHistoryContainer" class="space-y-2">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Feelings Journal -->
+      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
+        <div>
+          <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">Дневник чувств</h3>
+          <p class="text-[10px] text-mauve-light mt-1">Отметь, что ты чувствуешь сейчас. Здесь нет правильных или неправильных эмоций.</p>
+        </div>
+        <select id="feelingMood" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none">
+          <option value="Радость">😊 Радость</option>
+          <option value="Спокойствие">😌 Спокойствие</option>
+          <option value="Благодарность">🤍 Благодарность</option>
+          <option value="Вдохновение">✨ Вдохновение</option>
+          <option value="Тревога">🌧️ Тревога</option>
+          <option value="Грусть">💧 Грусть</option>
+          <option value="Злость">🔥 Злость</option>
+          <option value="Усталость">🌙 Усталость</option>
+          <option value="Одиночество">🫂 Одиночество</option>
+          <option value="Растерянность">🌀 Растерянность</option>
+        </select>
+        <textarea id="feelingNote" rows="3" placeholder="Что повлияло на это состояние? О чём хочется себе сказать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none resize-y"></textarea>
+        <button onclick="saveFeelingEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить запись</button>
+      </div>
+      <div id="feelingHistoryContainer" class="space-y-2"></div>
+    </section>
+
+    <!-- 3. GOAL PLANNER -->
     <section id="tab-goals" class="tab-content hidden space-y-4">
       <div class="flex justify-between items-center">
         <div>
@@ -272,22 +364,7 @@
         </span>
       </div>
 
-      <!-- 30-DAY PRACTICE PROGRESS -->
-      <div class="glass-card rounded-2xl p-4 border border-blush space-y-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Твой ритм</p>
-            <h3 class="text-sm font-extrabold text-mauve">30 дней практики</h3>
-          </div>
-          <span id="practiceProgressCount" class="text-xl font-extrabold text-mauve tabular-nums">0/30</span>
-        </div>
-        <div class="h-2 rounded-full bg-powder overflow-hidden">
-          <div id="practiceProgressBar" class="h-full rounded-full bg-dusty transition-all" style="width:0%"></div>
-        </div>
-        <p id="practiceProgressHint" class="text-[10px] text-mauve-light">Отмечай день, когда выполнила любую практику.</p>
-        <button id="practiceCompleteBtn" onclick="markPracticeDay()" class="w-full py-2.5 rounded-xl bg-mauve text-blush-light text-xs font-bold">Отметить практику сегодня</button>
-      </div>
-
+      <div class="glass-card rounded-2xl p-4 border border-blush space-y-3"><div class="flex items-center justify-between"><div><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Твой ритм</p><h3 class="text-sm font-extrabold text-mauve">30 дней практики</h3></div><span id="practiceProgressCount" class="text-xl font-extrabold text-mauve tabular-nums">0/30</span></div><div class="h-2 rounded-full bg-powder overflow-hidden"><div id="practiceProgressBar" class="h-full rounded-full bg-dusty transition-all" style="width:0%"></div></div><p id="practiceProgressHint" class="text-[10px] text-mauve-light">Отмечай день, когда выполнила любую практику.</p><button id="practiceCompleteBtn" onclick="markPracticeDay()" class="w-full py-2.5 rounded-xl bg-mauve text-blush-light text-xs font-bold">Отметить практику сегодня</button></div>
       <!-- BREATHWORK VISUALIZER CARD -->
       <div class="glass-card rounded-3xl p-5 border border-blush shadow-card-float text-center space-y-4 relative overflow-hidden">
         <div class="flex justify-between items-center">
@@ -363,104 +440,43 @@
     </section>
 
     <!-- 6. DAILY INSPIRATION & JOURNAL -->
-    <section id="tab-daily" class="tab-content hidden space-y-4">
-      <div>
-        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Рефлексия</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
-      </div>
-
-      <!-- Future Self: scripting -->
-
-
-      <div>
-        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Письмо в будущее</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Мой Идеальный День</h2>
-      </div>
-
-      <!-- Ambient Audio Focus Player -->
-      <div class="glass-card rounded-2xl p-3 border border-blush flex items-center justify-between shadow-sm">
-        <div class="flex items-center space-x-3">
-          <button onclick="toggleAmbientAudio()" class="w-9 h-9 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-sm">
-            <i id="ambientIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
-          </button>
-          <div>
-            <p class="text-xs font-bold text-mauve">Атмосфера Сосредоточения</p>
-            <p id="ambientStatus" class="text-[10px] text-mauve-light">Мягкие медитативные волны</p>
+    <section id="tab-future" class="tab-content hidden space-y-4">
+      <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Саморефлексия и символы</span><h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Оракул</h2></div>
+      <!-- Карта дня -->
+    <div class="space-y-3">
+        <div class="flex items-end justify-between">
+          <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Точка внимания</span><h3 class="text-lg font-extrabold text-mauve">Карта дня</h3></div>
+          <span class="text-[9px] text-mauve-light">78 архетипов • один день</span>
+        </div>
+        <p class="text-[11px] leading-relaxed text-mauve-light">Не предсказание и не приговор. Просто символ, через который можно посмотреть на себя и на то, что сейчас происходит.</p>
+        <div id="dailyTarotCard" class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#5A3D42,#846066 58%,#C98B93);color:#FFF9F9;min-height:260px">
+          <div id="dailyTarotBack" class="mx-auto w-36 h-48 rounded-2xl border border-white/40 flex flex-col items-center justify-center p-4" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.07),rgba(255,255,255,.07) 2px,transparent 2px,transparent 9px),linear-gradient(145deg,#846066,#3D272A);box-shadow:0 12px 28px #3D272A66">
+            <div class="w-16 h-16 rounded-full border border-blush-light/70 flex items-center justify-center text-3xl">✧</div>
+            <p class="mt-4 text-[10px] tracking-[.25em] font-bold">FUTURE SELF</p><p class="text-[9px] tracking-widest mt-1">YOUR DAILY SYMBOL</p>
           </div>
+          <div id="dailyTarotReveal" class="hidden space-y-3">
+            <div class="mx-auto w-36 min-h-48 rounded-2xl border border-white/40 p-3 flex flex-col items-center justify-center" style="background:linear-gradient(155deg,#FDF2F4,#E8C5C8);color:#5A3D42;box-shadow:0 12px 28px #3D272A66">
+              <span id="dailyTarotNumber" class="text-[9px] tracking-widest"></span><div class="text-4xl my-4" id="dailyTarotSymbol">✧</div><p id="dailyTarotCardName" class="text-xs font-extrabold uppercase tracking-wide"></p><p class="text-[8px] tracking-widest mt-2">FUTURE SELF</p>
+            </div>
+            <div class="text-left rounded-2xl p-3 space-y-2" style="background:#FFF9F9;color:#5A3D42">
+              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Главная мысль</p>
+              <p id="dailyTarotMessage" class="text-xs leading-relaxed"></p>
+              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">На что обратить внимание</p>
+              <p id="dailyTarotFocus" class="text-xs leading-relaxed"></p>
+              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">Вопрос себе</p>
+              <p id="dailyTarotQuestion" class="text-xs leading-relaxed italic"></p>
+            </div>
+          </div>
+          <button id="dailyTarotDrawBtn" onclick="drawDailyTarotCard()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5D5DA;color:#5A3D42">Открыть карту дня</button>
+          <p id="dailyTarotFootnote" class="text-[9px] text-white/70">Карта останется с тобой до конца дня</p>
         </div>
-      </div>
-
-      <!-- Questionnaire Wizard -->
-      <div class="space-y-3">
-        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
-          <label class="block text-xs font-bold text-mauve">Как выглядит твой идеальный день через 3 года?</label>
-          <textarea id="idealDayText" rows="3" placeholder="Я просыпаюсь в светлой комнате с видом на море..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
-        </div>
-
-        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
-          <label class="block text-xs font-bold text-mauve">Кем ты являешься? Каковы твои привычки?</label>
-          <textarea id="identityText" rows="2" placeholder="Я уверенная, спокойная, занимаюсь любимым делом..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
-        </div>
-
-        <div class="glass-card p-4 rounded-2xl border border-blush space-y-2">
-          <label class="block text-xs font-bold text-mauve">Что ты оставляешь в прошлом?</label>
-          <textarea id="leavingBehindText" rows="2" placeholder="Страх проявления, сомнения, синдром самозванца..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none focus:border-dusty resize-none"></textarea>
-        </div>
-
-        <button onclick="saveFutureSelfScript()" class="w-full py-3 bg-mauve text-blush-light text-xs font-bold rounded-2xl shadow-md hover:bg-mauve-light transition">
-          Сохранить Видение Будущего ✨
-        </button>
+        <div id="dailyTarotHistory" class="space-y-2"></div>
       </div>
 
 
-
-
-
-
-
-      <!-- Daily Affirmation Card -->
-      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
-        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
-        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
-        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
-      </div>
-
-      <!-- Gratitude Form -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
-        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
-      </div>
-
-      <div id="gratitudeHistoryContainer" class="space-y-2">
-        <!-- Rendered via JS -->
-      </div>
-
-      <!-- Feelings Journal -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <div>
-          <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">Дневник чувств</h3>
-          <p class="text-[10px] text-mauve-light mt-1">Отметь, что ты чувствуешь сейчас. Здесь нет правильных или неправильных эмоций.</p>
-        </div>
-        <select id="feelingMood" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none">
-          <option value="Радость">😊 Радость</option>
-          <option value="Спокойствие">😌 Спокойствие</option>
-          <option value="Благодарность">🤍 Благодарность</option>
-          <option value="Вдохновение">✨ Вдохновение</option>
-          <option value="Тревога">🌧️ Тревога</option>
-          <option value="Грусть">💧 Грусть</option>
-          <option value="Злость">🔥 Злость</option>
-          <option value="Усталость">🌙 Усталость</option>
-          <option value="Одиночество">🫂 Одиночество</option>
-          <option value="Растерянность">🌀 Растерянность</option>
-        </select>
-        <textarea id="feelingNote" rows="3" placeholder="Что повлияло на это состояние? О чём хочется себе сказать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none resize-y"></textarea>
-        <button onclick="saveFeelingEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить запись</button>
-      </div>
-      <div id="feelingHistoryContainer" class="space-y-2"></div>
     </section>
+
+    
 
   </main>
 
@@ -652,524 +668,8 @@
     function stopBreathing(){clearInterval(breathInterval);isBreathingActive=false;document.getElementById('breathPlayIcon').className='fa-solid fa-play';document.getElementById('breathPlayText').innerText='Начать Практику';document.getElementById('breathCircle').style.transform='scale(1)';}
     function toggleBreathingSession(){if(isBreathingActive){stopBreathing();return;}isBreathingActive=true;document.getElementById('breathPlayIcon').className='fa-solid fa-pause';document.getElementById('breathPlayText').innerText='Пауза';runBreathLoop();}
     function runBreathLoop(){const phases=BREATH_PATTERNS[activeBreathKey].phases;let i=0;function step(){if(!isBreathingActive)return;let [name,duration,scale]=phases[i];let n=duration;triggerBreathHaptic();document.getElementById('breathPhaseText').innerText=name;document.getElementById('breathTimerNum').innerText=n;document.getElementById('breathCircle').style.transform=`scale(${scale})`;breathInterval=setInterval(()=>{n--;document.getElementById('breathTimerNum').innerText=n;if(n<=0){clearInterval(breathInterval);i=(i+1)%phases.length;step();}},1000);}step();}
-    function renderPracticeProgress(){
-      const days=[...new Set(appState.practiceDays||[])].sort().slice(-30);
-      const count=days.length,percent=Math.round(count/30*100);
-      const countEl=document.getElementById('practiceProgressCount');
-      const bar=document.getElementById('practiceProgressBar');
-      const hint=document.getElementById('practiceProgressHint');
-      const button=document.getElementById('practiceCompleteBtn');
-      if(!countEl||!bar||!hint||!button)return;
-      countEl.innerText=count+'/30';bar.style.width=percent+'%';
-      const doneToday=days.includes(localDayKey());
-      hint.innerText=count>=30?'Ты завершила 30-дневный цикл. Отличная работа!':doneToday?'Сегодняшняя практика уже отмечена. Возвращайся завтра.':'Отмечай день, когда выполнила любую практику.';
-      button.disabled=doneToday||count>=30;
-      button.innerText=count>=30?'30 дней завершено':doneToday?'Сегодня уже отмечено':'Отметить практику сегодня';
-      button.style.opacity=button.disabled?'.6':'1';
-    }
-    function markPracticeDay(){
-      appState.practiceDays=Array.isArray(appState.practiceDays)?appState.practiceDays:[];
-      const today=localDayKey();
-      if(appState.practiceDays.includes(today)){renderPracticeProgress();return;}
-      if(appState.practiceDays.length>=30){renderPracticeProgress();return;}
-      appState.practiceDays.push(today);saveState();renderPracticeProgress();showToast('Практика отмечена. Так держать!');
-    }
-    function renderGoals(){const c=document.getElementById('goalsContainer');c.innerHTML=appState.goals.map(g=>`<div class="glass-card rounded-2xl p-3 border border-blush flex justify-between items-center"><div><h4 class="text-xs font-bold text-mauve ${g.completed?'line-through text-mauve-light':''}">${escapeHtml(g.title)}</h4><span class="text-[9px] text-mauve-light font-semibold">${escapeHtml(g.cat)}</span></div><button onclick="toggleGoal('${g.id}')" class="w-7 h-7 rounded-full ${g.completed?'bg-dusty text-white':'bg-milk border border-blush text-mauve-light'}"><i class="fa-solid fa-check text-xs"></i></button></div>`).join('');const done=appState.goals.filter(g=>g.completed).length;document.getElementById('statActiveGoals').innerText=appState.goals.length-done;document.getElementById('statCompletedGoals').innerText=done;document.getElementById('statGoalProgressPercent').innerText=(appState.goals.length?Math.round(done/appState.goals.length*100):0)+'%';}
-    function toggleGoal(id){const g=appState.goals.find(x=>x.id===id);if(g){g.completed=!g.completed;saveState();renderGoals();}}
-    function openAddGoalModal(){document.getElementById('addGoalModal').classList.remove('hidden');} function openPremiumModal(){document.getElementById('premiumModal').classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');}
-    function saveNewGoal(){const title=document.getElementById('goalTitleInput').value.trim(),cat=document.getElementById('goalCategorySelect').value;if(!title)return;appState.goals.push({id:String(Date.now()),title,cat,completed:false});saveState();renderGoals();document.getElementById('goalTitleInput').value='';closeModal('addGoalModal');showToast('Цель добавлена!');}
-    function saveFutureSelfScript(){appState.futureScript={idealDay:document.getElementById('idealDayText').value,identity:document.getElementById('identityText').value,leavingBehind:document.getElementById('leavingBehindText').value};saveState();showToast('Видение сохранено ✨');}
-
-    const tarotMajors = [
-      ['Шут','Свобода начинается там, где ты перестаёшь требовать от себя гарантий. Необязательно знать весь маршрут, чтобы сделать первый шаг.','Заметь, где любопытство сильнее страха, а где ты называешь страх здравым смыслом.','Что бы ты попробовала, если бы не требовала от себя идеального результата?','✧'],
-      ['Маг','У тебя уже есть больше инструментов, чем ты себе засчитываешь. Сейчас вопрос не в ещё одной подготовке, а в том, как ты распорядишься тем, что есть.','Где ты ждёшь разрешения, хотя можешь начать сама?','Какой один ресурс я могу использовать уже сегодня?','✦'],
-      ['Верховная Жрица','Не каждый ответ нужно вытаскивать наружу силой. Иногда полезнее перестать шуметь внутри и честно услышать собственную реакцию.','Отдели интуицию от тревожных догадок и чужих ожиданий.','Что я уже понимаю, но пока не хочу признавать?','☾'],
-      ['Императрица','Рост не всегда выглядит как рывок. Иногда он начинается с того, что ты перестаёшь обращаться с собой как с проектом, который всё время нужно исправлять.','Посмотри, где тебе не хватает заботы, удовольствия и пространства.','Что я могу сегодня сделать не ради результата, а из заботы о себе?','❀'],
-      ['Император','Опора — это не тотальный контроль. Это способность определить правила, которые защищают твои силы, время и границы.','Проверь, где структура помогает тебе, а где превращается в жёсткость.','Какое решение вернёт мне ощущение устойчивости?','♜'],
-      ['Иерофант','Не все правила бессмысленны, но не каждое правило обязано становиться твоей жизнью. Можно уважать опыт других и всё равно выбирать собственный путь.','Чьи убеждения ты продолжаешь считать своими по привычке?','Во что я действительно верю, если убрать чужое мнение?','✧'],
-      ['Влюблённые','Выбор показывает не только то, чего ты хочешь, но и то, что для тебя важно. Не пытайся усидеть между двумя решениями, если одно из них давно стало честнее другого.','Заметь, где ты соглашаешься против себя ради одобрения или спокойствия.','Какой выбор больше соответствует моим ценностям?','♡'],
-      ['Колесница','Собранность важнее суеты. Не нужно одновременно менять всю жизнь — выбери направление и перестань тратить силы на постоянное метание.','Определи одну задачу, которой сегодня действительно стоит отдать внимание.','Куда я хочу направить свою энергию вместо того, чтобы распылять её?','➶'],
-      ['Сила','Тебе не обязательно давить на себя, чтобы справляться. Мягкость не отменяет характера, а пауза не делает тебя слабой.','Обрати внимание, где ты пытаешься победить себя вместо того, чтобы понять.','Как я могу проявить силу без насилия над собой?','♌'],
-      ['Отшельник','Иногда дистанция нужна не для побега, а чтобы снова услышать собственный голос. Не заполняй каждую паузу чужими словами и делами.','Побудь немного без внешней оценки и сравнения.','Какой ответ появляется, когда я перестаю спрашивать всех вокруг?','☼'],
-      ['Колесо Фортуны','Не всё зависит от тебя, и это не повод отказываться от влияния на свою жизнь. Изменения случаются, но твоя реакция и следующие шаги всё ещё имеют значение.','Заметь, что меняется само, а где требуется твоё участие.','Что сейчас пора перестать контролировать, а что — взять в свои руки?','◉'],
-      ['Справедливость','Честность с собой иногда неудобна, зато освобождает от бесконечных оправданий. Смотри не только на намерения, но и на реальные последствия решений.','Где ты смягчаешь правду, чтобы не принимать решение?','Как выглядит честный вывод, если не искать виноватых?','⚖'],
-      ['Повешенный','Пауза не всегда означает застой. Возможно, старый способ смотреть на ситуацию больше не работает, и тебе нужно сменить угол, а не усиливать давление.','Не торопись повторять привычный сценарий.','Что изменится, если я посмотрю на это иначе?','⌁'],
-      ['Смерть','Завершение не обязательно означает потерю. Иногда ты просто выросла из роли, привычки или ожидания, которое больше не совпадает с тобой.','Признай, что уже закончилось, даже если эмоционально ты ещё держишься.','Что я продолжаю удерживать только потому, что когда-то это было важно?','✺'],
-      ['Умеренность','Не нужно бросаться из крайности в крайность. Устойчивые перемены часто собираются из небольших решений, которые можно повторять без истощения.','Ищи не идеальный баланс, а рабочий ритм.','Какой небольшой шаг сделает мой день спокойнее и устойчивее?','◌'],
-      ['Дьявол','То, что даёт быстрое облегчение, не всегда даёт свободу. Посмотри без стыда на привычку, зависимость или сценарий, который забирает больше, чем обещает.','Где удовольствие превращается в автоматизм или способ не чувствовать?','Что я получаю от этой привычки и какой ценой?','⛓'],
-      ['Башня','Если конструкция держится только на отрицании очевидного, рано или поздно её придётся пересмотреть. Не драматизируй перемены, но и не делай вид, что ничего не происходит.','Обрати внимание на факты, которые ты давно обходишь стороной.','Что уже не работает, хотя я продолжаю это поддерживать?','⚡'],
-      ['Звезда','Надежда — не обещание, что всё сложится само. Это возможность снова увидеть направление и делать шаги, даже если пока не виден весь результат.','Вернись к тому, что действительно вдохновляет, а не просто красиво выглядит со стороны.','Что помогает мне не терять связь с собой?','✧'],
-      ['Луна','Не каждая мысль — факт, и не каждое чувство — предсказание. Когда тревожно, легко достроить историю за других людей и поверить в неё.','Проверь предположения и не принимай важное решение на пике эмоций.','Что я знаю точно, а что сейчас только додумываю?','☾'],
-      ['Солнце','Разреши себе замечать хорошее без привычки сразу обесценивать его или искать подвох. Радость не нужно заслуживать бесконечной продуктивностью.','Отметь то, что уже получается, даже если это пока небольшой результат.','Что в моей жизни заслуживает признания прямо сейчас?','☀'],
-      ['Суд','Пора перестать жить по старой версии себя только потому, что окружающие привыкли видеть тебя именно такой. Ты можешь пересмотреть решение и выбрать иначе.','Услышь, к чему ты давно возвращаешься мыслями.','Какой внутренний зов я откладываю уже слишком долго?','♢'],
-      ['Мир','Ты можешь признать пройденный путь, не обесценивая его из-за того, что впереди ещё много планов. Завершение — тоже достижение.','Посмотри на целую картину, а не только на то, чего пока нет.','Что я уже прошла и могу наконец себе засчитать?','◎']
-    ];
-    const tarotSuits = [
-      {name:'Жезлов',theme:'желание, энергия и личная инициатива',focus:'свои амбиции, смелость и то, куда уходит твой запал',q:'Где я хочу действовать по-настоящему, а не только мечтать?',symbol:'♨',verbs:['Идея просится в действие. Не жди, пока уверенность появится сама: иногда она приходит после первого шага.','Твой импульс важен, но ему нужна форма. Выбери одно направление и не распыляйся на десять стартов.','Не путай занятость с движением. Спроси себя, приближает ли сегодняшняя активность к тому, чего ты хочешь.','Тебе может хотеться большего — и это нормально. Только не превращай амбицию в повод постоянно быть недовольной собой.','Сейчас важно не доказывать, а пробовать. Дай себе право на черновик, тест и несовершенный первый результат.','Твоя энергия не бесконечна. Направь её туда, где есть смысл, а не только внешний эффект.','Смелость сегодня — не громкий жест, а честное действие, которое ты давно откладываешь.','Не отдавай весь огонь чужим ожиданиям. Оставь часть сил на собственную жизнь.','Проверь, не стала ли цель способом убежать от настоящего. Желание должно вести тебя, а не сжигать.','У тебя есть право хотеть большего и одновременно двигаться в человеческом темпе.','Сначала определи, что для тебя победа. Иначе можно очень стараться ради чужой планки.','Пора перестать ждать идеальных условий. Сделай доступный шаг и посмотри, что он откроет.','Не каждую возможность нужно хватать. Выбирай ту, которая совпадает с твоим направлением.','Заверши один начатый процесс, прежде чем обещать себе ещё пять новых.']},
-      {name:'Кубков',theme:'чувства, близость и эмоциональные потребности',focus:'свои чувства, отношения и то, что ты не проговариваешь',q:'Какое чувство я пытаюсь обойти вместо того, чтобы прожить?',symbol:'♡',verbs:['Не обесценивай свою реакцию только потому, что кому-то она кажется слишком сильной. Но дай себе время понять, о чём она говорит.','Близость начинается не с угадывания мыслей, а с честного разговора. Не требуй от других читать то, что ты не произносишь.','Твои чувства заслуживают внимания, но не каждое из них обязано становиться немедленным решением.','Посмотри, где ты отдаёшь больше, чем можешь, надеясь однажды получить это обратно без просьбы.','Разреши себе принимать заботу, не превращая её в долг, который нужно срочно вернуть.','Не путай привычную эмоциональную интенсивность с настоящей близостью. Спокойствие тоже может быть глубоким.','Сегодня важно назвать своё желание прямо — хотя бы самой себе.','Не додумывай за другого человека. Спроси, уточни или признай, что пока не знаешь.','Отпусти ожидание, что прошлое можно переписать правильным поведением в настоящем.','Тебе не нужно заслуживать внимание постоянной полезностью.','Проверь, не прячешь ли ты обиду за фразой «мне всё равно».','Сочувствие к другому не требует предавать собственные границы.','Позволь отношениям быть реальными, а не только такими, какими ты надеешься их однажды увидеть.','Эмоциональная зрелость — не отсутствие чувств, а способность не отдавать им весь руль.']},
-      {name:'Мечей',theme:'мысли, решения и личные границы',focus:'свои мысли, факты, разговоры и решения',q:'Какую правду мне важно признать, даже если она неудобна?',symbol:'⚔',verbs:['Отдели факт от интерпретации. Возможно, часть напряжения создаёт не ситуация, а история, которую ты вокруг неё построила.','Не пытайся решить всё одним разговором. Сформулируй главное и оставь место для ответа.','Твоя ясность сейчас ценнее желания всем понравиться. Можно быть уважительной и при этом не соглашаться.','Не превращай анализ в бесконечное откладывание. Иногда данных уже достаточно для следующего шага.','Граница не обязана сопровождаться длинным оправданием. Короткое «мне так не подходит» тоже ответ.','Проверь, не споришь ли ты с человеком в голове вместо того, чтобы прояснить ситуацию в реальности.','Скажи себе правду без унижения. Ответственность не требует жестокости к себе.','Не каждую мысль нужно продолжать. Некоторые сценарии можно заметить и не раскручивать.','Выбирай слова, которые проясняют, а не ранят ради последнего слова.','Если решение принято только из страха, дай себе паузу и пересмотри мотив.','Не ищи идеальную формулировку, чтобы избежать неудобного разговора.','Собери факты, назови потребность и обозначь следующий шаг.','Ты можешь изменить мнение, когда появляется новая информация. Это не слабость, а гибкость.','Пора прекратить внутренний суд там, где нужен конкретный план.']},
-      {name:'Пентаклей',theme:'тело, ресурсы, деньги и повседневная устойчивость',focus:'свои ресурсы, привычки, тело и практические шаги',q:'Какое небольшое действие укрепит мою опору в реальности?',symbol:'◇',verbs:['Посмотри на основу: сон, деньги, время, тело и бытовые решения. Большие планы держатся на простых вещах.','Не требуй мгновенной отдачи от того, что строится постепенно. Последовательность сейчас важнее эффектного рывка.','Твой ресурс не безлимитный. Распланируй день так, чтобы в нём оставалось место на восстановление.','Практичность не убивает мечту — она помогает ей обрести форму. Проверь цифры, сроки и следующий шаг.','Не сравнивай свой темп с чужой витриной. Условия и стартовые точки у всех разные.','Сделай что-то полезное для будущей себя: сохрани, организуй, подготовь или заверши одну небольшую задачу.','Забота о теле — не наказание за то, что оно не соответствует ожиданиям.','Деньги любят ясность: посмотри на реальные цифры вместо тревожных предположений.','Не покупай ощущение контроля бесконечным планированием. Выбери действие, которое можно выполнить сегодня.','Стабильность складывается из повторяемых решений, а не из одного идеального дня.','Признай ценность уже вложенного труда. Не обнуляй прогресс только потому, что результат ещё не финальный.','Проверь, где ты недооцениваешь своё время и отдаёшь его бесплатно.','Не нужно менять всё сразу. Одна привычка, которую реально удержать, полезнее идеального списка.','Закрепи результат: наведи порядок в одном деле, которое давно висит фоном.']}
-    ];
-    const tarotRanks = ['Туз','Двойка','Тройка','Четвёрка','Пятёрка','Шестёрка','Семёрка','Восьмёрка','Девятка','Десятка','Паж','Рыцарь','Королева','Король'];
-    const tarotDeck = tarotMajors.map((c,i)=>({name:c[0],message:c[1],focus:c[2],question:c[3],symbol:c[4],number:String(i+1).padStart(2,'0')}));
-    tarotSuits.forEach((s,si)=>tarotRanks.forEach((rank,ri)=>{tarotDeck.push({name:rank+' '+s.name,message:s.verbs[ri],focus:'Тема карты — '+s.theme+'. Сегодня присмотрись: '+s.focus+'.',question:s.q,symbol:s.symbol,number:String(tarotDeck.length+1).padStart(2,'0')});}));
-    function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-    function dailyTarotIndex(key){const seed=String(key)+'-'+String(tg?.initDataUnsafe?.user?.id||'preview');let n=0;for(let i=0;i<seed.length;i++)n=(n*31+seed.charCodeAt(i))>>>0;return n%tarotDeck.length;}
-    function renderDailyTarot(){const history=appState.dailyTarot||[],today=localDayKey(),entry=history.find(x=>x.date===today);const back=document.getElementById('dailyTarotBack'),reveal=document.getElementById('dailyTarotReveal'),button=document.getElementById('dailyTarotDrawBtn');if(!back||!reveal||!button)return;if(entry&&entry.revealed){const card=tarotDeck[entry.index];back.classList.add('hidden');reveal.classList.remove('hidden');document.getElementById('dailyTarotNumber').innerText='АРХЕТИП '+card.number;document.getElementById('dailyTarotSymbol').innerText=card.symbol;document.getElementById('dailyTarotCardName').innerText=card.name;document.getElementById('dailyTarotMessage').innerText=card.message;document.getElementById('dailyTarotFocus').innerText=card.focus;document.getElementById('dailyTarotQuestion').innerText=card.question;button.innerText='Карта уже открыта сегодня';button.disabled=true;button.style.opacity='.65';}else{back.classList.remove('hidden');reveal.classList.add('hidden');button.innerText='Открыть карту дня';button.disabled=false;button.style.opacity='1';}const hist=document.getElementById('dailyTarotHistory');const past=history.filter(x=>x.date!==today).slice(0,5);hist.innerHTML=past.length?'<p class="text-[9px] font-bold text-dusty uppercase tracking-widest">Предыдущие карты</p>'+past.map(x=>{const c=tarotDeck[x.index];return '<div class="glass-card rounded-xl p-3 flex items-center justify-between"><div><p class="text-xs font-bold text-mauve">'+escapeHtml(c.name)+'</p><p class="text-[9px] text-mauve-light">'+escapeHtml(x.date)+'</p></div><span class="text-xl text-dusty">'+c.symbol+'</span></div>';}).join(''):'';}
-    function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const today=localDayKey();if(appState.dailyTarot.some(x=>x.date===today)){renderDailyTarot();return;}const index=dailyTarotIndex(today);appState.dailyTarot.unshift({date:today,index,revealed:true});appState.dailyTarot=appState.dailyTarot.slice(0,30);saveState();renderDailyTarot();showToast('Твоя карта дня открыта');}
-
-    function saveGratitudeEntry(){const vals=[1,2,3].map(i=>document.getElementById('gratitude'+i).value.trim());if(!vals.some(Boolean)){showToast('Добавь хотя бы одну благодарность');return;}appState.gratitudes.unshift({date:new Date().toLocaleDateString('ru-RU'),items:vals.filter(Boolean)});saveState();[1,2,3].forEach(i=>document.getElementById('gratitude'+i).value='');renderGratitude();showToast('Запись сохранена');}
-    function renderGratitude(){const c=document.getElementById('gratitudeHistoryContainer');c.innerHTML=(appState.gratitudes||[]).map(g=>`<div class="glass-card p-3 rounded-xl border border-blush"><p class="text-[10px] font-bold text-dusty mb-1">${escapeHtml(g.date)}</p>${g.items.map(x=>`<p class="text-xs text-mauve">• ${escapeHtml(x)}</p>`).join('')}</div>`).join('');}
-    function saveFeelingEntry(){const mood=document.getElementById('feelingMood').value,note=document.getElementById('feelingNote').value.trim();appState.feelings=appState.feelings||[];appState.feelings.unshift({mood,note,date:new Date().toLocaleString('ru-RU',{day:'2-digit',month:'long',hour:'2-digit',minute:'2-digit'})});appState.feelings=appState.feelings.slice(0,100);saveState();document.getElementById('feelingNote').value='';renderFeelings();showToast('Запись о чувствах сохранена');}
-    function renderFeelings(){const c=document.getElementById('feelingHistoryContainer');if(!c)return;const entries=appState.feelings||[];c.innerHTML=entries.map(entry=>`<div class="glass-card p-3 rounded-xl border border-blush"><div class="flex items-center justify-between gap-2"><p class="text-xs font-bold text-mauve">${escapeHtml(entry.mood)}</p><p class="text-[9px] text-dusty">${escapeHtml(entry.date)}</p></div>${entry.note?`<p class="text-xs text-mauve-light mt-2 whitespace-pre-wrap">${escapeHtml(entry.note)}</p>`:''}</div>`).join('');}
-    const affirmations=['Я создаю жизнь, в которой мне хорошо.','Мои ежедневные действия приближают меня к важному.','Я могу двигаться к своим целям в собственном темпе.','Я достойна заботы, уважения и возможностей.'];function generateNewAffirmation(){document.getElementById('dailyAffirmationText').innerText='“'+affirmations[Math.floor(Math.random()*affirmations.length)]+'”';}
-    let ambientOn=false;function toggleAmbientAudio(){const a=document.getElementById('ambientAudio');if(ambientOn){a.pause();ambientOn=false;document.getElementById('ambientIcon').className='fa-solid fa-play text-xs ml-0.5';document.getElementById('ambientStatus').innerText='Пауза';}else{a.play().then(()=>{ambientOn=true;document.getElementById('ambientIcon').className='fa-solid fa-pause text-xs';document.getElementById('ambientStatus').innerText='Воспроизведение';}).catch(()=>showToast('Не удалось запустить аудио'));}}
-    const tracks=[['Встреча с Собой через 5 лет','Глубокое соединение с идеальным Я'],['Активация Изобилия','Практика фокуса на возможностях']];let selectedTrack=0;function selectMeditationTrack(i){selectedTrack=i;document.getElementById('meditationTrackTitle').innerText=tracks[i][0];document.getElementById('meditationTrackDesc').innerText=tracks[i][1];showToast('Трек выбран. Добавь аудиофайл для воспроизведения.');}function toggleMeditationPlay(){showToast('Для воспроизведения медитации нужно подключить аудиофайл.');}
-    function exportVisionBoard(){if(!window.html2canvas){showToast('Экспорт временно недоступен');return;}html2canvas(document.getElementById('visionCanvasContainer')).then(canvas=>{const a=document.createElement('a');a.download='future-self-vision-board.png';a.href=canvas.toDataURL('image/png');a.click();}).catch(()=>showToast('Не удалось экспортировать карту'));}
-    async function openAdminPanel(){if(!isAdmin){showToast('Нет прав администратора');return;}document.getElementById('adminModal').classList.remove('hidden');loadFriendUsers();}
-    async function createAccessInvite(){const days=Number(document.getElementById('friendDuration').value);try{const result=await api('/admin/invites',{durationDays:days});document.getElementById('createdInviteUrl').value=result.inviteUrl;document.getElementById('inviteLinkResult').classList.remove('hidden');showToast('Новая ссылка создана');}catch(e){showToast(e.message);}}
-    async function copyAccessInvite(){const value=document.getElementById('createdInviteUrl').value;try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);}else{document.getElementById('createdInviteUrl').select();document.execCommand('copy');}showToast('Ссылка скопирована');}catch(e){document.getElementById('createdInviteUrl').select();showToast('Выделила ссылку — скопируй её вручную');}}
-    async function grantFriendAccess(){const id=document.getElementById('friendTelegramId').value.trim(),days=Number(document.getElementById('friendDuration').value);if(!/^\d{5,15}$/.test(id)){showToast('Проверь Telegram ID');return;}try{await api('/admin/grant',{telegramId:id,durationDays:days});document.getElementById('friendTelegramId').value='';showToast('Полный доступ FRIENDS выдан');loadFriendUsers();}catch(e){showToast(e.message);}}
-    async function revokeFriendAccess(id){try{await api('/admin/revoke',{telegramId:id});showToast('Доступ отозван');loadFriendUsers();}catch(e){showToast(e.message);}}
-    async function loadFriendUsers(){const c=document.getElementById('friendUsersList');try{const data=await api('/admin/users');c.innerHTML=data.users.length?data.users.map(u=>`<div class="flex items-center justify-between bg-milk rounded-xl p-2"><div><b>${escapeHtml(u.name||'Пользователь')}</b><p>ID: ${escapeHtml(u.telegramId)} · ${escapeHtml(u.access)}${u.expiresAt?' · до '+new Date(u.expiresAt).toLocaleDateString('ru-RU'):''}</p></div><button onclick="revokeFriendAccess('${u.telegramId}')" class="text-red-700 underline">Отозвать</button></div>`).join(''):'<p>Пока нет выданных доступов.</p>';}catch(e){c.innerHTML='<p>'+escapeHtml(e.message)+'</p>';}}
-    async function simulateTelegramPay(){try{const result=await api('/payments/create-invoice',{plan:'pro_monthly'});if(!result.invoiceLink)throw new Error('Сервер не вернул ссылку на оплату');if(tg?.openInvoice)tg.openInvoice(result.invoiceLink,(status)=>{if(status==='paid'){showToast('Оплата подтверждена. Обновляю доступ…');initAccount();}else if(status==='cancelled')showToast('Оплата отменена');else showToast('Платёж не завершён');});else window.open(result.invoiceLink,'_blank');}catch(e){showToast(e.message || 'Не удалось создать счёт на оплату. Попробуй ещё раз.');}}
-    window.addEventListener('load',async()=>{renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();const f=appState.futureScript||{};document.getElementById('idealDayText').value=f.idealDay||'';document.getElementById('identityText').value=f.identity||'';document.getElementById('leavingBehindText').value=f.leavingBehind||'';await initAccount();});
-  </script>
-</body>
-</html    <section id="tab-future" class="tab-content hidden space-y-4">
-      <div>
-        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Саморефлексия и символы</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Оракул</h2>
-      </div>
-
-      <!-- Карта дня -->
-
-      <div class="space-y-3">
-        <div class="flex items-end justify-between">
-          <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Точка внимания</span><h3 class="text-lg font-extrabold text-mauve">Карта дня</h3></div>
-          <span class="text-[9px] text-mauve-light">78 архетипов • один день</span>
-        </div>
-        <p class="text-[11px] leading-relaxed text-mauve-light">Не предсказание и не приговор. Просто символ, через который можно посмотреть на себя и на то, что сейчас происходит.</p>
-        <div id="dailyTarotCard" class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#5A3D42,#846066 58%,#C98B93);color:#FFF9F9;min-height:260px">
-          <div id="dailyTarotBack" class="mx-auto w-36 h-48 rounded-2xl border border-white/40 flex flex-col items-center justify-center p-4" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.07),rgba(255,255,255,.07) 2px,transparent 2px,transparent 9px),linear-gradient(145deg,#846066,#3D272A);box-shadow:0 12px 28px #3D272A66">
-            <div class="w-16 h-16 rounded-full border border-blush-light/70 flex items-center justify-center text-3xl">✧</div>
-            <p class="mt-4 text-[10px] tracking-[.25em] font-bold">FUTURE SELF</p><p class="text-[9px] tracking-widest mt-1">YOUR DAILY SYMBOL</p>
-          </div>
-          <div id="dailyTarotReveal" class="hidden space-y-3">
-            <div class="mx-auto w-36 min-h-48 rounded-2xl border border-white/40 p-3 flex flex-col items-center justify-center" style="background:linear-gradient(155deg,#FDF2F4,#E8C5C8);color:#5A3D42;box-shadow:0 12px 28px #3D272A66">
-              <span id="dailyTarotNumber" class="text-[9px] tracking-widest"></span><div class="text-4xl my-4" id="dailyTarotSymbol">✧</div><p id="dailyTarotCardName" class="text-xs font-extrabold uppercase tracking-wide"></p><p class="text-[8px] tracking-widest mt-2">FUTURE SELF</p>
-            </div>
-            <div class="text-left rounded-2xl p-3 space-y-2" style="background:#FFF9F9;color:#5A3D42">
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Главная мысль</p>
-              <p id="dailyTarotMessage" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">На что обратить внимание</p>
-              <p id="dailyTarotFocus" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">Вопрос себе</p>
-              <p id="dailyTarotQuestion" class="text-xs leading-relaxed italic"></p>
-            </div>
-          </div>
-          <button id="dailyTarotDrawBtn" onclick="drawDailyTarotCard()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5D5DA;color:#5A3D42">Открыть карту дня</button>
-          <p id="dailyTarotFootnote" class="text-[9px] text-white/70">Карта останется с тобой до конца дня</p>
-        </div>
-        <div id="dailyTarotHistory" class="space-y-2"></div>
-      </div>
-
-
-    </section>
-
-        <!-- 3. GOAL PLANNER -->
-    <section id="tab-goals" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center">
-        <div>
-          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">План действий</span>
-          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Цели & Этапы</h2>
-        </div>
-        <button onclick="openAddGoalModal()" class="px-3 py-1.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md flex items-center space-x-1">
-          <i class="fa-solid fa-plus text-[10px]"></i>
-          <span>Новая Цель</span>
-        </button>
-      </div>
-
-      <!-- Stats Summary -->
-      <div class="grid grid-cols-3 gap-2">
-        <div class="glass-card p-3 rounded-2xl border border-blush text-center">
-          <span id="statActiveGoals" class="text-lg font-extrabold text-mauve">0</span>
-          <p class="text-[9px] text-mauve-light font-bold uppercase">В процессе</p>
-        </div>
-        <div class="glass-card p-3 rounded-2xl border border-blush text-center">
-          <span id="statCompletedGoals" class="text-lg font-extrabold text-dusty">0</span>
-          <p class="text-[9px] text-mauve-light font-bold uppercase">Достигнуто</p>
-        </div>
-        <div class="glass-card p-3 rounded-2xl border border-blush text-center">
-          <span id="statGoalProgressPercent" class="text-lg font-extrabold text-mauve">0%</span>
-          <p class="text-[9px] text-mauve-light font-bold uppercase">Прогресс</p>
-        </div>
-      </div>
-
-      <div id="goalsContainer" class="space-y-3">
-        <!-- Rendered via JS -->
-      </div>
-    </section>
-
-    <!-- 4. PRACTICES & BREATHWORK -->
-    <section id="tab-practices" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center">
-        <div>
-          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">PRO РИТУАЛЫ & ОСОЗНАННОСТЬ</span>
-          <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Практики & Дыхание</h2>
-        </div>
-        <span class="px-2.5 py-1 bg-mauve text-blush-light text-[10px] font-bold rounded-full shadow-sm flex items-center space-x-1">
-          <i class="fa-solid fa-crown text-blush"></i>
-          <span>PREMIUM</span>
-        </span>
-      </div>
-
-      <!-- BREATHWORK VISUALIZER CARD -->
-      <div class="glass-card rounded-3xl p-5 border border-blush shadow-card-float text-center space-y-4 relative overflow-hidden">
-        <div class="flex justify-between items-center">
-          <span class="text-[10px] font-bold text-mauve uppercase tracking-wider">ДЫХАТЕЛЬНЫЙ ТРЕНАЖЕР</span>
-          <div class="flex space-x-1">
-            <button onclick="setBreathPattern('box')" id="breathBtnBox" class="px-2.5 py-1 rounded-lg bg-mauve text-blush-light text-[10px] font-bold">4-4-4-4</button>
-            <button onclick="setBreathPattern('sleep')" id="breathBtnSleep" class="px-2.5 py-1 rounded-lg bg-milk text-mauve border border-blush text-[10px]">4-7-8</button>
-            <button onclick="setBreathPattern('energy')" id="breathBtnEnergy" class="px-2.5 py-1 rounded-lg bg-milk text-mauve border border-blush text-[10px]">6-2-6</button>
-          </div>
-        </div>
-
-        <p id="breathPatternTitle" class="text-xs font-bold text-mauve">Квадратное дыхание (Снятие стресса & Баланс)</p>
-
-        <!-- Animated Breathing Circle -->
-        <div class="relative w-40 h-40 mx-auto my-3 flex items-center justify-center">
-          <div id="breathCircle" class="w-28 h-28 rounded-full bg-gradient-to-tr from-dusty to-blush-light flex flex-col items-center justify-center text-mauve font-extrabold shadow-lg breath-circle breath-glow">
-            <span id="breathPhaseText" class="text-xs uppercase tracking-wider font-bold">ВДОХ</span>
-            <span id="breathTimerNum" class="text-2xl font-black mt-0.5">4</span>
-          </div>
-        </div>
-
-        <button id="breathToggleBtn" onclick="toggleBreathingSession()" class="px-6 py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md flex items-center space-x-2 mx-auto hover:bg-mauve-light transition">
-          <i id="breathPlayIcon" class="fa-solid fa-play"></i>
-          <span id="breathPlayText">Начать Практику</span>
-        </button>
-        <button id="breathHapticBtn" onclick="toggleBreathHaptics()" class="text-[10px] font-semibold text-dusty underline mx-auto block">Вибрация: включена</button>
-        <p class="text-[9px] text-mauve-light">Лёгкий тактильный сигнал при смене фазы дыхания</p>
-        <div class="pt-3 border-t border-blush/70 space-y-2">
-          <div class="text-left"><p class="text-[10px] font-bold text-mauve uppercase tracking-wider">Звуковое сопровождение</p><p class="text-[9px] text-mauve-light">Выбери атмосферу для практики</p></div>
-          <div class="grid grid-cols-3 gap-2">
-            <button id="breathSoundNature" onclick="setBreathSound('nature')" class="px-2 py-2 rounded-xl bg-mauve text-white text-[10px] font-bold">🌿 Природа</button>
-            <button id="breathSoundAmbient" onclick="setBreathSound('ambient')" class="px-2 py-2 rounded-xl bg-milk border border-blush text-mauve text-[10px]">☁️ Эмбиент</button>
-            <button id="breathSoundSpa" onclick="setBreathSound('spa')" class="px-2 py-2 rounded-xl bg-milk border border-blush text-mauve text-[10px]">✧ SPA</button>
-          </div>
-          <div class="flex items-center gap-3">
-            <button id="breathSoundToggle" onclick="toggleBreathSound()" class="shrink-0 px-3 py-2 rounded-xl bg-white border border-blush text-mauve text-[10px] font-bold"><i id="breathSoundIcon" class="fa-solid fa-volume-high mr-1"></i><span id="breathSoundText">Включить звук</span></button>
-            <input id="breathSoundVolume" aria-label="Громкость звука" type="range" min="0" max="100" value="28" class="w-full accent-dusty" oninput="setBreathSoundVolume(this.value)">
-          </div>
-          <p class="text-[9px] text-mauve-light text-left">Мягкий фоновый звук можно включать или отключать независимо от вибрации.</p>
-        </div>
-      </div>
-
-      <!-- AUDIO MEDITATION PLAYER -->
-      <div class="glass-card rounded-3xl p-4 border border-blush space-y-3">
-        <h3 class="font-sans text-xs font-bold text-mauve uppercase tracking-wider">Аудио-Визуализации</h3>
-        
-        <div class="bg-milk/80 rounded-2xl p-3 border border-blush space-y-2">
-          <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-mauve text-blush-light flex items-center justify-center text-sm shrink-0">
-              🧘‍♀️
-            </div>
-            <div class="flex-1 min-w-0">
-              <h4 id="meditationTrackTitle" class="text-xs font-bold text-mauve truncate">Встреча с Собой через 5 лет</h4>
-              <p id="meditationTrackDesc" class="text-[10px] text-mauve-light truncate">Глубокое соединение с идеальным Я</p>
-            </div>
-            <button onclick="toggleMeditationPlay()" id="meditationPlayBtn" class="w-8 h-8 rounded-full bg-mauve text-blush-light flex items-center justify-center shadow-md shrink-0">
-              <i id="meditationPlayIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="space-y-1.5">
-          <div onclick="selectMeditationTrack(0)" class="p-2 rounded-xl bg-milk/50 border border-blush/60 flex items-center justify-between cursor-pointer hover:bg-powder/40 transition">
-            <span class="text-xs font-bold text-mauve">1. Встреча с Собой через 5 лет</span>
-            <span class="text-[9px] text-mauve-light font-mono">10 мин</span>
-          </div>
-          <div onclick="selectMeditationTrack(1)" class="p-2 rounded-xl bg-milk/50 border border-blush/60 flex items-center justify-between cursor-pointer hover:bg-powder/40 transition">
-            <span class="text-xs font-bold text-mauve">2. Активация Изобилия</span>
-            <span class="text-[9px] text-mauve-light font-mono">8 мин</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. DAILY INSPIRATION & JOURNAL -->
-    <section id="tab-daily" class="tab-content hidden space-y-4">
-      <div>
-        <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Рефлексия</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
-      </div>
-
-      <!-- FUTURE SELF DAILY CARD -->
-      <div class="space-y-3">
-        <div class="flex items-end justify-between">
-          <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Точка внимания</span><h3 class="text-lg font-extrabold text-mauve">Карта дня</h3></div>
-          <span class="text-[9px] text-mauve-light">78 архетипов • один день</span>
-        </div>
-        <p class="text-[11px] leading-relaxed text-mauve-light">Не предсказание и не приговор. Просто символ, через который можно посмотреть на себя и на то, что сейчас происходит.</p>
-        <div id="dailyTarotCard" class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#5A3D42,#846066 58%,#C98B93);color:#FFF9F9;min-height:260px">
-          <div id="dailyTarotBack" class="mx-auto w-36 h-48 rounded-2xl border border-white/40 flex flex-col items-center justify-center p-4" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.07),rgba(255,255,255,.07) 2px,transparent 2px,transparent 9px),linear-gradient(145deg,#846066,#3D272A);box-shadow:0 12px 28px #3D272A66">
-            <div class="w-16 h-16 rounded-full border border-blush-light/70 flex items-center justify-center text-3xl">✧</div>
-            <p class="mt-4 text-[10px] tracking-[.25em] font-bold">FUTURE SELF</p><p class="text-[9px] tracking-widest mt-1">YOUR DAILY SYMBOL</p>
-          </div>
-          <div id="dailyTarotReveal" class="hidden space-y-3">
-            <div class="mx-auto w-36 min-h-48 rounded-2xl border border-white/40 p-3 flex flex-col items-center justify-center" style="background:linear-gradient(155deg,#FDF2F4,#E8C5C8);color:#5A3D42;box-shadow:0 12px 28px #3D272A66">
-              <span id="dailyTarotNumber" class="text-[9px] tracking-widest"></span><div class="text-4xl my-4" id="dailyTarotSymbol">✧</div><p id="dailyTarotCardName" class="text-xs font-extrabold uppercase tracking-wide"></p><p class="text-[8px] tracking-widest mt-2">FUTURE SELF</p>
-            </div>
-            <div class="text-left rounded-2xl p-3 space-y-2" style="background:#FFF9F9;color:#5A3D42">
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Главная мысль</p>
-              <p id="dailyTarotMessage" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">На что обратить внимание</p>
-              <p id="dailyTarotFocus" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">Вопрос себе</p>
-              <p id="dailyTarotQuestion" class="text-xs leading-relaxed italic"></p>
-            </div>
-          </div>
-          <button id="dailyTarotDrawBtn" onclick="drawDailyTarotCard()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5D5DA;color:#5A3D42">Открыть карту дня</button>
-          <p id="dailyTarotFootnote" class="text-[9px] text-white/70">Карта останется с тобой до конца дня</p>
-        </div>
-        <div id="dailyTarotHistory" class="space-y-2"></div>
-      </div>
-
-      <!-- Daily Affirmation Card -->
-      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
-        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
-        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
-        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
-      </div>
-
-      <!-- Gratitude Form -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
-        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
-      </div>
-
-      <div id="gratitudeHistoryContainer" class="space-y-2">
-        <!-- Rendered via JS -->
-      </div>
-
-      <!-- Feelings Journal -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <div>
-          <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">Дневник чувств</h3>
-          <p class="text-[10px] text-mauve-light mt-1">Отметь, что ты чувствуешь сейчас. Здесь нет правильных или неправильных эмоций.</p>
-        </div>
-        <select id="feelingMood" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none">
-          <option value="Радость">😊 Радость</option>
-          <option value="Спокойствие">😌 Спокойствие</option>
-          <option value="Благодарность">🤍 Благодарность</option>
-          <option value="Вдохновение">✨ Вдохновение</option>
-          <option value="Тревога">🌧️ Тревога</option>
-          <option value="Грусть">💧 Грусть</option>
-          <option value="Злость">🔥 Злость</option>
-          <option value="Усталость">🌙 Усталость</option>
-          <option value="Одиночество">🫂 Одиночество</option>
-          <option value="Растерянность">🌀 Растерянность</option>
-        </select>
-        <textarea id="feelingNote" rows="3" placeholder="Что повлияло на это состояние? О чём хочется себе сказать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve focus:outline-none resize-y"></textarea>
-        <button onclick="saveFeelingEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить запись</button>
-      </div>
-      <div id="feelingHistoryContainer" class="space-y-2"></div>
-    </section>
-
-  </main>
-
-  <!-- NAVIGATION BAR -->
-  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass-card border-t border-blush/80 px-2 py-2 z-40 flex justify-around items-center">
-    <button onclick="switchTab('vision')" class="nav-btn flex flex-col items-center text-dusty" data-tab="vision">
-      <i class="fa-solid fa-compass text-base"></i>
-      <span class="text-[9px] font-bold mt-1">Карта</span>
-    </button>
-    <button onclick="switchTab('future')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="future">
-      <i class="fa-solid fa-feather text-base"></i>
-      <span class="text-[9px] font-bold mt-1">Видение</span>
-    </button>
-    <button onclick="switchTab('goals')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="goals">
-      <i class="fa-solid fa-bullseye text-base"></i>
-      <span class="text-[9px] font-bold mt-1">Цели</span>
-    </button>
-    <button onclick="switchTab('practices')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="practices">
-      <i class="fa-solid fa-wind text-base"></i>
-      <span class="text-[9px] font-bold mt-1">Практики</span>
-    </button>
-    
-    <button onclick="switchTab('daily')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="daily">
-      <i class="fa-solid fa-book-open text-base"></i>
-      <span class="text-[9px] font-bold mt-1">Дневник</span>
-    </button>
-  </nav>
-
-  <!-- MODALS -->
-  <div id="addBoardModal" class="fixed inset-0 bg-mauve/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-cream w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-blush space-y-4">
-      <div class="flex justify-between items-center">
-        <h3 class="font-sans text-base font-extrabold text-mauve">Готовые образы</h3>
-        <button onclick="closeModal('addBoardModal')" class="text-mauve-light"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <p class="text-[11px] text-mauve-light">Можно использовать подборку или загрузить свои фотографии с устройства.</p><div id="curatedImagesGrid" class="grid grid-cols-3 gap-2 max-h-56 overflow-y-auto"></div>
-    </div>
-  </div>
-
-  <div id="addGoalModal" class="fixed inset-0 bg-mauve/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-cream w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 border border-blush space-y-3">
-      <div class="flex justify-between items-center">
-        <h3 class="font-sans text-base font-extrabold text-mauve">Новая Цель</h3>
-        <button onclick="closeModal('addGoalModal')" class="text-mauve-light"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <input type="text" id="goalTitleInput" placeholder="Название цели..." class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none">
-      <select id="goalCategorySelect" class="w-full bg-milk border border-blush rounded-xl p-2.5 text-xs text-mauve focus:outline-none">
-        <option value="wealth">💎 Финансы</option>
-        <option value="career">🚀 Карьера</option>
-        <option value="love">💗 Любовь</option>
-        <option value="health">🌿 Здоровье</option>
-      </select>
-      <button onclick="saveNewGoal()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить</button>
-    </div>
-  </div>
-
-  <div id="premiumModal" class="fixed inset-0 bg-mauve/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-mauve border border-blush/40 w-full max-w-sm rounded-3xl p-6 text-cream space-y-4 text-center shadow-2xl relative">
-      <button onclick="closeModal('premiumModal')" class="absolute top-4 right-4 text-blush/60"><i class="fa-solid fa-xmark text-lg"></i></button>
-      <div class="w-12 h-12 rounded-full bg-dusty/20 text-blush-light border border-blush flex items-center justify-center mx-auto text-xl">
-        <i class="fa-solid fa-crown"></i>
-      </div>
-      <h3 class="font-sans text-xl font-extrabold text-blush-light">FUTURE SELF PRO</h3>
-      <p class="text-xs text-blush/80">Неограниченные карты, практики дыхания и AI-наставник.</p>
-      <div class="rounded-xl bg-white/10 p-3 text-left text-[10px] leading-relaxed text-blush/80 space-y-1"><p><b>Подписка:</b> 390 ⭐ за 1 месяц.</p><p>Оплата проходит в Telegram Stars. Звёзды списываются только после подтверждения платежа. Доступ PRO предоставляется на оплаченный период; продление и отмена должны быть доступны в разделе управления подпиской.</p><p>Платёж не будет выполнен без твоего подтверждения.</p></div>
-      <button onclick="simulateTelegramPay()" class="w-full py-3 rounded-xl rose-shimmer-bg text-mauve font-extrabold text-xs uppercase shadow-xl">Оплатить • 390 ⭐ / мес</button>
-    </div>
-  </div>
-
-
-  <div id="adminModal" class="fixed inset-0 bg-mauve/80 backdrop-blur-md z-50 hidden p-3 overflow-y-auto">
-    <div class="bg-cream w-full max-w-md mx-auto rounded-3xl p-5 border border-blush space-y-4 my-4">
-      <div class="flex justify-between items-center"><div><p class="text-[10px] uppercase tracking-widest text-dusty font-bold">Управление доступом</p><h3 class="text-xl font-extrabold text-mauve">Панель администратора</h3></div><button onclick="closeModal('adminModal')" class="text-mauve-light"><i class="fa-solid fa-xmark"></i></button></div>
-      <div class="bg-milk rounded-2xl p-3 text-xs text-mauve">Выдавай подругам бесплатный полный доступ FRIENDS. Для этого нужен их числовой Telegram ID. Доступ можно сделать бессрочным или ограничить по времени.</div>
-      <div class="space-y-2"><label class="text-xs font-bold text-mauve">Telegram ID пользователя</label><input id="friendTelegramId" inputmode="numeric" placeholder="Например, 123456789" class="w-full bg-white border border-blush rounded-xl p-3 text-sm"></div>
-      <div class="space-y-2"><label class="text-xs font-bold text-mauve">Срок доступа</label><select id="friendDuration" class="w-full bg-white border border-blush rounded-xl p-3 text-sm"><option value="0">Бессрочно</option><option value="7">7 дней</option><option value="30">30 дней</option><option value="90">90 дней</option><option value="365">1 год</option></select></div>
-      <button onclick="grantFriendAccess()" class="w-full py-3 bg-mauve text-white rounded-xl text-sm font-bold">Выдать полный доступ по Telegram ID</button>
-      <div class="border border-blush rounded-2xl p-3 space-y-2"><p class="text-xs font-bold text-mauve">Одноразовая ссылка-приглашение</p><p class="text-[10px] text-mauve-light">Выбери срок доступа и создай ссылку. Она действует 7 дней и активируется только одним человеком.</p><button onclick="createAccessInvite()" class="w-full py-3 rounded-xl bg-rose-100 text-mauve text-sm font-bold">Создать ссылку</button><div id="inviteLinkResult" class="hidden space-y-2"><input id="createdInviteUrl" readonly class="w-full bg-white border border-blush rounded-xl p-2 text-[10px] text-mauve"><button onclick="copyAccessInvite()" class="w-full py-2 rounded-xl bg-mauve text-white text-xs font-bold">Скопировать ссылку</button></div></div>
-      <div class="flex justify-between items-center pt-2"><h4 class="text-sm font-bold text-mauve">Пользователи с доступом</h4><button onclick="loadFriendUsers()" class="text-xs underline text-dusty">Обновить</button></div>
-      <div id="friendUsersList" class="space-y-2 text-xs text-mauve"><p class="text-mauve-light">Загрузка списка...</p></div>
-      <p class="text-[10px] text-mauve-light">Управление работает через защищённый сервер. Владелец задаётся в настройках сервера, а не в браузере.</p>
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 bg-mauve text-blush-light border border-blush px-4 py-2 rounded-full text-xs font-semibold shadow-xl opacity-0 transition-opacity pointer-events-none z-50">
-    <span id="toastMsg">Сохранено</span>
-  </div>
-
-  <!-- AUDIO -->
-  <audio id="ambientAudio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
-
-  <!-- JAVASCRIPT APP LOGIC -->
-  <script>
-    const tg = window.Telegram?.WebApp;
-    tg?.ready();
-    tg?.expand();
-
-    function syncAppViewportHeight() {
-      const telegramHeight = Number(tg?.viewportHeight || 0);
-      const visualHeight = Number(window.visualViewport?.height || 0);
-      const height = telegramHeight > 0 ? telegramHeight : visualHeight > 0 ? visualHeight : window.innerHeight;
-      if (height > 0) document.documentElement.style.setProperty('--app-viewport-height', height + 'px');
-
-      // Telegram fullscreen can extend beneath the iPhone status bar/notch.
-      // Respect both device and Telegram content safe areas before placing the header.
-      const deviceTop = Number(tg?.safeAreaInset?.top || 0);
-      const contentTop = Number(tg?.contentSafeAreaInset?.top || 0);
-      const telegramSafeTop = deviceTop + contentTop;
-      document.documentElement.style.setProperty('--telegram-safe-top', telegramSafeTop + 'px');
-    }
-    syncAppViewportHeight();
-    tg?.onEvent?.('viewportChanged', syncAppViewportHeight);
-    tg?.onEvent?.('safeAreaChanged', syncAppViewportHeight);
-    tg?.onEvent?.('contentSafeAreaChanged', syncAppViewportHeight);
-    tg?.onEvent?.('fullscreenChanged', syncAppViewportHeight);
-    window.addEventListener('resize', syncAppViewportHeight);
-    window.visualViewport?.addEventListener('resize', syncAppViewportHeight);
-
-    const API = 'https://future-self-server-weuq.onrender.com/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
-    const DEFAULT_STATE = {
-      user: { name: 'Гость', isPremium: false, access: 'FREE' },
-      boardElements: [
-        { id: '1', type: 'image', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80', x: 12, y: 18, width: 140, title: 'Путешествия' },
-        { id: '2', type: 'image', url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80', x: 165, y: 42, width: 140, title: 'Дом мечты' }
-      ], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
-      goals: [{ id: 'g1', title: 'Создать личный проект', cat: 'career', completed: false }], gratitudes: [], feelings: []
-    };
-    const storageKey = 'FUTURE_SELF_APP_STATE_' + (tg?.initDataUnsafe?.user?.id || 'preview');
-    let appState = { ...DEFAULT_STATE, ...(JSON.parse(localStorage.getItem(storageKey) || 'null') || {}) };
-    let accessRole = 'FREE'; let isAdmin = false;
-    const initData = tg?.initData || '';
-    async function api(path, body) {
-      if (!initData) throw new Error('Открой приложение через Telegram-бота, чтобы использовать защищённые функции.');
-      const response = await fetch(API + path, { method: body ? 'POST' : 'GET', headers: { 'Content-Type':'application/json', 'X-Telegram-Init-Data': initData }, body: body ? JSON.stringify(body) : undefined });
-      const data = await response.json().catch(()=>({}));
-      if (!response.ok) throw new Error(data.error || 'Ошибка сервера');
-      return data;
-    }
-    function saveState() { try { localStorage.setItem(storageKey, JSON.stringify(appState)); } catch(e) { showToast('Память устройства заполнена. Удали часть фото с карты.'); } }
-    function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toastMsg').innerText=msg; t.classList.remove('opacity-0'); clearTimeout(window.toastTimer); window.toastTimer=setTimeout(()=>t.classList.add('opacity-0'),2200); }
-    function escapeHtml(value='') { return String(value).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-    function setAccess(role) {
-      accessRole=role; appState.user.access=role; appState.user.isPremium=['PRO','FRIENDS','ADMIN'].includes(role);
-      const status=document.getElementById('userAccountStatus');
-      if(status) status.innerText = role==='FRIENDS' ? 'FRIENDS • ПОЛНЫЙ ДОСТУП БЕСПЛАТНО' : role==='ADMIN' ? 'ADMIN • ПОЛНЫЙ ДОСТУП' : role==='PRO' ? 'PRO • ПОЛНЫЙ ДОСТУП' : 'FREE • BASIC';
-      document.getElementById('adminOpenBtn')?.classList.toggle('hidden',!isAdmin);
-    }
-    async function initAccount() {
-      const user=tg?.initDataUnsafe?.user;
-      if(user) { appState.user.name=user.first_name || 'Пользователь'; document.getElementById('userGreeting').innerText='КАРТА БУДУЩЕГО • '+appState.user.name.toUpperCase(); }
-      if(initData) { try { const inviteToken=tg?.initDataUnsafe?.start_param; if(inviteToken) { try { await api('/invites/redeem',{token:inviteToken}); showToast('Полный доступ активирован!'); } catch(inviteError) { showToast(inviteError.message); } } const me=await api('/me'); isAdmin=!!me.isAdmin; setAccess(me.access); } catch(e) { showToast(e.message); } }
-      else { document.getElementById('userGreeting').innerText='КАРТА БУДУЩЕГО • ДЕМО'; setAccess('FREE'); }
-    }
-    function switchTab(tabId) {
-      if (['practices','ai'].includes(tabId) && !appState.user.isPremium) { openPremiumModal(); return; }
-      document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(btn=>{btn.classList.remove('text-dusty');btn.classList.add('text-mauve-light');});
-      document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
-      const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
-      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();renderDailyTarot();}
-    }
-    let selectedBoardItemId=null;
-    function boardPlacement(width){const c=document.getElementById('boardCanvas');const maxX=Math.max(8,(c?.clientWidth||340)-width-8);return{x:Math.round(8+Math.random()*maxX),y:Math.round(8+Math.random()*210),rotation:Math.round((Math.random()*12-6)*10)/10};}
-    function renderVisionBoard(){const c=document.getElementById('boardCanvas');c.innerHTML='';appState.boardElements.forEach(item=>{const d=document.createElement('div');const free=item.type==='image'&&item.style==='free';d.className='board-item absolute '+(item.type==='text'?'rounded-2xl overflow-hidden shadow-md border border-blush bg-white p-1':free?'overflow-visible':'rounded-2xl overflow-hidden shadow-md border '+(item.id===selectedBoardItemId?'border-2 border-dusty':'border-blush')+' bg-white p-1');if(item.id===selectedBoardItemId&&free)d.style.outline='2px solid #b88ba7';d.style.left=item.x+'px';d.style.top=item.y+'px';d.style.width=item.width+'px';d.style.transform='rotate('+(item.rotation||0)+'deg)';d.dataset.id=item.id;if(item.type==='text'){d.innerHTML='<div class="min-h-20 flex items-center justify-center p-3 text-center text-sm font-bold text-mauve">'+escapeHtml(item.text||'Твоя аффирмация')+'</div>';}else if(free){d.innerHTML='<img src="'+escapeHtml(item.url)+'" class="block w-full h-auto max-h-36 object-contain pointer-events-none drop-shadow-md">';}else{d.innerHTML='<img src="'+escapeHtml(item.url)+'" class="w-full h-24 object-cover rounded-xl pointer-events-none"><p class="text-[9px] font-bold text-mauve text-center mt-1 truncate">'+escapeHtml(item.title||'')+'</p>';}d.addEventListener('pointerdown',startBoardDrag);d.addEventListener('click',()=>selectBoardItem(item.id));c.appendChild(d);});}
-    function syncBoardItemTools(item){if(!item)return;document.getElementById('selectedBoardItemName').innerText=item.type==='text'?'Текстовый блок':(item.title||'Изображение');document.getElementById('boardSizeControl').value=item.width||135;document.getElementById('boardCaptionControl').value=item.type==='text'?item.text:(item.title||'');const image=item.type==='image';document.getElementById('boardImageStyleTools').classList.toggle('hidden',!image);if(image){const free=item.style==='free';document.getElementById('boardStyleFramed').className=free?'px-2 py-2 rounded-lg bg-white border border-blush text-mauve text-[10px] font-bold':'px-2 py-2 rounded-lg bg-mauve text-white text-[10px] font-bold';document.getElementById('boardStyleFree').className=free?'px-2 py-2 rounded-lg bg-mauve text-white text-[10px] font-bold':'px-2 py-2 rounded-lg bg-white border border-blush text-mauve text-[10px] font-bold';document.getElementById('boardRotationControl').value=item.rotation||0;document.getElementById('boardRotationValue').innerText=(item.rotation||0)+'°';}document.getElementById('boardCaptionControl').classList.toggle('hidden',item.type==='image'&&item.style==='free');}
-    function selectBoardItem(id){selectedBoardItemId=id;const item=appState.boardElements.find(x=>x.id===id);const tools=document.getElementById('boardElementTools');tools.classList.toggle('hidden',!item);if(item)syncBoardItemTools(item);renderVisionBoard();}
-    function startBoardDrag(e){if(e.target.tagName==='INPUT')return;const el=e.currentTarget,id=el.dataset.id;selectedBoardItemId=id;const item=appState.boardElements.find(x=>x.id===id);const tools=document.getElementById('boardElementTools');tools.classList.remove('hidden');syncBoardItemTools(item);const startX=e.clientX,startY=e.clientY,origX=item.x,origY=item.y;el.setPointerCapture?.(e.pointerId);function move(ev){const rect=document.getElementById('boardCanvas').getBoundingClientRect();item.x=Math.max(0,Math.min(rect.width-item.width,origX+ev.clientX-startX));item.y=Math.max(0,Math.min(rect.height-65,origY+ev.clientY-startY));el.style.left=item.x+'px';el.style.top=item.y+'px';}function end(){el.removeEventListener('pointermove',move);el.removeEventListener('pointerup',end);saveState();}el.addEventListener('pointermove',move);el.addEventListener('pointerup',end);}
-    function resizeSelectedBoardItem(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(item){item.width=Number(value);saveState();renderVisionBoard();}}
-    function setSelectedBoardStyle(style){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(!item||item.type!=='image')return;item.style=style;saveState();syncBoardItemTools(item);renderVisionBoard();}
-    function rotateSelectedBoardItem(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(!item||item.type!=='image')return;item.rotation=Number(value);const label=document.getElementById('boardRotationValue');if(label)label.innerText=item.rotation+'°';const el=document.querySelector('.board-item[data-id="'+CSS.escape(item.id)+'"]');if(el)el.style.transform='rotate('+item.rotation+'deg)';saveState();}
-    function updateSelectedBoardCaption(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(item){if(item.type==='text')item.text=value;else item.title=value;saveState();renderVisionBoard();}}
-    function deleteSelectedBoardItem(){appState.boardElements=appState.boardElements.filter(x=>x.id!==selectedBoardItemId);selectedBoardItemId=null;document.getElementById('boardElementTools').classList.add('hidden');saveState();renderVisionBoard();}
-    function addBoardText(){const text=prompt('Напиши фразу или аффирмацию для карты:');if(!text?.trim())return;const id=String(Date.now());appState.boardElements.push({id,type:'text',text:text.trim(),x:20+(appState.boardElements.length%2)*130,y:20+Math.floor(appState.boardElements.length/2)*100,width:150});saveState();renderVisionBoard();selectBoardItem(id);}
-    function openAddElementModal(){const grid=document.getElementById('curatedImagesGrid');const images=[['Море','https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500'],['Дом','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500'],['Путешествие','https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500'],['Стиль жизни','https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500'],['Финансы','https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=500'],['Здоровье','https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500']];grid.innerHTML=images.map(([name,url])=>`<button onclick="addBoardImage('${url}','${name}')" class="rounded-xl overflow-hidden border border-blush"><img src="${url}" class="w-full h-20 object-cover"><span class="block p-1 text-[10px] text-mauve">${name}</span></button>`).join('');document.getElementById('addBoardModal').classList.remove('hidden');}
-    function addBoardImage(url,title){const width=95+Math.round(Math.random()*55),pos=boardPlacement(width);appState.boardElements.push({id:String(Date.now()+Math.random()),type:'image',url,title,...pos,width,style:Math.random()<.5?'framed':'free'});saveState();renderVisionBoard();closeModal('addBoardModal');showToast('Добавлено на карту!');}
-    function handleBoardPhotoUpload(event){const files=Array.from(event.target.files||[]);if(!files.length)return;let done=0;files.forEach(file=>{if(!file.type.startsWith('image/')){done++;return;}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);const data=canvas.toDataURL('image/jpeg',.78),width=95+Math.round(Math.random()*55),pos=boardPlacement(width);appState.boardElements.push({id:String(Date.now()+done+Math.random()),type:'image',url:data,title:file.name.replace(/\.[^.]+$/,''),...pos,width,style:Math.random()<.5?'framed':'free'});done++;if(done===files.length){saveState();renderVisionBoard();showToast('Фотографии добавлены на карту');}};img.onerror=()=>{done++;if(done===files.length)showToast('Не удалось загрузить некоторые фото');};img.src=reader.result;};reader.readAsDataURL(file);});event.target.value='';}
-    let breathInterval=null,isBreathingActive=false,activeBreathKey='box',breathHapticsEnabled=true;
-    let breathSoundType='nature',breathSoundOn=false,breathAudioCtx=null,breathSoundNodes=[],breathMasterGain=null,breathNoiseBuffer=null;
-    function setBreathSound(type){breathSoundType=type;['nature','ambient','spa'].forEach(key=>{const b=document.getElementById('breathSound'+key.charAt(0).toUpperCase()+key.slice(1));if(!b)return;b.className=key===type?'px-2 py-2 rounded-xl bg-mauve text-white text-[10px] font-bold':'px-2 py-2 rounded-xl bg-milk border border-blush text-mauve text-[10px]';});if(breathSoundOn)startBreathSound();}
-    function setBreathSoundVolume(value){if(breathMasterGain&&breathAudioCtx)breathMasterGain.gain.setTargetAtTime(Number(value)/100*.16,breathAudioCtx.currentTime,.08);}
-    function stopBreathSound(){breathSoundNodes.forEach(n=>{try{n.stop?.();}catch(e){}try{n.disconnect?.();}catch(e){}});breathSoundNodes=[];if(breathMasterGain){try{breathMasterGain.disconnect();}catch(e){}breathMasterGain=null;}breathSoundOn=false;const t=document.getElementById('breathSoundText'),i=document.getElementById('breathSoundIcon');if(t)t.innerText='Включить звук';if(i)i.className='fa-solid fa-volume-high mr-1';}
-    function startBreathSound(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC){showToast('Звук не поддерживается этим браузером');return;}if(!breathAudioCtx)breathAudioCtx=new AC();breathAudioCtx.resume();stopBreathSound();breathMasterGain=breathAudioCtx.createGain();breathMasterGain.gain.value=Number(document.getElementById('breathSoundVolume')?.value||28)/100*.16;breathMasterGain.connect(breathAudioCtx.destination);const ctx=breathAudioCtx,master=breathMasterGain;function noise(){if(!breathNoiseBuffer){breathNoiseBuffer=ctx.createBuffer(1,ctx.sampleRate*4,ctx.sampleRate);const d=breathNoiseBuffer.getChannelData(0);for(let j=0;j<d.length;j++)d[j]=Math.random()*2-1;}const src=ctx.createBufferSource();src.buffer=breathNoiseBuffer;src.loop=true;breathSoundNodes.push(src);return src;}function tone(freq,gain,type='sine',detune=0){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;o.detune.value=detune;g.gain.value=gain;o.connect(g);g.connect(master);o.start();breathSoundNodes.push(o,g);}if(breathSoundType==='nature'){const src=noise(),filter=ctx.createBiquadFilter(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();filter.type='lowpass';filter.frequency.value=520;g.gain.value=.55;lfo.frequency.value=.12;lg.gain.value=180;lfo.connect(lg);lg.connect(filter.frequency);src.connect(filter);filter.connect(g);g.connect(master);src.start();lfo.start();breathSoundNodes.push(filter,g,lfo,lg);}else if(breathSoundType==='ambient'){tone(110,.24,'sine');tone(164.81,.12,'sine',3);tone(220,.06,'sine',-4);const src=noise(),f=ctx.createBiquadFilter(),g=ctx.createGain();f.type='lowpass';f.frequency.value=380;g.gain.value=.09;src.connect(f);f.connect(g);g.connect(master);src.start();breathSoundNodes.push(f,g);}else{tone(220,.17,'sine');tone(329.63,.12,'sine',2);tone(440,.045,'sine',-3);const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=0.12;g.gain.value=.025;o.connect(g);g.connect(master);o.start();breathSoundNodes.push(o,g);}breathSoundOn=true;document.getElementById('breathSoundText').innerText='Выключить звук';document.getElementById('breathSoundIcon').className='fa-solid fa-volume-xmark mr-1';}catch(e){stopBreathSound();showToast('Не удалось включить звук');}}
-    function toggleBreathSound(){if(breathSoundOn)stopBreathSound();else startBreathSound();}
-    const BREATH_PATTERNS={box:{title:'Квадратное дыхание (4-4-4-4)',phases:[['Вдох',4,1.3],['Задержка',4,1.3],['Выдох',4,.8],['Задержка',4,.8]]},sleep:{title:'4-7-8 Расслабление',phases:[['Вдох',4,1.3],['Задержка',7,1.3],['Выдох',8,.8]]},energy:{title:'6-2-6 Энергия',phases:[['Вдох',6,1.3],['Задержка',2,1.3],['Выдох',6,.8]]}};
-    function triggerBreathHaptic(){if(!breathHapticsEnabled)return;try{if(tg?.HapticFeedback?.selectionChanged){tg.HapticFeedback.selectionChanged();}else if(navigator.vibrate){navigator.vibrate(25);}}catch(e){}}
-    function toggleBreathHaptics(){breathHapticsEnabled=!breathHapticsEnabled;const b=document.getElementById('breathHapticBtn');if(b)b.innerText='Вибрация: '+(breathHapticsEnabled?'включена':'выключена');if(breathHapticsEnabled)triggerBreathHaptic();}
-    function setBreathPattern(key){stopBreathing();activeBreathKey=key;document.getElementById('breathPatternTitle').innerText=BREATH_PATTERNS[key].title;}
-    function stopBreathing(){clearInterval(breathInterval);isBreathingActive=false;document.getElementById('breathPlayIcon').className='fa-solid fa-play';document.getElementById('breathPlayText').innerText='Начать Практику';document.getElementById('breathCircle').style.transform='scale(1)';}
-    function toggleBreathingSession(){if(isBreathingActive){stopBreathing();return;}isBreathingActive=true;document.getElementById('breathPlayIcon').className='fa-solid fa-pause';document.getElementById('breathPlayText').innerText='Пауза';runBreathLoop();}
-    function runBreathLoop(){const phases=BREATH_PATTERNS[activeBreathKey].phases;let i=0;function step(){if(!isBreathingActive)return;let [name,duration,scale]=phases[i];let n=duration;triggerBreathHaptic();document.getElementById('breathPhaseText').innerText=name;document.getElementById('breathTimerNum').innerText=n;document.getElementById('breathCircle').style.transform=`scale(${scale})`;breathInterval=setInterval(()=>{n--;document.getElementById('breathTimerNum').innerText=n;if(n<=0){clearInterval(breathInterval);i=(i+1)%phases.length;step();}},1000);}step();}
+    function renderPracticeProgress(){const days=[...new Set(appState.practiceDays||[])].sort().slice(-30),count=days.length,percent=Math.round(count/30*100),countEl=document.getElementById('practiceProgressCount'),bar=document.getElementById('practiceProgressBar'),hint=document.getElementById('practiceProgressHint'),button=document.getElementById('practiceCompleteBtn');if(!countEl||!bar||!hint||!button)return;countEl.innerText=count+'/30';bar.style.width=percent+'%';const done=days.includes(localDayKey());hint.innerText=count>=30?'Ты завершила 30-дневный цикл. Отличная работа!':done?'Сегодняшняя практика уже отмечена. Возвращайся завтра.':'Отмечай день, когда выполнила любую практику.';button.disabled=done||count>=30;button.innerText=count>=30?'30 дней завершено':done?'Сегодня уже отмечено':'Отметить практику сегодня';button.style.opacity=button.disabled?'.6':'1';}
+    function markPracticeDay(){appState.practiceDays=Array.isArray(appState.practiceDays)?appState.practiceDays:[];const today=localDayKey();if(appState.practiceDays.includes(today)||appState.practiceDays.length>=30){renderPracticeProgress();return;}appState.practiceDays.push(today);saveState();renderPracticeProgress();showToast('Практика отмечена. Так держать!');}
     function renderGoals(){const c=document.getElementById('goalsContainer');c.innerHTML=appState.goals.map(g=>`<div class="glass-card rounded-2xl p-3 border border-blush flex justify-between items-center"><div><h4 class="text-xs font-bold text-mauve ${g.completed?'line-through text-mauve-light':''}">${escapeHtml(g.title)}</h4><span class="text-[9px] text-mauve-light font-semibold">${escapeHtml(g.cat)}</span></div><button onclick="toggleGoal('${g.id}')" class="w-7 h-7 rounded-full ${g.completed?'bg-dusty text-white':'bg-milk border border-blush text-mauve-light'}"><i class="fa-solid fa-check text-xs"></i></button></div>`).join('');const done=appState.goals.filter(g=>g.completed).length;document.getElementById('statActiveGoals').innerText=appState.goals.length-done;document.getElementById('statCompletedGoals').innerText=done;document.getElementById('statGoalProgressPercent').innerText=(appState.goals.length?Math.round(done/appState.goals.length*100):0)+'%';}
     function toggleGoal(id){const g=appState.goals.find(x=>x.id===id);if(g){g.completed=!g.completed;saveState();renderGoals();}}
     function openAddGoalModal(){document.getElementById('addGoalModal').classList.remove('hidden');} function openPremiumModal(){document.getElementById('premiumModal').classList.remove('hidden');} function closeModal(id){document.getElementById(id).classList.add('hidden');}
