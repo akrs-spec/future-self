@@ -259,10 +259,133 @@
     <section id="tab-daily" class="tab-content hidden space-y-4">
       <div>
         <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Рефлексия</span>
-        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник Дня</h2>
+        <h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Дневник дня</h2>
+        <p class="text-[11px] text-mauve-light mt-1">Твои записи остаются здесь. Открывай нужный раздел, когда захочешь вернуться к ним.</p>
       </div>
 
-<!-- Feelings Journal -->
+      <div id="dailyJournalHome" class="space-y-2">
+        <button onclick="openDailySection('card')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
+          <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">✧</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Карта дня</span><span class="block text-[10px] text-mauve-light mt-1">Символ дня и короткий ответ «да» или «нет»</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
+        <button onclick="openDailySection('affirmation')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
+          <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">♡</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Аффирмация дня</span><span class="block text-[10px] text-mauve-light mt-1">Настрой и мысль, которую хочется забрать с собой</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
+        <button onclick="openDailySection('gratitude')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
+          <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">🤍</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Дневник благодарности</span><span class="block text-[10px] text-mauve-light mt-1">Три вещи, за которые ты благодарна сегодня</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
+        <button onclick="openDailySection('feelings')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
+          <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">☁</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Дневник чувств</span><span class="block text-[10px] text-mauve-light mt-1">Отметь своё состояние и сохрани мысли</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
+        <button onclick="openDailySection('letter')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
+          <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">✉</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Письмо в будущее</span><span class="block text-[10px] text-mauve-light mt-1">Практика визуализации своей будущей жизни</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
+      </div>
+
+      <div id="dailySection-card" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <h3 class="text-lg font-extrabold text-mauve">Карта дня</h3>
+        <!-- Карта дня -->
+    <div class="space-y-3">
+        <div class="flex items-end justify-between">
+          <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Точка внимания</span><h3 class="text-lg font-extrabold text-mauve">Карта дня</h3></div>
+          <span class="text-[9px] text-mauve-light">78 архетипов • один день</span>
+        </div>
+        <p class="text-[11px] leading-relaxed text-mauve-light">Не предсказание и не приговор. Просто символ, через который можно посмотреть на себя и на то, что сейчас происходит.</p>
+        <div id="dailyTarotCard" class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#5A3D42,#846066 58%,#C98B93);color:#FFF9F9;min-height:260px">
+          <div id="dailyTarotBack" class="mx-auto w-36 h-48 rounded-2xl border border-white/40 flex flex-col items-center justify-center p-4" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.07),rgba(255,255,255,.07) 2px,transparent 2px,transparent 9px),linear-gradient(145deg,#846066,#3D272A);box-shadow:0 12px 28px #3D272A66">
+            <div class="w-16 h-16 rounded-full border border-blush-light/70 flex items-center justify-center text-3xl">✧</div>
+            <p class="mt-4 text-[10px] tracking-[.25em] font-bold">FUTURE SELF</p><p class="text-[9px] tracking-widest mt-1">YOUR DAILY SYMBOL</p>
+          </div>
+          <div id="dailyTarotReveal" class="hidden space-y-3">
+            <div class="mx-auto w-36 min-h-48 rounded-2xl border border-white/40 p-3 flex flex-col items-center justify-center" style="background:linear-gradient(155deg,#FDF2F4,#E8C5C8);color:#5A3D42;box-shadow:0 12px 28px #3D272A66">
+              <span id="dailyTarotNumber" class="text-[9px] tracking-widest"></span><div class="text-4xl my-4" id="dailyTarotSymbol">✧</div><p id="dailyTarotCardName" class="text-xs font-extrabold uppercase tracking-wide"></p><p class="text-[8px] tracking-widest mt-2">FUTURE SELF</p>
+            </div>
+            <div class="text-left rounded-2xl p-3 space-y-2" style="background:#FFF9F9;color:#5A3D42">
+              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Главная мысль</p>
+              <p id="dailyTarotMessage" class="text-xs leading-relaxed"></p>
+              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">На что обратить внимание</p>
+              <p id="dailyTarotFocus" class="text-xs leading-relaxed"></p>
+              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">Вопрос себе</p>
+              <p id="dailyTarotQuestion" class="text-xs leading-relaxed italic"></p>
+            </div>
+          </div>
+          <button id="dailyTarotDrawBtn" onclick="drawDailyTarotCard()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5D5DA;color:#5A3D42">Открыть карту дня</button>
+          <p id="dailyTarotFootnote" class="text-[9px] text-white/70">Карта останется с тобой до конца дня</p>
+        </div>
+        <div id="dailyTarotHistory" class="space-y-2"></div>
+      </div>
+
+
+    
+      <!-- YES / NO ORACLE -->
+      <div class="glass-card rounded-3xl p-5 border border-blush space-y-4 text-center">
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Короткий ответ</span>
+          <h3 class="text-lg font-extrabold text-mauve">Шар судьбы</h3>
+          <p class="text-[11px] leading-relaxed text-mauve-light">Мысленно задай вопрос, на который можно ответить только «да» или «нет», и коснись шара.</p>
+        </div>
+        <button id="fateBallButton" type="button" onclick="rollFateBall()" class="fate-ball mx-auto flex items-center justify-center rounded-full" aria-label="Получить ответ да или нет">
+          <span id="fateBallAnswer" class="fate-ball-answer">?</span>
+        </button>
+        <p id="fateBallResult" class="min-h-7 text-xl font-extrabold text-mauve" aria-live="polite">Твой ответ появится здесь</p>
+        <div class="space-y-2">
+          <div class="flex items-center justify-center gap-1.5" id="fateBallAttempts" aria-label="Осталось три попытки">
+            <span class="fate-dot"></span><span class="fate-dot"></span><span class="fate-dot"></span>
+          </div>
+          <p id="fateBallCounter" class="text-[10px] text-mauve-light">Осталось 3 из 3 ответов на сегодня</p>
+        </div>
+        <p class="text-[9px] text-mauve-light">Это игра для размышления, а не способ принимать важные решения.</p>
+      </div>
+
+
+      </div>
+
+      <div id="dailySection-affirmation" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <h3 class="text-lg font-extrabold text-mauve">Аффирмация дня</h3>
+        
+      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
+        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
+        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
+        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
+      </div>
+      </div>
+
+      <div id="dailySection-gratitude" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <h3 class="text-lg font-extrabold text-mauve">Дневник благодарности</h3>
+        
+      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
+        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
+        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
+        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
+      </div>
+
+      <div id="gratitudeHistoryContainer" class="space-y-2">
+        <!-- Rendered via JS -->
+      </div>
+
+      
+
+
+      </div>
+
+      <div id="dailySection-feelings" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <h3 class="text-lg font-extrabold text-mauve">Дневник чувств</h3>
+        
       <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
         <div>
           <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">Дневник чувств</h3>
@@ -286,22 +409,12 @@
       <div id="feelingHistoryContainer" class="space-y-2"></div>
     
 
-<!-- Gratitude Form -->
-      <div class="glass-card p-4 rounded-2xl border border-blush space-y-3">
-        <h3 class="text-xs font-bold text-mauve uppercase tracking-wider">3 Благодарности сегодня</h3>
-        <input type="text" id="gratitude1" placeholder="1. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude2" placeholder="2. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <input type="text" id="gratitude3" placeholder="3. Я благодарна за..." class="w-full bg-milk border border-blush rounded-xl p-2 text-xs text-mauve focus:outline-none">
-        <button onclick="saveGratitudeEntry()" class="w-full py-2.5 bg-mauve text-blush-light text-xs font-bold rounded-xl shadow-md">Сохранить Дневник</button>
+
       </div>
 
-      <div id="gratitudeHistoryContainer" class="space-y-2">
-        <!-- Rendered via JS -->
-      </div>
-
-      
-
-<!-- Future Self: scripting -->
+      <div id="dailySection-letter" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        
 
       <div>
         <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Письмо в будущее</span>
@@ -346,14 +459,8 @@
 
       
 
-<!-- Daily Affirmation Card -->
-      <div class="glass-card p-4 rounded-2xl border border-blush text-center space-y-2">
-        <span class="text-xs font-bold text-dusty uppercase tracking-wider">АФФИРМАЦИЯ ДНЯ</span>
-        <p id="dailyAffirmationText" class="text-xs font-bold text-mauve italic">"Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью."</p>
-        <button onclick="generateNewAffirmation()" class="text-[10px] text-dusty font-bold underline">Другая аффирмация</button>
-      </div>
 
-      
+      </div>
     </section>
 
     <!-- 3. GOAL PLANNER -->
@@ -479,62 +586,7 @@
     </section>
 
     <!-- 6. DAILY INSPIRATION & JOURNAL -->
-    <section id="tab-future" class="tab-content hidden space-y-4">
-      <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Саморефлексия и символы</span><h2 class="font-sans text-2xl text-mauve font-extrabold tracking-tight">Оракул</h2></div>
-      <!-- Карта дня -->
-    <div class="space-y-3">
-        <div class="flex items-end justify-between">
-          <div><span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Точка внимания</span><h3 class="text-lg font-extrabold text-mauve">Карта дня</h3></div>
-          <span class="text-[9px] text-mauve-light">78 архетипов • один день</span>
-        </div>
-        <p class="text-[11px] leading-relaxed text-mauve-light">Не предсказание и не приговор. Просто символ, через который можно посмотреть на себя и на то, что сейчас происходит.</p>
-        <div id="dailyTarotCard" class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#5A3D42,#846066 58%,#C98B93);color:#FFF9F9;min-height:260px">
-          <div id="dailyTarotBack" class="mx-auto w-36 h-48 rounded-2xl border border-white/40 flex flex-col items-center justify-center p-4" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,.07),rgba(255,255,255,.07) 2px,transparent 2px,transparent 9px),linear-gradient(145deg,#846066,#3D272A);box-shadow:0 12px 28px #3D272A66">
-            <div class="w-16 h-16 rounded-full border border-blush-light/70 flex items-center justify-center text-3xl">✧</div>
-            <p class="mt-4 text-[10px] tracking-[.25em] font-bold">FUTURE SELF</p><p class="text-[9px] tracking-widest mt-1">YOUR DAILY SYMBOL</p>
-          </div>
-          <div id="dailyTarotReveal" class="hidden space-y-3">
-            <div class="mx-auto w-36 min-h-48 rounded-2xl border border-white/40 p-3 flex flex-col items-center justify-center" style="background:linear-gradient(155deg,#FDF2F4,#E8C5C8);color:#5A3D42;box-shadow:0 12px 28px #3D272A66">
-              <span id="dailyTarotNumber" class="text-[9px] tracking-widest"></span><div class="text-4xl my-4" id="dailyTarotSymbol">✧</div><p id="dailyTarotCardName" class="text-xs font-extrabold uppercase tracking-wide"></p><p class="text-[8px] tracking-widest mt-2">FUTURE SELF</p>
-            </div>
-            <div class="text-left rounded-2xl p-3 space-y-2" style="background:#FFF9F9;color:#5A3D42">
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Главная мысль</p>
-              <p id="dailyTarotMessage" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">На что обратить внимание</p>
-              <p id="dailyTarotFocus" class="text-xs leading-relaxed"></p>
-              <p class="text-[9px] font-bold tracking-widest text-dusty uppercase pt-1">Вопрос себе</p>
-              <p id="dailyTarotQuestion" class="text-xs leading-relaxed italic"></p>
-            </div>
-          </div>
-          <button id="dailyTarotDrawBtn" onclick="drawDailyTarotCard()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5D5DA;color:#5A3D42">Открыть карту дня</button>
-          <p id="dailyTarotFootnote" class="text-[9px] text-white/70">Карта останется с тобой до конца дня</p>
-        </div>
-        <div id="dailyTarotHistory" class="space-y-2"></div>
-      </div>
-
-
     
-      <!-- YES / NO ORACLE -->
-      <div class="glass-card rounded-3xl p-5 border border-blush space-y-4 text-center">
-        <div class="space-y-1">
-          <span class="text-[10px] font-bold text-dusty uppercase tracking-widest">Короткий ответ</span>
-          <h3 class="text-lg font-extrabold text-mauve">Шар судьбы</h3>
-          <p class="text-[11px] leading-relaxed text-mauve-light">Мысленно задай вопрос, на который можно ответить только «да» или «нет», и коснись шара.</p>
-        </div>
-        <button id="fateBallButton" type="button" onclick="rollFateBall()" class="fate-ball mx-auto flex items-center justify-center rounded-full" aria-label="Получить ответ да или нет">
-          <span id="fateBallAnswer" class="fate-ball-answer">?</span>
-        </button>
-        <p id="fateBallResult" class="min-h-7 text-xl font-extrabold text-mauve" aria-live="polite">Твой ответ появится здесь</p>
-        <div class="space-y-2">
-          <div class="flex items-center justify-center gap-1.5" id="fateBallAttempts" aria-label="Осталось три попытки">
-            <span class="fate-dot"></span><span class="fate-dot"></span><span class="fate-dot"></span>
-          </div>
-          <p id="fateBallCounter" class="text-[10px] text-mauve-light">Осталось 3 из 3 ответов на сегодня</p>
-        </div>
-        <p class="text-[9px] text-mauve-light">Это игра для размышления, а не способ принимать важные решения.</p>
-      </div>
-
-</section>
 
     
 
@@ -559,10 +611,7 @@
       <span class="text-[9px] font-bold mt-1">Практики</span>
     </button>
     
-    <button onclick="switchTab('future')" class="nav-btn flex flex-col items-center text-mauve-light" data-tab="future">
-      <i class="fa-solid fa-moon text-base"></i>
-      <span class="text-[9px] font-bold mt-1">Оракул</span>
-    </button>
+
   </nav>
 
   <!-- MODALS -->
@@ -693,11 +742,26 @@
     }
     function switchTab(tabId) {
       if (['practices','ai'].includes(tabId) && !appState.user.isPremium) { openPremiumModal(); return; }
+      if (tabId === 'daily') closeDailySection();
       document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(btn=>{btn.classList.remove('text-dusty');btn.classList.add('text-mauve-light');});
       document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
       const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
-      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='future'){renderDailyTarot();renderFateBall();} if(tabId==='practices') renderPracticeProgress();
+      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='practices') renderPracticeProgress();
+    }
+    function openDailySection(key) {
+      document.getElementById('dailyJournalHome')?.classList.add('hidden');
+      document.querySelectorAll('[id^="dailySection-"]').forEach(section => section.classList.add('hidden'));
+      document.getElementById('dailySection-' + key)?.classList.remove('hidden');
+      if (key === 'card') { renderDailyTarot(); renderFateBall(); }
+      if (key === 'gratitude') renderGratitude();
+      if (key === 'feelings') renderFeelings();
+      document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
+    }
+    function closeDailySection() {
+      document.querySelectorAll('[id^="dailySection-"]').forEach(section => section.classList.add('hidden'));
+      document.getElementById('dailyJournalHome')?.classList.remove('hidden');
+      document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
     }
     let selectedBoardItemId=null;
     function boardPlacement(width){const c=document.getElementById('boardCanvas');const maxX=Math.max(8,(c?.clientWidth||340)-width-8);return{x:Math.round(8+Math.random()*maxX),y:Math.round(8+Math.random()*210),rotation:Math.round((Math.random()*12-6)*10)/10};}
