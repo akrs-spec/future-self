@@ -339,7 +339,7 @@
         </div>
 
         <button onclick="saveFutureSelfScript()" class="w-full py-3 bg-mauve text-blush-light text-xs font-bold rounded-2xl shadow-md hover:bg-mauve-light transition">
-          Сохранить Видение Будущего ✨
+          Сохранить письмо ✨
         </button>
       </div>
 
@@ -785,7 +785,7 @@
       result.textContent=current.answer||'Твой ответ появится здесь';
       counter.textContent=used>=3?'На сегодня ответы закончились':'Осталось '+(3-used)+' из 3 ответов на сегодня';
       button.disabled=used>=3;
-      dots.forEach((dot,index)=>dot.classList.toggle('used',index>=3-used));
+      dots.forEach((dot,index)=>dot.classList.toggle('used',index<used));
     }
     function rollFateBall(){
       const today=localDayKey();
