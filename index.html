@@ -283,8 +283,11 @@
           <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
         </button>
       </div>
-
-
+        <button onclick="openDailySection('pause')" class="w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left shadow-sm" style="background:linear-gradient(115deg,#F8ECEE,#FFF9F9)">
+          <span class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#EED9DD">↗</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Мне нужно переключиться</span><span class="block text-[10px] text-mauve-light mt-1">Один неожиданный план вместо импульсивного действия</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
 
       <div id="dailySection-affirmation" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button><div class="rounded-[2rem] p-6 min-h-[390px] relative overflow-hidden flex flex-col justify-between text-center shadow-card-float" style="background:radial-gradient(circle at 15% 12%,rgba(255,255,255,.72),transparent 30%),radial-gradient(circle at 88% 82%,rgba(201,139,147,.38),transparent 34%),linear-gradient(145deg,#F7E6E8 0%,#E8C5C8 48%,#C98B93 100%);"><div class="absolute -top-12 -right-10 w-44 h-44 rounded-full border border-white/40"></div><div class="absolute top-8 -left-8 w-28 h-28 rounded-full border border-white/40"></div><div class="relative"><p class="text-[10px] tracking-[.3em] uppercase font-bold text-mauve/70">FUTURE SELF · DAILY WORD</p><div class="w-14 h-14 mx-auto mt-8 rounded-full border border-white/70 bg-white/25 flex items-center justify-center text-3xl text-mauve">✧</div></div><div class="relative py-8"><p class="text-[10px] uppercase tracking-[.25em] font-bold text-mauve/60 mb-5">Аффирмация дня</p><p id="dailyAffirmationText" class="font-sans text-2xl leading-relaxed font-extrabold text-mauve">Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью.</p><div class="w-12 h-px bg-mauve/40 mx-auto mt-7"></div></div><div class="relative space-y-3"><p class="text-[10px] text-mauve/70">Прочитай медленно и побудь с этой мыслью</p><button onclick="generateNewAffirmation()" class="w-full py-3 rounded-2xl bg-mauve text-white text-xs font-bold shadow-lg"><i class="fa-solid fa-shuffle mr-2"></i>Другая аффирмация</button></div></div></div>
 
@@ -389,6 +392,42 @@
 
 
 
+      </div>
+
+      <div id="dailySection-pause" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <div class="rounded-3xl p-5 text-center space-y-3" style="background:radial-gradient(circle at 80% 0%,rgba(255,255,255,.8),transparent 38%),linear-gradient(145deg,#F7E8EA,#E8C9CE)">
+          <p class="text-[9px] tracking-[.28em] uppercase font-bold text-mauve/60">FUTURE SELF · A MOMENT FOR YOU</p>
+          <div class="text-3xl text-mauve">✧</div>
+          <h3 class="text-xl font-extrabold text-mauve">Не спеши за импульсом.</h3>
+          <p class="text-xs leading-relaxed text-mauve/80">Не обязательно побеждать желание или ругать себя за него. Давай просто займём ближайшее время чем-то, после чего тебе станет чуть лучше.</p>
+        </div>
+        <div class="glass-card rounded-2xl border border-blush p-4 space-y-3">
+          <div>
+            <p class="text-xs font-bold text-mauve">Сколько времени у тебя есть?</p>
+            <p class="text-[10px] text-mauve-light mt-1">Выбери время — я найду тебе занятие.</p>
+          </div>
+          <div class="grid grid-cols-5 gap-1.5">
+            <button type="button" onclick="setPauseDuration(5)" data-pause-duration="5" class="pause-duration py-2 rounded-xl border text-[10px] font-bold">5 мин</button>
+            <button type="button" onclick="setPauseDuration(15)" data-pause-duration="15" class="pause-duration py-2 rounded-xl border text-[10px] font-bold">15 мин</button>
+            <button type="button" onclick="setPauseDuration(30)" data-pause-duration="30" class="pause-duration py-2 rounded-xl border text-[10px] font-bold">30 мин</button>
+            <button type="button" onclick="setPauseDuration(45)" data-pause-duration="45" class="pause-duration py-2 rounded-xl border text-[10px] font-bold">45 мин</button>
+            <button type="button" onclick="setPauseDuration(60)" data-pause-duration="60" class="pause-duration py-2 rounded-xl border text-[10px] font-bold">1 час</button>
+          </div>
+          <button onclick="drawPauseActivity()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold shadow-md">Подбери мне занятие</button>
+        </div>
+        <div id="pauseActivityResult" class="hidden glass-card rounded-2xl border border-blush p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] uppercase tracking-widest font-bold text-dusty">Твой план на сейчас</span>
+            <span id="pauseActivityTime" class="text-[10px] font-bold text-mauve"></span>
+          </div>
+          <h3 id="pauseActivityTitle" class="text-lg font-extrabold text-mauve"></h3>
+          <p id="pauseActivityDescription" class="text-xs leading-relaxed text-mauve-light"></p>
+          <div class="pt-2 border-t border-blush">
+            <p class="text-[10px] text-mauve-light">Не нужно делать идеально. Просто начни — остальное не обязательно.</p>
+          </div>
+          <button onclick="drawPauseActivity()" class="w-full py-2.5 rounded-xl border border-blush text-xs font-bold text-mauve">Другой вариант</button>
+        </div>
       </div>
     </section>
 
@@ -714,6 +753,63 @@
       document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
       const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
       if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='practices') renderPracticeProgress();
+    }
+    const pauseActivities = [
+      {time:5,title:'Сделай себе маленький апгрейд',description:'Выбери одну деталь, которая давно раздражает: хаос на экране телефона, переполненная сумка, косметика без места. Удели ей пять минут. Не устраивай генеральную уборку — просто убери один визуальный шум.'},
+      {time:5,title:'Запиши сообщение. Но не адресату',description:'Открой заметки и напиши всё, что сейчас хочется отправить человеку. Без цензуры и красивых формулировок. В конце допиши: «Что я на самом деле хочу получить этим сообщением?» Сохрани для себя, не отправляй.'},
+      {time:5,title:'Поменяй декорации',description:'Выйди на балкон, к окну или просто перейди в другую комнату. Возьми напиток, который любишь, и пять минут смотри не в экран. Иногда голове нужно не решение, а другая картинка.'},
+      {time:5,title:'Собери плейлист из трёх треков',description:'Найди три песни под состояние, в котором хочешь оказаться, а не под то, в котором застряла. Сохрани их отдельным мини-плейлистом с названием, которое поймёшь только ты.'},
+      {time:5,title:'Верни себе пространство',description:'Убери один чат из закреплённых, закрой профиль, на который тянет заходить, или отключи уведомления. Не как драматичный жест — просто сделай доступ к импульсу на один шаг сложнее.'},
+      {time:15,title:'Устрой свидание с собственным вкусом',description:'Сделай себе напиток или перекус так, будто зашла в красивое маленькое кафе. Не ешь на бегу и не листай ленту. Выбери музыку, посуду и удели этому четверть часа.'},
+      {time:15,title:'Пройдись без маршрута и отчёта',description:'Выйди на улицу и иди туда, куда обычно не сворачиваешь. Не нужно считать шаги, снимать сторис или превращать прогулку в тренировку. Просто посмотри, что есть за пределами привычного круга.'},
+      {time:15,title:'Сделай ревизию желаний',description:'Запиши пять вещей, которых тебе хочется в ближайший месяц. Не «надо» и не «правильно», а именно хочется: место, впечатление, покупка, навык, встреча. Выбери одну, которую реально устроить.'},
+      {time:15,title:'Собери образ для версии себя с планами',description:'Открой гардероб и собери комплект, в котором ты пошла бы на интересную встречу или в новое место. Даже если сегодня никуда не идёшь. Можно сфотографировать и сохранить.'},
+      {time:15,title:'Разморозь одну отложенную мелочь',description:'Найди дело, которое занимает меньше четверти часа и висит в голове уже неделю: записаться, ответить, заказать, отменить, уточнить. Закрой только его. Не составляй список из двадцати пунктов.'},
+      {time:15,title:'Почитай не то, что «полезно»',description:'Открой книгу, эссе или статью на тему, которая тебя искренне цепляет. Не ставь цель прочитать главу. Найди один абзац, который хочется перечитать, и задержись на нём.'},
+      {time:15,title:'Сделай пространство чуть красивее',description:'Выбери одну поверхность — прикроватную тумбу, рабочий стол или полку. Убери лишнее и оставь только то, на что приятно смотреть. Остановись, когда место начнёт радовать.'},
+      {time:30,title:'Сходи на прогулку как турист в своём городе',description:'Выбери улицу или район, где давно не была. Зайди в незнакомый магазин, рассмотри фасады, найди место, которое хочется запомнить. Задача — вернуться с новым впечатлением, а не с покупками.'},
+      {time:30,title:'Приготовь блюдо, которое давно сохраняла',description:'Открой сохранённый рецепт и приготовь его без попытки сделать идеальную картинку. Можно красиво сервировать, включить музыку и устроить себе нормальный ужин, даже если ты одна.'},
+      {time:30,title:'Сделай себе домашний beauty-ритуал',description:'Не десять банок и не марафон ухода. Выбери одну вещь, которую обычно откладываешь: маска, ванна для ног, укладка, маникюр или спокойный уход за телом. Сделай это не на скорость.'},
+      {time:30,title:'Разбери одну цифровую залежь',description:'Открой сохранённые публикации, скриншоты или заметки. Удали то, что больше не актуально, а три действительно интересные вещи перенеси туда, где ты их найдёшь. Не пытайся разобрать весь телефон.'},
+      {time:30,title:'Сделай мини-проект руками',description:'Собери коллаж из референсов, переставь предметы на полке, оформи страницу блокнота, попробуй новый макияж или придумай обложку плейлиста. Важно получить маленький законченный результат.'},
+      {time:30,title:'Напиши себе честный разбор ситуации',description:'Раздели страницу на три части: «Что произошло», «Что я додумываю», «Что я точно знаю». Заполни без оправданий и обвинений. В конце напиши, какое действие завтра будет уважением к себе.'},
+      {time:30,title:'Устрой тренировку без наказания',description:'Включи музыку и подвигайся полчаса: танцы, растяжка, домашняя силовая или прогулка в бодром темпе. Не нужно отрабатывать еду, компенсировать день или ставить рекорд. Просто почувствуй тело.'},
+      {time:30,title:'Составь карту ближайших впечатлений',description:'Найди пять мест, куда можно сходить в ближайшие недели: кофейня, выставка, парк, книжный, красивый район. Сохрани адреса и выбери одно место для следующего свободного дня.'},
+      {time:30,title:'Позвони человеку, после которого легче',description:'Выбери того, с кем не нужно изображать идеальную версию себя. Не обязательно обсуждать проблему. Можно обменяться новостями, посмеяться или вместе выбрать, куда сходить.'},
+      {time:45,title:'Сделай вечер, который не зависит от чужого ответа',description:'Выбери фильм или документалку, приготовь что-нибудь вкусное, убери телефон подальше и устрой себе полноценный вечер. Не оставляй его в режиме ожидания — запланируй его как встречу, которая уже состоится.'},
+      {time:45,title:'Освой что-нибудь совершенно не обязательное',description:'Найди короткий урок по теме, которая просто любопытна: базовый рисунок, язык, монтаж, история моды, интерьер, музыка. Не превращай это в новый проект саморазвития. Сегодня можно учиться из интереса.'},
+      {time:45,title:'Обнови одну зону своей жизни',description:'Выбери маленький участок: рабочий стол, косметичку, полку, папку с документами или список дел. Приведи его в состояние, в котором завтра будет легче начать день.'},
+      {time:45,title:'Собери маршрут на день, которого ждёшь',description:'Выбери город или район, куда хочется выбраться. Найди одну красивую точку, место поесть и что-то необычное по пути. Сохрани маршрут — пусть у тебя появится конкретный план, который манит.'},
+      {time:45,title:'Сделай фотосессию без публикации',description:'Поиграй со светом, одеждой и ракурсами. Сними детали, портрет или просто красивый кадр дома. Ничего не выкладывай и не оценивай по реакции — оставь фотографии только себе.'},
+      {time:45,title:'Устрой себе культурный выход',description:'Посмотри афишу, выбери выставку, лекцию, кинопоказ или концерт на ближайшие дни. Купи билет, если подходит, или просто сохрани событие. Пусть у тебя будет что-то интересное впереди.'},
+      {time:60,title:'Исследуй новое место',description:'Выбери место в городе, где ещё не была, и проведи там час: книжный, галерея, парк, рынок, необычная кофейня. Не нужно делать из этого контент. Просто расширь свою привычную карту.'},
+      {time:60,title:'Собери свою следующую главу',description:'Открой заметки или доску желаний и создай подборку не абстрактной «идеальной жизни», а конкретных вещей на ближайшие три месяца: места, навыки, проекты, впечатления и маленькие перемены.'},
+      {time:60,title:'Приготовь ужин и включи длинный разговор',description:'Выбери интервью, подкаст или лекцию с человеком, чьи мысли тебе интересны. Приготовь полноценный ужин и послушай без параллельной прокрутки ленты. Отметь одну мысль, которую забираешь с собой.'},
+      {time:60,title:'Сделай что-то, что давно хотела попробовать',description:'Выбери занятие без требования стать в нём хорошей: рисование, новое блюдо, танец, фото-прогулка, настольная игра, пробный урок. Один час — не обязательство, а эксперимент.'},
+      {time:60,title:'Выйди из привычного сценария',description:'Запланируй маленькое приключение на сегодня: доехать до незнакомой остановки, зайти в новое место, пройти другим маршрутом или устроить себе спонтанный культурный выход. Вернись с историей, а не с очередным просмотренным профилем.'}
+    ];
+    let pauseDuration = 30;
+    let pauseRecentActivities = [];
+    function setPauseDuration(minutes){
+      pauseDuration=minutes;
+      document.querySelectorAll('.pause-duration').forEach(btn=>{
+        const active=Number(btn.dataset.pauseDuration)===minutes;
+        btn.style.background=active?'#846066':'#FFF9F9';
+        btn.style.color=active?'#FFF9F9':'#846066';
+        btn.style.borderColor=active?'#846066':'#E8C5C8';
+      });
+    }
+    function drawPauseActivity(){
+      const choices=pauseActivities.filter(item=>item.time===pauseDuration&&!pauseRecentActivities.includes(item.title));
+      const pool=choices.length?choices:pauseActivities.filter(item=>item.time===pauseDuration);
+      if(!pool.length)return;
+      const activity=pool[Math.floor(Math.random()*pool.length)];
+      pauseRecentActivities.unshift(activity.title);
+      pauseRecentActivities=pauseRecentActivities.slice(0,3);
+      document.getElementById('pauseActivityTime').innerText=activity.time+' минут';
+      document.getElementById('pauseActivityTitle').innerText=activity.title;
+      document.getElementById('pauseActivityDescription').innerText=activity.description;
+      document.getElementById('pauseActivityResult').classList.remove('hidden');
     }
     function openDailySection(key) {
       document.getElementById('dailyJournalHome')?.classList.add('hidden');
