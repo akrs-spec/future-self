@@ -1307,13 +1307,14 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
     function openTarotArchiveCard(date){const entry=(appState.dailyTarot||[]).find(x=>x.date===date);if(!entry)return;const card=tarotDeck[entry.index];if(!card)return;document.getElementById('tarotArchiveSymbol').textContent=card.symbol;document.getElementById('tarotArchiveNumber').textContent='АРХЕТИП '+card.number;document.getElementById('tarotArchiveName').textContent=card.name;document.getElementById('tarotArchiveDate').textContent=new Date(date+'T12:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});document.getElementById('tarotArchiveMessage').textContent=card.message;document.getElementById('tarotArchiveFocus').textContent=card.focus;document.getElementById('tarotArchiveQuestion').textContent=card.question;const modal=document.getElementById('dailyTarotArchiveModal');modal.classList.remove('hidden');modal.classList.add('flex');}
     function closeTarotArchiveCard(){const modal=document.getElementById('dailyTarotArchiveModal');if(!modal)return;modal.classList.add('hidden');modal.classList.remove('flex');}
     function toggleOracleFolder(which){
-  const keys=['daily','yesno','mirror','rooms'];
-  const panels=Object.fromEntries(keys.map(key=>[key,document.getElementById('oracleFolder'+key.charAt(0).toUpperCase()+key.slice(1)+'Content')]));
+  const suffixes={daily:'Daily',yesno:'YesNo',mirror:'Mirror',rooms:'Rooms'};
+  const panels=Object.fromEntries(Object.entries(suffixes).map(([key,suffix])=>[key,document.getElementById('oracleFolder'+suffix+'Content')]));
   const buttons=document.querySelectorAll('#tab-future button[aria-controls^="oracleFolder"]');
   const target=panels[which];if(!target)return;
   const willOpen=target.classList.contains('hidden');
   Object.entries(panels).forEach(([key,panel])=>{if(panel)panel.classList.toggle('hidden',key!==which||!willOpen);});
-  buttons.forEach(button=>{const active=button.getAttribute('aria-controls')==='oracleFolder'+which.charAt(0).toUpperCase()+which.slice(1)+'Content'&&willOpen;button.setAttribute('aria-expanded',String(active));const chevron=button.querySelector('.oracle-folder-chevron');if(chevron)chevron.textContent=active?'⌃':'⌄';});
+  buttons.forEach(button=>{const active=button.getAttribute('aria-controls')==='oracleFolder'+suffixes[which]+'Content'&&willOpen;button.setAttribute('aria-expanded',String(active));const chevron=button.querySelector('.oracle-folder-chevron');if(chevron)chevron.textContent=active?'⌃':'⌄';});
+  if(which==='mirror'&&willOpen)renderMirrorHistory();
 }
 
 const mirrorQuestionBank=[
