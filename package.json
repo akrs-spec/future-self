@@ -5,5 +5,9 @@
   "type": "module",
   "scripts": {"start": "node server.js"},
   "engines": {"node": ">=20"},
-  "dependencies": {"better-sqlite3": "^11.8.1", "express": "^4.21.2"}
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2",
+    "pg": "^8.16.3"
+  }
 }
