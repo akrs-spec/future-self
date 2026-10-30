@@ -1066,7 +1066,30 @@
        saveState();renderFutureScriptHistory();
      }
     function editFutureLetter(index){const entry=appState.futureScriptHistory?.[index];if(!entry)return;editingFutureLetterIndex=index;document.getElementById('idealDayText').value=entry.idealDay||'';document.getElementById('identityText').value=entry.identity||'';document.getElementById('leavingBehindText').value=entry.leavingBehind||'';const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить изменения ✨';document.getElementById('dailySection-letter').scrollIntoView({behavior:'smooth',block:'start'});}
-    function deleteFutureLetter(index){if(!confirm('Удалить это письмо в будущее?'))return;appState.futureScriptHistory.splice(index,1);if(editingFutureLetterIndex===index){editingFutureLetterIndex=null;['idealDayText','identityText','leavingBehindText'].forEach(id=>document.getElementById(id).value='');const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить письмо ✨';}else if(editingFutureLetterIndex!==null&&editingFutureLetterIndex>index){editingFutureLetterIndex--;}saveState();renderFutureScriptHistory();showToast('Письмо удалено');}
+    function deleteFutureLetter(id,index){
+      const remove=()=>{
+        const entries=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
+        const targetIndex=id?entries.findIndex(entry=>String(entry.id||'')===String(id)):Number(index);
+        if(targetIndex<0||targetIndex>=entries.length){showToast('Не удалось найти это письмо');return;}
+        const removed=entries[targetIndex];
+        entries.splice(targetIndex,1);
+        if(editingFutureLetterIndex===targetIndex){
+          editingFutureLetterIndex=null;
+          ['idealDayText','identityText','leavingBehindText'].forEach(fieldId=>{const field=document.getElementById(fieldId);if(field)field.value='';});
+          const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');
+          if(btn)btn.innerText='Сохранить письмо ✨';
+        }else if(editingFutureLetterIndex!==null&&editingFutureLetterIndex>targetIndex){editingFutureLetterIndex--;}
+        appState.futureScriptHistory=entries;
+        saveState();
+        const stored=JSON.parse(localStorage.getItem(storageKey)||'{}');
+        const stillExists=removed.id?((stored.futureScriptHistory||[]).some(entry=>String(entry.id||'')===String(removed.id))):((stored.futureScriptHistory||[]).length!==entries.length);
+        if(stillExists){showToast('Не удалось подтвердить удаление. Попробуй ещё раз');return;}
+        renderFutureScriptHistory();
+        showToast('Письмо удалено');
+      };
+      if(tg?.showConfirm){tg.showConfirm('Удалить это письмо в будущее?',confirmed=>{if(confirmed)remove();});}
+      else if(window.confirm('Удалить это письмо в будущее?'))remove();
+    }
     function toggleFutureLetterFavorite(index){const e=appState.futureScriptHistory?.[index];if(!e)return;const body=[e.idealDay,e.identity,e.leavingBehind].filter(Boolean).join('\n\n');toggleFavorite('Письмо в будущее',e.id||String(index),'Письмо в будущее',body,e.createdAt||'');}
     function renderFutureScriptHistory(){
       const c=document.getElementById('futureScriptHistory');if(!c)return;
@@ -1075,7 +1098,7 @@
         const date=entry.createdAt?new Date(entry.createdAt):null;
         const dateLabel=date&&!Number.isNaN(date.getTime())?date.toLocaleString('ru-RU',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):(entry.legacy?'Дата предыдущей записи не сохранилась':'Дата не указана');
         const fields=[['Идеальный день',entry.idealDay],['Кем я являюсь',entry.identity],['Что я оставляю в прошлом',entry.leavingBehind]].filter(x=>x[1]);
-        return '<details class="glass-card rounded-2xl border border-blush p-3" '+(index===0?'open':'')+'><summary class="cursor-pointer list-none flex items-center justify-between gap-2"><span class="text-xs font-bold text-mauve">'+escapeHtml(dateLabel)+'</span><i class="fa-solid fa-chevron-down text-[10px] text-dusty"></i></summary><div class="space-y-3 mt-3">'+fields.map(([label,value])=>'<div><p class="text-[10px] font-bold text-dusty mb-1">'+escapeHtml(label)+'</p><p class="text-xs leading-relaxed text-mauve whitespace-pre-wrap">'+escapeHtml(value)+'</p></div>').join('')+'<div class="flex items-center justify-end gap-2 pt-1"><button type="button" onclick="toggleFutureLetterFavorite('+index+')" aria-label="В избранное" title="В избранное" class="w-8 h-8 rounded-full bg-milk border border-blush text-dusty">'+((appState.favorites||[]).some(f=>f.key==='Письмо в будущее:'+(entry.id||index))?'♥':'♡')+'</button><button type="button" onclick="editFutureLetter('+index+')" aria-label="Редактировать письмо" title="Редактировать" class="w-8 h-8 rounded-full bg-milk border border-blush text-dusty flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button><button type="button" onclick="deleteFutureLetter('+index+')" aria-label="Удалить письмо" title="Удалить" class="w-8 h-8 rounded-full bg-white border border-red-100 text-red-400 flex items-center justify-center"><i class="fa-regular fa-trash-can text-xs"></i></button></div></div></details>';
+        return '<details class="glass-card rounded-2xl border border-blush p-3" '+(index===0?'open':'')+'><summary class="cursor-pointer list-none flex items-center justify-between gap-2"><span class="text-xs font-bold text-mauve">'+escapeHtml(dateLabel)+'</span><i class="fa-solid fa-chevron-down text-[10px] text-dusty"></i></summary><div class="space-y-3 mt-3">'+fields.map(([label,value])=>'<div><p class="text-[10px] font-bold text-dusty mb-1">'+escapeHtml(label)+'</p><p class="text-xs leading-relaxed text-mauve whitespace-pre-wrap">'+escapeHtml(value)+'</p></div>').join('')+'<div class="flex items-center justify-end gap-2 pt-1"><button type="button" onclick="toggleFutureLetterFavorite('+index+')" aria-label="В избранное" title="В избранное" class="w-8 h-8 rounded-full bg-milk border border-blush text-dusty">'+((appState.favorites||[]).some(f=>f.key==='Письмо в будущее:'+(entry.id||index))?'♥':'♡')+'</button><button type="button" onclick="editFutureLetter('+index+')" aria-label="Редактировать письмо" title="Редактировать" class="w-8 h-8 rounded-full bg-milk border border-blush text-dusty flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button><button type="button" onclick="deleteFutureLetter(\''+escapeHtml(entry.id||'')+'\','+index+')" aria-label="Удалить письмо" title="Удалить" class="w-8 h-8 rounded-full bg-white border border-red-100 text-red-400 flex items-center justify-center"><i class="fa-regular fa-trash-can text-xs"></i></button></div></div></details>';
       }).join(''):'<div class="glass-card rounded-2xl p-4 border border-blush text-center"><p class="text-xs font-bold text-mauve">Здесь будут твои письма</p><p class="text-[10px] text-mauve-light mt-1">Сохрани ответы, и они появятся в истории с датой и временем.</p></div>';
     }
     const tarotMajors = [
