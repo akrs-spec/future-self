@@ -637,6 +637,7 @@
               </div>
             </div>
             <p id="oracleRoomHistoryNote" class="text-[9px] text-mauve-light text-center">Истории сохраняются в твоих прохождениях. Новые сюжеты будут появляться без повторов, пока не закончится подборка комнаты.</p>
+            <div id="oracleStoryHistory" class="space-y-2"></div>
           </div>
         </div>
 
@@ -1315,6 +1316,7 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
   Object.entries(panels).forEach(([key,panel])=>{if(panel)panel.classList.toggle('hidden',key!==which||!willOpen);});
   buttons.forEach(button=>{const active=button.getAttribute('aria-controls')==='oracleFolder'+suffixes[which]+'Content'&&willOpen;button.setAttribute('aria-expanded',String(active));const chevron=button.querySelector('.oracle-folder-chevron');if(chevron)chevron.textContent=active?'⌃':'⌄';});
   if(which==='mirror'&&willOpen)renderMirrorHistory();
+  if(which==='rooms'&&willOpen)renderOracleStoryHistory();
 }
 
 const mirrorQuestionBank=[
@@ -1403,10 +1405,11 @@ function chooseOracleStory(choiceIndex){
  const room=oracleRoomData[currentOracleStory.roomKey],story=room.stories[currentOracleStory.index],choice=story.choices[choiceIndex];if(!choice)return;
  appState.oracleRoomSeen=appState.oracleRoomSeen||{};appState.oracleRoomSeen[currentOracleStory.roomKey]=appState.oracleRoomSeen[currentOracleStory.roomKey]||[];
  if(!appState.oracleRoomSeen[currentOracleStory.roomKey].includes(currentOracleStory.index))appState.oracleRoomSeen[currentOracleStory.roomKey].push(currentOracleStory.index);
- appState.oracleStoryHistory=appState.oracleStoryHistory||[];appState.oracleStoryHistory.unshift({id:String(Date.now()),room:room.name,title:story.title,choice:choice[0],date:new Date().toLocaleDateString('ru-RU')});appState.oracleStoryHistory=appState.oracleStoryHistory.slice(0,30);saveState();
+ appState.oracleStoryHistory=appState.oracleStoryHistory||[];appState.oracleStoryHistory.unshift({id:String(Date.now()),room:room.name,title:story.title,choice:choice[0],date:new Date().toLocaleDateString('ru-RU')});appState.oracleStoryHistory=appState.oracleStoryHistory.slice(0,30);saveState();renderOracleStoryHistory();
  document.getElementById('oracleStoryChoices').classList.add('hidden');document.getElementById('oracleStoryEnding').classList.remove('hidden');document.getElementById('oracleStoryEndingText').textContent=choice[1]+' '+choice[2];document.getElementById('oracleStoryQuestion').textContent='Вопрос тебе: '+(choiceIndex===0?'Что я давно готова исследовать?':choiceIndex===1?'Что мне важно сохранить?':'Какой следующий шаг я могу выбрать сама?');
 }
-function leaveOracleStory(){currentOracleStory=null;document.getElementById('oracleStory').classList.add('hidden');document.getElementById('oracleRoomsGrid').classList.remove('hidden');document.getElementById('oracleStoryChoices').classList.remove('hidden');document.getElementById('oracleStoryEnding').classList.add('hidden');}
+function renderOracleStoryHistory(){const el=document.getElementById('oracleStoryHistory');if(!el)return;const items=appState.oracleStoryHistory||[];el.innerHTML=items.length?'<p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Мои прохождения</p>'+items.slice(0,8).map(x=>'<div class="rounded-xl border border-blush p-3 flex items-start justify-between gap-2"><div><p class="text-xs font-bold text-mauve">'+escapeHtml(x.title)+'</p><p class="text-[9px] text-mauve-light mt-1">'+escapeHtml(x.room)+' · '+escapeHtml(x.choice)+'</p></div><span class="text-[9px] text-mauve-light whitespace-nowrap">'+escapeHtml(x.date)+'</span></div>').join(''):'<p class="text-[10px] text-mauve-light text-center py-2">Здесь появятся твои первые истории.</p>';}
+function leaveOracleStory(){currentOracleStory=null;document.getElementById('oracleStory').classList.add('hidden');document.getElementById('oracleRoomsGrid').classList.remove('hidden');document.getElementById('oracleStoryChoices').classList.remove('hidden');document.getElementById('oracleStoryEnding').classList.add('hidden');renderOracleStoryHistory();}
 
 function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const today=localDayKey();if(appState.dailyTarot.some(x=>x.date===today)){renderDailyTarot();return;}const index=dailyTarotIndex(today);appState.dailyTarot.unshift({date:today,index,revealed:true});appState.dailyTarot=appState.dailyTarot.slice(0,30);saveState();renderDailyTarot();showToast('Твоя карта дня открыта');}
 
