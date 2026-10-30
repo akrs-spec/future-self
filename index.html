@@ -1386,28 +1386,57 @@ const oracleRoomData={
   {title:'Билет без даты',text:'Проводник протягивает тебе билет без даты. Он действителен, но только если ты сама впишешь одно слово. Какое слово появится на билете?',choices:[['Начать','Билет становится тёплым в руках. Похоже, решение уже созрело, осталось выбрать первый шаг.','Начало не обязано быть масштабным. Иногда достаточно одного действия.'],['Отпустить','За окном остаётся станция, на которой ты слишком долго ждала.','Освобождение места для нового начинается с честного признания того, что больше не подходит.'],['Остаться','Поезд не трогается, но ты впервые замечаешь, что можешь выбрать время отправления сама.','Остаться — тоже выбор, если он сделан осознанно, а не только из страха.']]}
  ]}
 };
+
 let currentOracleStory=null;
+const oracleStorySeeds={
+ library:{places:['за стеллажом, которого вчера здесь не было','в запертой комнате под самой крышей','между страницами атласа без названий','в читальном зале, где остановились часы','в архиве писем без адресатов','за дверцей старого каталога','в зале, куда ведёт лестница из пыльных книг','у окна, за которым виден незнакомый город'],objects:['медный ключ с крошечной гравировкой','фотография, на которой постепенно меняется фон','конверт с твоим почерком','карманные часы, идущие в обратную сторону','карта с отмеченной точкой без названия','стеклянная шкатулка с одним пустым отделением','книга, в которой появляются новые строки','зеркальный осколок, отражающий другую комнату'],events:['кто-то оставил тебе короткую записку','из соседнего помещения доносится знакомая мелодия','на полях проступает фраза, которую ты когда-то произносила','дверь за спиной бесшумно закрывается','на столе загорается маленькая лампа','кто-то произносит твоё имя, но рядом никого нет','одна из книг сама раскрывается на последней странице','ты замечаешь второй экземпляр предмета, который держишь в руках']},
+ forest:{places:['на поляне, скрытой за стеной тумана','у ручья, который течёт вверх по склону','между деревьями с серебряной корой','на тропе, исчезающей за поворотом','рядом с домиком без окон','у озера, в котором не отражается небо','на мосту, ведущем к двум разным берегам','в саду, где цветы раскрываются только в темноте'],objects:['компас, стрелка которого указывает на тебя','пучок светящихся трав','письмо, завёрнутое в сухой лист','колокольчик без язычка','перо незнакомой птицы','камень с тёплым сердцем внутри','лента, завязанная вокруг ветки','маленький фонарь с синим пламенем'],events:['туман разделяется на три узкие тропы','ветер приносит обрывок чьего-то разговора','следы появляются впереди, хотя никто не проходил','вода начинает светиться изнутри','птица оставляет у твоих ног необычный предмет','деревья меняют положение, открывая проход','вдалеке загорается свет в доме, которого не было','ты слышишь собственный голос, зовущий с другой стороны']},
+ house:{places:['в гостиной с накрытым на одного столом','за дверью, которой нет на плане дома','на лестнице, ведущей в подвал','в комнате с тремя одинаковыми окнами','в зимнем саду среди спящих растений','в коридоре с портретами без лиц','на чердаке, где слышен тихий разговор','в кухне, где остывает чашка чая'],objects:['чужой дневник с пустыми страницами','ключ с биркой «не торопись»','билет на поезд без пункта назначения','чашка с отпечатком губ на самом краю','старое зеркало, накрытое тканью','коробка с тремя разными именами','фотография комнаты, в которой ты стоишь','записка, сложенная в форме маленькой двери'],events:['за стеной раздаётся стук в определённом ритме','на столе появляется ещё одна тарелка','в зеркале на секунду отражается открытая дверь','из закрытого ящика доносится шелест бумаги','на лестнице загорается свет','ты находишь следы недавнего присутствия','часы начинают идти только когда ты двигаешься','из соседней комнаты звучит вопрос']},
+ train:{places:['на платформе, которой нет в расписании','в вагоне с окнами на незнакомые места','в маленьком купе последнего вагона','на станции посреди заснеженного поля','в переходе между двумя платформами','у табло, на котором меняются только символы','в вагоне-ресторане после полуночи','на перроне, где поезд уже ждёт тебя'],objects:['билет с незаполненной датой','чемодан с одной вещью внутри','карта маршрута с исчезающими линиями','часы, остановившиеся за минуту до отправления','письмо от попутчика, которого ты ещё не встретила','жетон с незнакомым номером','ключ от купе, которого нет в составе','маленькая коробка с надписью «открой на своей станции»'],events:['диктор объявляет станцию, которой не существует','проводник предлагает выбрать одно из трёх направлений','соседнее место оказывается занято вещью из твоего прошлого','поезд неожиданно останавливается в полной тишине','на стекле появляется надпись изнутри','за окном мелькает пейзаж, который кажется знакомым','в билете проявляется новая строка','двери открываются, хотя поезд ещё не прибыл']}
+};
+const oracleChoicePatterns=[
+ {label:'Исследовать находку',result:['Ты решаешь не отводить взгляд. За первым знаком обнаруживается ещё один — и история открывает неожиданную сторону.','Ты находишь подсказку, которая не даёт готового ответа, но меняет сам вопрос.'],reflection:'Что я могу узнать, если позволю себе исследовать неизвестное?'},
+ {label:'Сохранить и присмотреться',result:['Ты бережно оставляешь находку при себе. Теперь у тебя есть время понять, почему именно она привлекла твоё внимание.','Ты замечаешь деталь, которую легко было пропустить. Она становится ключом к следующему шагу.'],reflection:'Что сейчас важно не торопить, а внимательно рассмотреть?'},
+ {label:'Выбрать другой путь',result:['Ты отходишь в сторону — и именно там открывается проход, которого не было видно раньше.','Ты отказываешься от очевидного варианта и обнаруживаешь, что у ситуации больше одного выхода.'],reflection:'Какой вариант я пока не разрешаю себе рассмотреть?'},
+ {label:'Задать вопрос',result:['В ответ приходит не прямое объяснение, а фраза, которая неожиданно связывает детали воедино.','Тишина длится несколько секунд, а затем появляется знак, который помогает увидеть ситуацию под другим углом.'],reflection:'Какой вопрос я давно хочу задать самой себе?'},
+ {label:'Оставить всё как есть',result:['Ты не вмешиваешься. События продолжаются своим ходом, и становится заметно, что не каждую загадку нужно решать немедленно.','Ты решаешь не менять найденное. Иногда уважение к собственному темпу оказывается самым точным выбором.'],reflection:'Где мне можно перестать торопить себя?'}
+];
+function oracleHash(value){let h=2166136261;for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function oracleBuildPersonalStory(roomKey,runNumber){
+ const room=oracleRoomData[roomKey],seed=String(telegramUserId||storageKey||'preview-user')+'|'+roomKey+'|'+runNumber;
+ const bank=oracleStorySeeds[roomKey],a=oracleHash(seed+'|a'),b=oracleHash(seed+'|b'),d=oracleHash(seed+'|d');
+ const place=bank.places[a%bank.places.length],object=bank.objects[b%bank.objects.length],event=bank.events[d%bank.events.length];
+ const titleParts=['Там, где начинается ответ','Знак на пороге','То, что осталось незамеченным','Комната второго шанса','Незнакомый маршрут','Когда гаснет свет','Послание без отправителя','За последней дверью'];
+ const title=titleParts[oracleHash(seed+'|title')%titleParts.length];
+ const storyText='Ты оказываешься '+place+'. Перед тобой — '+object+'. В этот момент '+event+'. Кажется, эта история ждёт не правильного ответа, а твоего выбора. Как поступишь?';
+ const offset=oracleHash(seed+'|choices')%oracleChoicePatterns.length;
+ const choices=[0,1,2].map(i=>{const p=oracleChoicePatterns[(offset+i*2)%oracleChoicePatterns.length];const r=p.result[oracleHash(seed+'|result|'+i)%p.result.length];return [p.label,r,p.reflection];});
+ return {title,text:storyText,choices,fingerprint:oracleHash(seed+'|'+place+'|'+object+'|'+event).toString(36)};
+}
 function enterOracleRoom(roomKey){
  const room=oracleRoomData[roomKey];if(!room)return;
- appState.oracleRoomSeen=appState.oracleRoomSeen||{};
- const seen=appState.oracleRoomSeen[roomKey]||[];
- let available=room.stories.filter((s,i)=>!seen.includes(i));
- if(!available.length){appState.oracleRoomSeen[roomKey]=[];available=room.stories.slice();}
- const chosen=available[Math.floor(Math.random()*available.length)],index=room.stories.indexOf(chosen);
- currentOracleStory={roomKey,index,choice:null};
+ appState.oracleStoryHistory=appState.oracleStoryHistory||[];
+ const history=appState.oracleStoryHistory;
+ let runNumber=history.length+1,storyData,attempts=0;
+ const used=new Set(history.map(x=>x.fingerprint).filter(Boolean));
+ do{storyData=oracleBuildPersonalStory(roomKey,runNumber++);attempts++;}while(used.has(storyData.fingerprint)&&attempts<100);
+ currentOracleStory={roomKey,story:storyData,choice:null};
  const story=document.getElementById('oracleStory');story.classList.remove('hidden');document.getElementById('oracleRoomsGrid').classList.add('hidden');
- document.getElementById('oracleStoryRoom').textContent=room.name;document.getElementById('oracleStoryTitle').textContent=chosen.title;document.getElementById('oracleStoryText').textContent=chosen.text;
+ document.getElementById('oracleStoryRoom').textContent=room.name;document.getElementById('oracleStoryTitle').textContent=storyData.title;document.getElementById('oracleStoryText').textContent=storyData.text;
  document.getElementById('oracleStoryEnding').classList.add('hidden');
- document.getElementById('oracleStoryChoices').innerHTML=chosen.choices.map((x,i)=>'<button type="button" onclick="chooseOracleStory('+i+')" class="w-full rounded-2xl p-3 text-left border border-blush bg-white/75 text-xs text-mauve">'+x[0]+'</button>').join('');
+ document.getElementById('oracleStoryChoices').classList.remove('hidden');
+ document.getElementById('oracleStoryChoices').innerHTML=storyData.choices.map((x,i)=>'<button type="button" onclick="chooseOracleStory('+i+')" class="w-full rounded-2xl p-3 text-left border border-blush bg-white/75 text-xs text-mauve">'+x[0]+'</button>').join('');
 }
 function chooseOracleStory(choiceIndex){
  if(!currentOracleStory)return;
- const room=oracleRoomData[currentOracleStory.roomKey],story=room.stories[currentOracleStory.index],choice=story.choices[choiceIndex];if(!choice)return;
- appState.oracleRoomSeen=appState.oracleRoomSeen||{};appState.oracleRoomSeen[currentOracleStory.roomKey]=appState.oracleRoomSeen[currentOracleStory.roomKey]||[];
- if(!appState.oracleRoomSeen[currentOracleStory.roomKey].includes(currentOracleStory.index))appState.oracleRoomSeen[currentOracleStory.roomKey].push(currentOracleStory.index);
- appState.oracleStoryHistory=appState.oracleStoryHistory||[];appState.oracleStoryHistory.unshift({id:String(Date.now()),room:room.name,title:story.title,choice:choice[0],date:new Date().toLocaleDateString('ru-RU')});appState.oracleStoryHistory=appState.oracleStoryHistory.slice(0,30);saveState();renderOracleStoryHistory();
- document.getElementById('oracleStoryChoices').classList.add('hidden');document.getElementById('oracleStoryEnding').classList.remove('hidden');document.getElementById('oracleStoryEndingText').textContent=choice[1]+' '+choice[2];document.getElementById('oracleStoryQuestion').textContent='Вопрос тебе: '+(choiceIndex===0?'Что я давно готова исследовать?':choiceIndex===1?'Что мне важно сохранить?':'Какой следующий шаг я могу выбрать сама?');
+ const room=oracleRoomData[currentOracleStory.roomKey],story=currentOracleStory.story,choice=story.choices[choiceIndex];if(!choice)return;
+ appState.oracleStoryHistory=appState.oracleStoryHistory||[];
+ appState.oracleStoryHistory.unshift({id:String(Date.now()),fingerprint:story.fingerprint,room:room.name,title:story.title,choice:choice[0],date:new Date().toLocaleDateString('ru-RU')});
+ appState.oracleStoryHistory=appState.oracleStoryHistory.slice(0,100);saveState();renderOracleStoryHistory();
+ document.getElementById('oracleStoryChoices').classList.add('hidden');document.getElementById('oracleStoryEnding').classList.remove('hidden');
+ document.getElementById('oracleStoryEndingText').textContent=choice[1];document.getElementById('oracleStoryQuestion').textContent='Вопрос тебе: '+choice[2];
 }
+
 function renderOracleStoryHistory(){const el=document.getElementById('oracleStoryHistory');if(!el)return;const items=appState.oracleStoryHistory||[];el.innerHTML=items.length?'<p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Мои прохождения</p>'+items.slice(0,8).map(x=>'<div class="rounded-xl border border-blush p-3 flex items-start justify-between gap-2"><div><p class="text-xs font-bold text-mauve">'+escapeHtml(x.title)+'</p><p class="text-[9px] text-mauve-light mt-1">'+escapeHtml(x.room)+' · '+escapeHtml(x.choice)+'</p></div><span class="text-[9px] text-mauve-light whitespace-nowrap">'+escapeHtml(x.date)+'</span></div>').join(''):'<p class="text-[10px] text-mauve-light text-center py-2">Здесь появятся твои первые истории.</p>';}
 function leaveOracleStory(){currentOracleStory=null;document.getElementById('oracleStory').classList.add('hidden');document.getElementById('oracleRoomsGrid').classList.remove('hidden');document.getElementById('oracleStoryChoices').classList.remove('hidden');document.getElementById('oracleStoryEnding').classList.add('hidden');renderOracleStoryHistory();}
 
