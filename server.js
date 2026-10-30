@@ -27,6 +27,8 @@ const ADMIN_ID = String(process.env.ADMIN_TELEGRAM_ID || '7738464404');
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'ymDCYd8puC7gYjxIamPt'; // Marina — soft, clear Russian female voice.
 const WEBHOOK_SECRET = process.env.BOT_WEBHOOK_SECRET;
 const DATABASE_URL = process.env.DATABASE_URL;
 const SQLITE_PATH = process.env.DB_PATH || './future-self.sqlite';
@@ -277,6 +279,73 @@ app.post('/api/ai/chat', auth, async (req, res) => {
     if (!reply) throw new Error(data.promptFeedback?.blockReason ? `Gemini blocked the prompt: ${data.promptFeedback.blockReason}` : 'Gemini returned an empty response');
     res.json({reply});
   } catch(e) { console.error('Gemini chat error:',e); res.status(502).json({error:e.message}); }
+});
+
+const MEDITATION_PARTS = [
+  [
+    'Сделай спокойный вдох… и медленный выдох. Устройся так, чтобы телу было удобно. Тебе не нужно ничего доказывать и никуда спешить. Если захочется, просто прикрой глаза.',
+    'Представь, что прошло пять лет. Ты просыпаешься в своей жизни. Не пытайся сделать картинку идеальной. Заметь первое, что появляется: свет за окном, пространство вокруг, звуки, ощущение в теле.',
+    'Посмотри на себя в этой будущей жизни. Как ты держишься? Как разговариваешь с собой? Что стало для тебя привычной заботой, а что больше не занимает столько места в мыслях?',
+    'Представь, что будущая ты садится рядом. В ней нет осуждения. Она знает, через что тебе пришлось пройти, и не требует от тебя мгновенных перемен.',
+    'Спроси её: какой один небольшой шаг действительно приблизит меня к этой жизни? Не ищи грандиозный ответ. Позволь появиться простой мысли, слову или ощущению.',
+    'Поблагодари себя будущую за эту встречу. Сделай вдох, почувствуй опору под телом и возвращай внимание в комнату. Когда будешь готова, мягко открой глаза. Запомни один шаг, который хочешь сделать.'
+  ],
+  [
+    'Найди удобное положение. Почувствуй, как поверхность поддерживает твоё тело. Медленно вдохни… и спокойно выдохни. Сейчас не нужно решать все вопросы сразу.',
+    'Вспомни место, реальное или воображаемое, где тебе спокойно. Рассмотри его в деталях: какой там свет, какие цвета, какая температура воздуха. Позволь этому образу стать немного яснее.',
+    'Переведи внимание на то, что уже есть в твоей жизни. Навыки, опыт, люди, идеи, способность учиться и начинать снова. Не обесценивай небольшое. Ресурс не всегда выглядит как что-то большое.',
+    'Представь, что перед тобой открывается несколько дорог. Не обязательно выбирать все. Какая из них вызывает тихий интерес? Какое действие может сделать эту возможность чуть реальнее?',
+    'Скажи себе: я могу замечать возможности и проверять их маленькими шагами. Мне не нужно контролировать всё будущее, чтобы двигаться вперёд.',
+    'Сделай ещё один спокойный вдох и выдох. Почувствуй опору под собой. Возвращайся в настоящий момент и возьми с собой одну мысль, которая поддерживает тебя.'
+  ]
+];
+const meditationAudioCache = new Map();
+const meditationAudioUsage = new Map();
+
+app.post('/api/meditation/audio', auth, async (req, res) => {
+  try {
+    if (!ELEVENLABS_API_KEY) return res.status(503).json({error:'Озвучка пока не настроена на сервере'});
+    const trackIndex = Number(req.body?.trackIndex);
+    const partIndex = Number(req.body?.partIndex);
+    const text = MEDITATION_PARTS[trackIndex]?.[partIndex];
+    if (!text) return res.status(400).json({error:'Неизвестная часть практики'});
+    const cacheKey = ELEVENLABS_VOICE_ID + ':' + trackIndex + ':' + partIndex;
+    const cached = meditationAudioCache.get(cacheKey);
+    if (cached) {
+      res.setHeader('Cache-Control','private, max-age=86400');
+      res.type('audio/mpeg').send(cached);
+      return;
+    }
+    const userId = String(req.telegramUser.id);
+    const now = Date.now();
+    const usage = meditationAudioUsage.get(userId);
+    if (usage && now - usage.startedAt < 60 * 60 * 1000 && usage.count >= 12) {
+      return res.status(429).json({error:'Лимит генерации аудио на час достигнут. Попробуй позже.'});
+    }
+    if (!usage || now - usage.startedAt >= 60 * 60 * 1000) meditationAudioUsage.set(userId,{startedAt:now,count:1});
+    else usage.count++;
+    const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + encodeURIComponent(ELEVENLABS_VOICE_ID) + '?output_format=mp3_44100_128', {
+      method:'POST',
+      headers:{'xi-api-key':ELEVENLABS_API_KEY,'Content-Type':'application/json','Accept':'audio/mpeg'},
+      body:JSON.stringify({
+        text,
+        model_id:'eleven_multilingual_v2',
+        voice_settings:{stability:0.58,similarity_boost:0.82,style:0.18,use_speaker_boost:true,speed:0.88}
+      })
+    });
+    if (!response.ok) {
+      const details = await response.text();
+      console.error('ElevenLabs TTS error:',response.status,details.slice(0,1000));
+      return res.status(502).json({error:'Не удалось создать озвучку. Проверь баланс и доступность голоса в ElevenLabs.'});
+    }
+    const audio = Buffer.from(await response.arrayBuffer());
+    meditationAudioCache.set(cacheKey,audio);
+    res.setHeader('Cache-Control','private, max-age=86400');
+    res.type('audio/mpeg').send(audio);
+  } catch(error) {
+    console.error('Meditation audio error:',error);
+    res.status(502).json({error:'Ошибка при создании голосовой практики'});
+  }
 });
 
 app.post('/api/payments/create-invoice', auth, async (req, res) => {
