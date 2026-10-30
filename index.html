@@ -776,10 +776,16 @@
       ], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
       goals: [{ id: 'g1', title: 'Создать личный проект', cat: 'career', completed: false }], gratitudes: [], feelings: [], practiceDays: [], yesNoOracle: { date: '', used: 0, answer: '' }
     };
-    const storageKey = 'FUTURE_SELF_APP_STATE_' + (tg?.initDataUnsafe?.user?.id || 'preview');
-    let appState = { ...DEFAULT_STATE, ...(JSON.parse(localStorage.getItem(storageKey) || 'null') || {}) };
-    let accessRole = 'FREE'; let isAdmin = false;
     const initData = tg?.initData || '';
+    const telegramUserId = tg?.initDataUnsafe?.user?.id;
+    const storageKey = 'FUTURE_SELF_APP_STATE_' + (telegramUserId ? String(telegramUserId) : (initData ? 'telegram-session' : 'preview'));
+    function readLocalState() {
+      try { const raw=localStorage.getItem(storageKey); return raw ? JSON.parse(raw) : null; }
+      catch(e) { console.warn('Could not read local app state:',e); return null; }
+    }
+    let appState = { ...DEFAULT_STATE, ...(readLocalState() || {}) };
+    let accessRole = 'FREE'; let isAdmin = false;
+    let cloudStateReady = false, cloudSaveTimer = null, cloudSaveQueue = Promise.resolve(), cloudSyncErrorShown = false;
     async function api(path, body) {
       if (!initData) throw new Error('Открой приложение через Telegram-бота, чтобы использовать защищённые функции.');
       const response = await fetch(API + path, { method: body ? 'POST' : 'GET', headers: { 'Content-Type':'application/json', 'X-Telegram-Init-Data': initData }, body: body ? JSON.stringify(body) : undefined });
@@ -787,7 +793,49 @@
       if (!response.ok) throw new Error(data.error || 'Ошибка сервера');
       return data;
     }
-    function saveState() { try { localStorage.setItem(storageKey, JSON.stringify(appState)); } catch(e) { showToast('Память устройства заполнена. Удали часть фото с карты.'); } }
+    function scheduleCloudStateSave() {
+      if (!initData || !cloudStateReady) return;
+      clearTimeout(cloudSaveTimer);
+      cloudSaveTimer=setTimeout(()=>{
+        const snapshot=JSON.stringify(appState);
+        cloudSaveQueue=cloudSaveQueue.catch(()=>{}).then(async()=>{
+          const response=await fetch(API+'/state',{method:'POST',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':initData},body:JSON.stringify({state:JSON.parse(snapshot)})});
+          const data=await response.json().catch(()=>({}));
+          if(!response.ok)throw new Error(data.error||'Не удалось сохранить данные на сервере');
+          cloudSyncErrorShown=false;
+        }).catch(error=>{
+          console.error('Cloud save failed:',error);
+          if(!cloudSyncErrorShown){cloudSyncErrorShown=true;showToast('Не удалось синхронизировать данные. Они пока сохранены на устройстве.');}
+        });
+      },350);
+    }
+    async function loadCloudState() {
+      if(!initData)return;
+      const data=await api('/state');
+      if(data.state&&typeof data.state==='object'&&!Array.isArray(data.state)){
+        appState={...DEFAULT_STATE,...data.state,user:{...DEFAULT_STATE.user,...(data.state.user||{})}};
+        try{localStorage.setItem(storageKey,JSON.stringify(appState));}catch(e){console.warn('Local cache unavailable:',e);}
+      }
+      cloudStateReady=true;
+      if(!data.state){
+        const snapshot=JSON.stringify(appState);
+        await api('/state',{state:JSON.parse(snapshot)});
+      }
+    }
+    function saveState() {
+      let localSaved=false;
+      try {
+        const serialized=JSON.stringify(appState);
+        localStorage.setItem(storageKey,serialized);
+        localSaved=localStorage.getItem(storageKey)===serialized;
+        if(!localSaved)throw new Error('Local storage verification failed');
+      } catch(e) {
+        console.warn('Local save failed:',e);
+        showToast('Не удалось сохранить данные на устройстве');
+      }
+      scheduleCloudStateSave();
+      return localSaved;
+    }
     function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toastMsg').innerText=msg; t.classList.remove('opacity-0'); clearTimeout(window.toastTimer); window.toastTimer=setTimeout(()=>t.classList.add('opacity-0'),2200); }
     function escapeHtml(value='') { return String(value).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function setAccess(role) {
@@ -1059,11 +1107,11 @@
       const key=String(id),before=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
       const next=before.filter(entry=>String(entry.id)!==key);
       if(next.length===before.length){showToast('Это послание уже удалено');renderFutureScriptHistory();return;}
-      const removed=before.find(entry=>String(entry.id)===key);
       appState.futureScriptHistory=next;
+      appState.futureScript={idealDay:'',identity:'',leavingBehind:''};
       appState.favorites=(appState.favorites||[]).filter(f=>!(f.type==='Послание себе в будущее'&&String(f.id)===key));
       if(editingFutureLetterId===key){editingFutureLetterId=null;['idealDayText','identityText','leavingBehindText'].forEach(id=>document.getElementById(id).value='');}
-      try{localStorage.setItem(storageKey,JSON.stringify(appState));const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');if((saved.futureScriptHistory||[]).some(entry=>String(entry.id)===key)){appState.futureScriptHistory=before;showToast('Не удалось удалить. Попробуй ещё раз');return;}}catch(e){appState.futureScriptHistory=before;showToast('Не удалось сохранить удаление');return;}
+      try{localStorage.setItem(storageKey,JSON.stringify(appState));const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');if((saved.futureScriptHistory||[]).some(entry=>String(entry.id)===key)||(saved.futureScript||{}).idealDay||(saved.futureScript||{}).identity||(saved.futureScript||{}).leavingBehind){appState.futureScriptHistory=before;showToast('Не удалось удалить. Попробуй ещё раз');return;}scheduleCloudStateSave();}catch(e){appState.futureScriptHistory=before;showToast('Не удалось сохранить удаление');return;}
       const btn=document.querySelector('#dailySection-letter button[onclick="saveFutureSelfScript()"]');if(btn)btn.innerText='Сохранить послание ✨';
       renderFutureScriptHistory();showToast('Послание удалено');
     }
@@ -1290,15 +1338,18 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
     async function loadFriendUsers(){const c=document.getElementById('friendUsersList');try{const data=await api('/admin/users');c.innerHTML=data.users.length?data.users.map(u=>`<div class="flex items-center justify-between bg-milk rounded-xl p-2"><div><b>${escapeHtml(u.name||'Пользователь')}</b><p>ID: ${escapeHtml(u.telegramId)} · ${escapeHtml(u.access)}${u.expiresAt?' · до '+new Date(u.expiresAt).toLocaleDateString('ru-RU'):''}</p></div><button onclick="revokeFriendAccess('${u.telegramId}')" class="text-red-700 underline">Отозвать</button></div>`).join(''):'<p>Пока нет выданных доступов.</p>';}catch(e){c.innerHTML='<p>'+escapeHtml(e.message)+'</p>';}}
     async function simulateTelegramPay(){try{const result=await api('/payments/create-invoice',{plan:'pro_monthly'});if(!result.invoiceLink)throw new Error('Сервер не вернул ссылку на оплату');if(tg?.openInvoice)tg.openInvoice(result.invoiceLink,(status)=>{if(status==='paid'){showToast('Оплата подтверждена. Обновляю доступ…');initAccount();}else if(status==='cancelled')showToast('Оплата отменена');else showToast('Платёж не завершён');});else window.open(result.invoiceLink,'_blank');}catch(e){showToast(e.message || 'Не удалось создать счёт на оплату. Попробуй ещё раз.');}}
     window.addEventListener('load',async()=>{
-      renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();renderFateBall();
+      await initAccount();
+      try{await loadCloudState();}catch(e){console.error('Cloud state load failed:',e);showToast('Не удалось загрузить облачные данные. Использую сохранение на устройстве.');}
+      const telegramUser=tg?.initDataUnsafe?.user;
+      if(telegramUser){appState.user=appState.user||{};appState.user.name=telegramUser.first_name||'Пользователь';}
+      setAccess(accessRole);
       appState.futureScriptHistory=Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[];
       const f=appState.futureScript||{};
       if(!appState.futureScriptHistory.length&&(f.idealDay||f.identity||f.leavingBehind)){
         appState.futureScriptHistory.push({id:'legacy-future-script',legacy:true,idealDay:f.idealDay||'',identity:f.identity||'',leavingBehind:f.leavingBehind||''});
-        saveState();
       }
-      renderFutureScriptHistory();
-      await initAccount();
+      if(f.idealDay||f.identity||f.leavingBehind){appState.futureScript={idealDay:'',identity:'',leavingBehind:''};saveState();}
+      renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();renderFateBall();renderFutureScriptHistory();
     });
   </script>
 </body>
