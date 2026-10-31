@@ -1254,7 +1254,12 @@
         element.setAttribute('aria-hidden', 'true');
       }
     }
+    let dailyJournalReturnScrollTop = 0;
     function openDailySection(key) {
+      const mainScroller = document.querySelector('main');
+      if (document.getElementById('dailyJournalHome')?.style.display !== 'none') {
+        dailyJournalReturnScrollTop = mainScroller?.scrollTop || 0;
+      }
       const panels = document.querySelectorAll('[id^="dailySection-"]');
       panels.forEach(panel => setDailyPanelVisible(panel, false));
       setDailyPanelVisible(document.getElementById('dailyJournalHome'), false);
@@ -1278,14 +1283,17 @@
       if (key === 'fills') renderFillsMe();
       if (key === 'calendar') renderActivityCalendar();
       if (key === 'challenge') renderWeeklyChallenge();
-      document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
+      document.querySelector('main')?.scrollTo({top: 0, behavior: 'instant'});
     }
     function closeDailySection() {
       document.querySelectorAll('[id^="dailySection-"]').forEach(panel => setDailyPanelVisible(panel, false));
       setDailyPanelVisible(document.getElementById('dailyJournalHome'), true);
       setDailyPanelVisible(document.getElementById('dailyToolsHome'), true);
       setDailyPanelVisible(document.getElementById('dailyJournalHeader'), true);
-      document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
+      requestAnimationFrame(() => {
+        const scroller = document.querySelector('main');
+        if (scroller) scroller.scrollTo({top: dailyJournalReturnScrollTop, behavior: 'instant'});
+      });
     }
     let selectedBoardItemId=null;
     function boardPlacement(width){const c=document.getElementById('boardCanvas');const maxX=Math.max(8,(c?.clientWidth||340)-width-8);return{x:Math.round(8+Math.random()*maxX),y:Math.round(8+Math.random()*210),rotation:Math.round((Math.random()*12-6)*10)/10};}
