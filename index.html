@@ -954,13 +954,19 @@
     window.addEventListener('pagehide',flushCloudStateSave);
     async function loadCloudState() {
       if(!initData)return;
-      const localDeletedIds=Array.isArray(appState.deletedFutureLetterIds)?appState.deletedFutureLetterIds.map(String):[];const localDeletedBoardIds=Array.isArray(appState.deletedBoardItemIds)?appState.deletedBoardItemIds.map(String):[];const localBoardElements=Array.isArray(appState.boardElements)?appState.boardElements:[];const localBoardUpdatedAt=Number(appState.boardUpdatedAt)||0;
       const data=await api('/state');
+      // Re-read the local cache AFTER the network request: the user may have edited the board
+      // while the cloud state was loading. The pre-request snapshot would silently overwrite it.
+      const latestLocal=readLocalState()||appState;
+      const localDeletedIds=Array.isArray(latestLocal.deletedFutureLetterIds)?latestLocal.deletedFutureLetterIds.map(String):[];
+      const localDeletedBoardIds=Array.isArray(latestLocal.deletedBoardItemIds)?latestLocal.deletedBoardItemIds.map(String):[];
+      const localBoardElements=Array.isArray(latestLocal.boardElements)?latestLocal.boardElements:[];
+      const localBoardUpdatedAt=Number(latestLocal.boardUpdatedAt)||0;
       if(data.state&&typeof data.state==='object'&&!Array.isArray(data.state)){
         const remote=data.state;
         const deletedIds=[...new Set([...localDeletedIds,...(Array.isArray(remote.deletedFutureLetterIds)?remote.deletedFutureLetterIds.map(String):[])])];const deletedBoardIds=[...new Set([...localDeletedBoardIds,...(Array.isArray(remote.deletedBoardItemIds)?remote.deletedBoardItemIds.map(String):[])])];
         appState={...DEFAULT_STATE,...remote,user:{...DEFAULT_STATE.user,...(remote.user||{})}};
-        const remoteBoardUpdatedAt=Number(remote.boardUpdatedAt)||0;const useLocalBoard=localBoardUpdatedAt>remoteBoardUpdatedAt;
+        const remoteBoardUpdatedAt=Number(remote.boardUpdatedAt)||0;const useLocalBoard=localBoardUpdatedAt>=remoteBoardUpdatedAt&&localBoardUpdatedAt>0;
         if(useLocalBoard){appState.boardElements=localBoardElements;appState.boardUpdatedAt=localBoardUpdatedAt;}
         appState.deletedFutureLetterIds=deletedIds;appState.deletedBoardItemIds=deletedBoardIds;appState.boardElements=(Array.isArray(appState.boardElements)?appState.boardElements:[]).filter(item=>!deletedBoardIds.includes(String(item.id)));
         appState.futureScriptHistory=(Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[]).filter(entry=>!deletedIds.includes(String(entry.id)));
