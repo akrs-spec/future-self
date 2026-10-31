@@ -90,8 +90,9 @@
     #silentPracticeFlow textarea { touch-action:pan-y; }
 
     body > main {
-      flex: 1 1 auto;
+      flex: 1 1 0%;
       min-height: 0;
+      max-height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
@@ -891,17 +892,33 @@
       const telegramHeight = Number(tg?.viewportHeight || 0);
       const visualHeight = Number(window.visualViewport?.height || 0);
       const editingText = document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
-      // iOS/Telegram may keep viewportHeight unchanged while the keyboard is open.
-      // In that case the visual viewport is the real available app height.
-      const height = editingText && visualHeight > 0 ? visualHeight : telegramHeight > 0 ? telegramHeight : visualHeight > 0 ? visualHeight : window.innerHeight;
-      if (height > 0) document.documentElement.style.setProperty('--app-viewport-height', height + 'px');
-
-      // Telegram fullscreen can extend beneath the iPhone status bar/notch.
-      // Respect both device and Telegram content safe areas before placing the header.
+      // While the keyboard is open, use the smaller reported viewport so the app
+      // cannot keep a full-height layout behind the keyboard.
+      const candidates = editingText ? [telegramHeight, visualHeight].filter(v => v > 0) : [telegramHeight, visualHeight].filter(v => v > 0);
+      const height = candidates.length ? (editingText ? Math.min(...candidates) : (telegramHeight || visualHeight)) : window.innerHeight;
+      if (height > 0) {
+        document.documentElement.style.setProperty('--app-viewport-height', height + 'px');
+        document.documentElement.style.setProperty('--keyboard-viewport-height', height + 'px');
+      }
       const deviceTop = Number(tg?.safeAreaInset?.top || 0);
       const contentTop = Number(tg?.contentSafeAreaInset?.top || 0);
-      const telegramSafeTop = deviceTop + contentTop;
-      document.documentElement.style.setProperty('--telegram-safe-top', telegramSafeTop + 'px');
+      document.documentElement.style.setProperty('--telegram-safe-top', (deviceTop + contentTop) + 'px');
+      if (editingText) revealFocusedEditor();
+    }
+    function revealFocusedEditor() {
+      const field = document.activeElement;
+      const main = document.querySelector('body > main');
+      if (!field?.matches?.('input,textarea,select,[contenteditable="true"]') || !main || !field.isConnected) return;
+      const viewport = window.visualViewport;
+      const visibleTop = viewport ? viewport.offsetTop : 0;
+      const visibleBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
+      const rect = field.getBoundingClientRect();
+      const margin = 28;
+      if (rect.bottom > visibleBottom - margin) {
+        main.scrollTop += rect.bottom - visibleBottom + margin;
+      } else if (rect.top < visibleTop + margin) {
+        main.scrollTop -= visibleTop + margin - rect.top;
+      }
     }
     syncAppViewportHeight();
     tg?.onEvent?.('viewportChanged', syncAppViewportHeight);
@@ -910,33 +927,27 @@
     tg?.onEvent?.('fullscreenChanged', syncAppViewportHeight);
     window.addEventListener('resize', syncAppViewportHeight);
     window.visualViewport?.addEventListener('resize', syncAppViewportHeight);
-    // Keep the focused editor visible above the on-screen keyboard (especially in the challenge journal).
-    let editorRevealTimer=null;
-    document.addEventListener('focusin',(event)=>{
-      if(!event.target.matches('input,textarea,select,[contenteditable="true"]'))return;
+    window.visualViewport?.addEventListener('scroll', syncAppViewportHeight);
+    let editorRevealTimer = null;
+    document.addEventListener('focusin', (event) => {
+      if (!event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
       syncAppViewportHeight();
       clearTimeout(editorRevealTimer);
-      editorRevealTimer=setTimeout(()=>{
-        const field=event.target,main=document.querySelector('body > main');
-        if(!field.isConnected)return;
-        const rect=field.getBoundingClientRect(),viewport=window.visualViewport;
-        const visibleBottom=viewport?viewport.offsetTop+viewport.height:window.innerHeight;
-        if(rect.bottom>visibleBottom-20 || rect.top<20){
-          field.scrollIntoView({behavior:'smooth',block:'center'});
-        }
-        if(main)main.style.scrollPaddingBottom='calc(45vh + 24px + env(safe-area-inset-bottom))';
-      },280);
+      // iOS keyboard animation and Telegram viewport updates settle asynchronously.
+      [120, 300, 550, 850].forEach(delay => setTimeout(() => {
+        syncAppViewportHeight();
+        revealFocusedEditor();
+      }, delay));
     });
-    document.addEventListener('focusout',(event)=>{
-      if(!event.target.matches('input,textarea,select,[contenteditable="true"]'))return;
-      setTimeout(()=>{
-        const editing=document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
-        if(!editing){
-          const main=document.querySelector('body > main');
-          if(main)main.style.scrollPaddingBottom='';
+    document.addEventListener('focusout', (event) => {
+      if (!event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
+      setTimeout(() => {
+        const editing = document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
+        if (!editing) {
+          document.documentElement.style.setProperty('--keyboard-viewport-height', '100dvh');
           syncAppViewportHeight();
         }
-      },80);
+      }, 120);
     });
 
     const API = 'https://future-self-server-weuq.onrender.com/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
