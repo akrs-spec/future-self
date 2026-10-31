@@ -1328,8 +1328,17 @@
       appState.silentPracticeHistory.unshift(historyRecord);
       appState.silentPracticeHistory=appState.silentPracticeHistory.slice(0,50);
       session.saved=true;
-      const localSaved=saveState();
       recordPracticeCompletion(practice.title,historyRecord.id);
+      const localSaved=saveState();
+      let cloudSaved=false;
+      if(initData&&cloudStateReady){
+        clearTimeout(cloudSaveTimer);
+        const snapshot=JSON.stringify(appState);
+        cloudSaveQueue=cloudSaveQueue.catch(()=>{}).then(()=>api('/state',{state:JSON.parse(snapshot)}));
+        try{await cloudSaveQueue;cloudSaved=true;cloudSyncErrorShown=false;}
+        catch(error){console.error('Silent practice cloud save failed:',error);}
+      }
+      const saveConfirmed=cloudSaved||localSaved;
       renderSilentPracticeHistory();
       const flow=document.getElementById('silentPracticeFlow');
       flow.innerHTML=`<div class="min-h-[75vh] flex flex-col justify-center text-center space-y-5 py-8">
@@ -1340,7 +1349,7 @@
         <div class="rounded-2xl bg-white/80 border border-blush p-4 text-left space-y-1">
           <p class="text-[10px] uppercase tracking-widest text-dusty font-bold">Твоя практика завершена</p>
           <p class="text-sm font-bold text-mauve">${escapeHtml(practice.title)}</p>
-          <p class="text-[10px] text-mauve-light">${localSaved?'Результат сохранён на этом устройстве.':'Не удалось подтвердить сохранение на устройстве.'}</p>
+          <p class="text-[10px] text-mauve-light">${cloudSaved?'Результат сохранён в твоём профиле.':localSaved?'Результат сохранён на этом устройстве.':'Не удалось сохранить результат. Проверь подключение и попробуй ещё раз.'}</p>
         </div>
         <div class="space-y-2"><button onclick="finishSilentPractice()" class="w-full py-3.5 rounded-xl bg-mauve text-white text-xs font-bold">Вернуться к практикам</button><button onclick="exitSilentPracticeToMenu()" class="w-full py-3 rounded-xl bg-white border border-blush text-mauve text-xs font-bold"><i class="fa-solid fa-house mr-1"></i> В главное меню</button></div>
       </div>`;
