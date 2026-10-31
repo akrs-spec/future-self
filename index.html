@@ -769,6 +769,7 @@
         <div id="silentPracticeHistory" class="space-y-2"></div>
       </div>
       <div id="silentPracticeFlow" class="fixed left-0 right-0 bottom-0 z-[60] hidden w-full max-w-md mx-auto overflow-y-auto overscroll-contain bg-cream px-5 pt-3 pb-10 space-y-4" style="top:calc(max(env(safe-area-inset-top),var(--telegram-safe-top,0px)) + 4px)"></div>
+      <button id="silentPracticeExitButton" type="button" onclick="closeSilentPractice()" aria-label="Выйти из практики" class="hidden fixed z-[100] left-3 rounded-full w-8 h-8 bg-white border border-blush shadow-md text-mauve flex items-center justify-center" style="top:calc(max(env(safe-area-inset-top),var(--telegram-safe-top,0px)) + 10px)"><i class="fa-solid fa-arrow-left text-xs"></i></button>
 
     </section>
 
@@ -1243,6 +1244,7 @@
       document.getElementById('silentPracticeHome').classList.add('hidden');
       const flow=document.getElementById('silentPracticeFlow');
       flow.classList.remove('hidden');flow.scrollTop=0;
+      document.getElementById('silentPracticeExitButton').classList.remove('hidden');
       renderSilentPracticeStep();
     }
     function startRandomSilentPractice(){
@@ -1257,7 +1259,7 @@
       const isAction=step===total,progress=isAction?100:Math.round((step+1)/(total+1)*100);
       const prompt=isAction?'Какой один небольшой шаг ты готова сделать в ближайшие сутки?':practice.questions[step];
       const value=isAction?session.nextStep:session.answers[step];
-      flow.innerHTML=`<div class="sticky z-[80] -mx-5 px-5 pt-1 pb-1 flex justify-start pointer-events-none" style="top:0"><button type="button" onclick="closeSilentPractice()" aria-label="Вернуться к практикам" class="pointer-events-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/95 border border-blush shadow-sm text-[10px] font-semibold text-mauve leading-none"><i class="fa-solid fa-arrow-left text-[9px]"></i><span>К практикам</span></button></div>
+      flow.innerHTML=`
         <div class="glass-card rounded-3xl p-5 border border-blush space-y-4">
           <div class="flex justify-between items-center"><span class="text-[10px] uppercase tracking-widest text-dusty font-bold">${escapeHtml(practice.title)}</span><span class="text-[10px] text-mauve-light">${isAction?'Завершение':(step+1)+' из '+(total+1)}</span></div>
           <div class="h-1.5 rounded-full bg-powder overflow-hidden"><div class="h-full rounded-full bg-dusty" style="width:${progress}%"></div></div>
@@ -1319,6 +1321,7 @@
     function finishSilentPractice(){
       silentPracticeSession=null;
       document.getElementById('silentPracticeFlow').classList.add('hidden');
+      document.getElementById('silentPracticeExitButton').classList.add('hidden');
       document.getElementById('silentPracticeHome').classList.remove('hidden');
       renderSilentPracticeHistory();renderPracticeProgress();
     }
@@ -1332,7 +1335,7 @@
       switchTab('vision');
     }
     function closeSilentPractice(){
-      silentPracticeSession=null;document.getElementById('silentPracticeFlow').classList.add('hidden');document.getElementById('silentPracticeHome').classList.remove('hidden');
+      silentPracticeSession=null;document.getElementById('silentPracticeFlow').classList.add('hidden');document.getElementById('silentPracticeExitButton').classList.add('hidden');document.getElementById('silentPracticeHome').classList.remove('hidden');
     }
     function syncSilentPracticeHistoryToTracker(){appState.practiceDays=Array.isArray(appState.practiceDays)?appState.practiceDays:[];appState.practiceSessions=Array.isArray(appState.practiceSessions)?appState.practiceSessions:[];let changed=false;(appState.silentPracticeHistory||[]).forEach(item=>{if(!item||!item.id||!/^\d{4}-\d{2}-\d{2}$/.test(item.date||''))return;if(appState.practiceSessions.some(session=>session.sourceId===item.id))return;const legacy=appState.practiceSessions.find(session=>!session.sourceId&&session.name===item.title&&session.date===item.date);if(legacy){legacy.sourceId=item.id;changed=true;}else{appState.practiceSessions.unshift({id:'silent-'+item.id,sourceId:item.id,date:item.date,name:item.title,completedAt:item.date+'T12:00:00'});changed=true;}if(!appState.practiceDays.includes(item.date)){appState.practiceDays.push(item.date);changed=true;}});appState.practiceSessions=appState.practiceSessions.slice(0,200);if(changed)saveState();}
     function renderPracticeProgress(){syncSilentPracticeHistoryToTracker();const sessions=Array.isArray(appState.practiceSessions)?appState.practiceSessions:[],sessionDays=sessions.map(item=>item.date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)),days=[...new Set([...(appState.practiceDays||[]),...sessionDays].filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)))].sort(),count=Math.min(30,days.length),percent=Math.round(count/30*100),countEl=document.getElementById('practiceProgressCount'),bar=document.getElementById('practiceProgressBar'),hint=document.getElementById('practiceProgressHint'),sessionEl=document.getElementById('practiceSessionCount'),streakEl=document.getElementById('practiceStreakCount');if(!countEl||!bar||!hint||!sessionEl||!streakEl)return;countEl.innerText=count+'/30';bar.style.width=percent+'%';sessionEl.innerText=String(sessions.length);let streak=0;const day=new Date();if(!days.includes(localDayKey()))day.setDate(day.getDate()-1);while(days.includes(day.getFullYear()+'-'+String(day.getMonth()+1).padStart(2,'0')+'-'+String(day.getDate()).padStart(2,'0'))){streak++;day.setDate(day.getDate()-1);}streakEl.innerText=String(streak);const done=days.includes(localDayKey());hint.innerText=count>=30?'Ты завершила 30-дневный цикл. Отличная работа!':done?'Сегодня практика уже засчитана. Возвращайся завтра.':'Каждая завершённая дыхательная или тихая практика сохраняется в общем трекере.';}
