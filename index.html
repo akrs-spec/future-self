@@ -1425,7 +1425,8 @@
     let silentPracticeSession=null;
     function openSilentPractice(key){
       const practice=silentPracticeLibrary[key];if(!practice)return;
-      const variation=chooseSilentPracticeQuestions(key);\n      silentPracticeSession={key,questions:variation.questions,actionPrompt:variation.actionPrompt,answers:Array(variation.questions.length).fill(''),step:0,nextStep:''};
+      const variation=chooseSilentPracticeQuestions(key);
+      silentPracticeSession={key,questions:variation.questions,actionPrompt:variation.actionPrompt,answers:Array(variation.questions.length).fill(''),step:0,nextStep:''};
       const home=document.getElementById('silentPracticeHome');
       home.classList.add('hidden');
       if(home)home.style.display='none';
