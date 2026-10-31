@@ -915,10 +915,7 @@
     const API = 'https://future-self-server-weuq.onrender.com/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
     const DEFAULT_STATE = {
       user: { name: 'Гость', isPremium: false, access: 'FREE' },
-      boardElements: [
-        { id: '1', type: 'image', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80', x: 12, y: 18, width: 140, title: 'Путешествия' },
-        { id: '2', type: 'image', url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80', x: 165, y: 42, width: 140, title: 'Дом мечты' }
-      ], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
+      boardElements: [], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
       goals: [{ id: 'g1', title: 'Создать личный проект', cat: 'career', completed: false }], trackers: [], gratitudes: [], feelings: [], practiceDays: [], yesNoOracle: { date: '', used: 0, answer: '' }
     };
     const initData = tg?.initData || '';
