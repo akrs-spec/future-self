@@ -104,26 +104,34 @@
     body > nav {
       padding-bottom: calc(8px + env(safe-area-inset-bottom));
     }
-    /* Give text editors the full Telegram viewport while the iOS keyboard is open. */
+    /* Keep the editor inside the actually visible area when the iOS keyboard opens. */
+    body.keyboard-open {
+      height: var(--app-viewport-height, 100dvh) !important;
+      min-height: 0 !important;
+    }
     body.keyboard-open > nav { display: none !important; }
     body.keyboard-open > main {
+      flex: 1 1 0% !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
       padding-top: 0 !important;
       padding-bottom: 8px !important;
+      scroll-padding-top: 12px;
       scroll-padding-bottom: 8px;
-      min-height: 0 !important;
-      max-height: var(--app-viewport-height, 100dvh);
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
     }
     body.keyboard-open #silentPracticeFlow {
+      padding-top: 8px !important;
       padding-bottom: 8px !important;
       margin-bottom: 0 !important;
+      min-height: 0 !important;
       max-height: none !important;
     }
-    body.keyboard-open #silentPracticeFlow > .glass-card {
-      margin-bottom: 0 !important;
-    }
     body.keyboard-open #silentPracticeFlow textarea {
-      min-height: 112px;
-      max-height: 30dvh;
+      min-height: 88px;
+      max-height: min(28vh, 190px);
     }
 
     .glass-card {
@@ -901,38 +909,38 @@
     tg?.ready();
     tg?.expand();
 
+    const isTextEditor = (element) => !!element?.matches?.('input,textarea,select,[contenteditable="true"]');
     function syncAppViewportHeight() {
-      const telegramHeight = Number(tg?.viewportHeight || 0);
-      const visualHeight = Number(window.visualViewport?.height || 0);
-      const editingText = document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
-      // While the keyboard is open, use the smaller reported viewport so the app
-      // cannot keep a full-height layout behind the keyboard.
-      const candidates = editingText ? [telegramHeight, visualHeight].filter(v => v > 0) : [telegramHeight, visualHeight].filter(v => v > 0);
-      const height = candidates.length ? (editingText ? Math.min(...candidates) : (telegramHeight || visualHeight)) : window.innerHeight;
+      const editingText = isTextEditor(document.activeElement);
+      const viewport = window.visualViewport;
+      const visualHeight = Number(viewport?.height || 0);
+      const telegramHeight = Number(tg?.viewportHeight || tg?.viewportStableHeight || 0);
+      // visualViewport is the source that follows the iOS keyboard. Telegram's
+      // viewport can remain at its pre-keyboard height inside an embedded WebView.
+      const height = editingText
+        ? (visualHeight || telegramHeight || window.innerHeight)
+        : (telegramHeight || visualHeight || window.innerHeight);
       if (height > 0) {
-        document.documentElement.style.setProperty('--app-viewport-height', height + 'px');
-        document.documentElement.style.setProperty('--keyboard-viewport-height', height + 'px');
+        document.documentElement.style.setProperty('--app-viewport-height', Math.round(height) + 'px');
       }
       const deviceTop = Number(tg?.safeAreaInset?.top || 0);
       const contentTop = Number(tg?.contentSafeAreaInset?.top || 0);
       document.documentElement.style.setProperty('--telegram-safe-top', (deviceTop + contentTop) + 'px');
-      document.body.classList.toggle('keyboard-open', !!editingText);
-      if (editingText) revealFocusedEditor();
+      document.body.classList.toggle('keyboard-open', editingText);
     }
     function revealFocusedEditor() {
       const field = document.activeElement;
       const main = document.querySelector('body > main');
-      if (!field?.matches?.('input,textarea,select,[contenteditable="true"]') || !main || !field.isConnected) return;
+      if (!isTextEditor(field) || !main || !field.isConnected) return;
       const viewport = window.visualViewport;
-      const visibleTop = viewport ? viewport.offsetTop : 0;
-      const visibleBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
+      const visibleTop = Number(viewport?.offsetTop || 0);
+      const visibleBottom = visibleTop + Number(viewport?.height || window.innerHeight);
       const rect = field.getBoundingClientRect();
-      const margin = 28;
-      if (rect.bottom > visibleBottom - margin) {
-        main.scrollTop += rect.bottom - visibleBottom + margin;
-      } else if (rect.top < visibleTop + margin) {
-        main.scrollTop -= visibleTop + margin - rect.top;
-      }
+      const margin = 20;
+      let delta = 0;
+      if (rect.bottom > visibleBottom - margin) delta = rect.bottom - visibleBottom + margin;
+      else if (rect.top < visibleTop + margin) delta = rect.top - visibleTop - margin;
+      if (delta) main.scrollTop += delta;
     }
     syncAppViewportHeight();
     tg?.onEvent?.('viewportChanged', syncAppViewportHeight);
@@ -940,49 +948,29 @@
     tg?.onEvent?.('contentSafeAreaChanged', syncAppViewportHeight);
     tg?.onEvent?.('fullscreenChanged', syncAppViewportHeight);
     window.addEventListener('resize', syncAppViewportHeight);
-    window.visualViewport?.addEventListener('resize', syncAppViewportHeight);
-    window.visualViewport?.addEventListener('scroll', syncAppViewportHeight);
+    window.visualViewport?.addEventListener('resize', () => {
+      syncAppViewportHeight();
+      if (isTextEditor(document.activeElement)) requestAnimationFrame(revealFocusedEditor);
+    });
+    window.visualViewport?.addEventListener('scroll', () => {
+      if (isTextEditor(document.activeElement)) requestAnimationFrame(revealFocusedEditor);
+    });
     let editorRevealTimer = null;
     document.addEventListener('focusin', (event) => {
-      if (!event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
+      if (!isTextEditor(event.target)) return;
       syncAppViewportHeight();
       clearTimeout(editorRevealTimer);
-      if (event.target.id === 'silentPracticeAnswer') {
-        document.body.classList.add('keyboard-open');
-        [250, 500, 800].forEach(delay => setTimeout(() => {
-          const field = document.getElementById('silentPracticeAnswer');
-          const main = document.querySelector('body > main');
-          if (!field || !main || document.activeElement !== field) return;
-          const visibleBottom = window.visualViewport
-            ? window.visualViewport.offsetTop + window.visualViewport.height
-            : window.innerHeight;
-          const rect = field.getBoundingClientRect();
-          if (rect.bottom > visibleBottom - 18) {
-            main.scrollTop += rect.bottom - visibleBottom + 18;
-          }
-        }, delay));
-      }
-      // iOS keyboard animation and Telegram viewport updates settle asynchronously.
-      document.body.classList.add('keyboard-open');
-      [120, 300, 550, 850].forEach(delay => setTimeout(() => {
+      // Wait for the iOS keyboard animation to finish, then reveal the field once.
+      editorRevealTimer = setTimeout(() => {
         syncAppViewportHeight();
         revealFocusedEditor();
-        const main = document.querySelector('body > main');
-        const field = document.activeElement;
-        if (main && field?.isConnected) {
-          const r = field.getBoundingClientRect();
-          const bottom = window.visualViewport ? window.visualViewport.offsetTop + window.visualViewport.height : window.innerHeight;
-          if (r.bottom > bottom - 24) main.scrollTop += r.bottom - bottom + 24;
-        }
-      }, delay));
+      }, 260);
     });
     document.addEventListener('focusout', (event) => {
-      if (!event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
+      if (!isTextEditor(event.target)) return;
       setTimeout(() => {
-        const editing = document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
-        if (!editing) {
+        if (!isTextEditor(document.activeElement)) {
           document.body.classList.remove('keyboard-open');
-          document.documentElement.style.setProperty('--keyboard-viewport-height', '100dvh');
           syncAppViewportHeight();
         }
       }, 120);
@@ -1400,7 +1388,7 @@
       const value=isAction?session.nextStep:session.answers[step];
       flow.innerHTML=`
         <div class="glass-card rounded-3xl p-5 border border-blush space-y-4">
-          <div class="flex items-center justify-between gap-3"><button type="button" onclick="closeSilentPractice()" class="shrink-0 inline-flex items-center gap-1.5 text-[11px] font-semibold text-mauve-light hover:text-mauve px-2 py-1 rounded-lg bg-white border border-blush"><i class="fa-solid fa-arrow-left text-[10px]"></i><span>К практикам</span></button><span class="text-[10px] text-mauve-light text-right">${isAction?'Завершение':(step+1)+' из '+(total+1)}</span></div>
+          <div class="flex items-center justify-between gap-3"><button type="button" aria-label="Вернуться к практикам" title="К практикам" onclick="closeSilentPractice()" class="!inline-flex !w-8 !h-8 !min-w-8 !shrink-0 !items-center !justify-center !p-0 rounded-full bg-white border border-blush text-mauve-light hover:text-mauve"><i class="fa-solid fa-arrow-left text-[10px]"></i></button><span class="text-[10px] text-mauve-light text-right">${isAction?'Завершение':(step+1)+' из '+(total+1)}</span></div>
           <div class="flex justify-between items-center"><span class="text-[10px] uppercase tracking-widest text-dusty font-bold">${escapeHtml(practice.title)}</span></div>
           <div class="h-1.5 rounded-full bg-powder overflow-hidden"><div class="h-full rounded-full bg-dusty" style="width:${progress}%"></div></div>
           <p class="text-[11px] leading-relaxed text-mauve-light">${step===0?escapeHtml(practice.intro):'Не торопись. Здесь нет правильных или неправильных ответов.'}</p>
