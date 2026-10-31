@@ -754,7 +754,7 @@
         </div>
         <div id="silentPracticeHistory" class="space-y-2"></div>
       </div>
-      <div id="silentPracticeFlow" class="hidden space-y-3"></div>
+      <div id="silentPracticeFlow" class="fixed inset-0 z-[60] hidden w-full max-w-md mx-auto overflow-y-auto overscroll-contain bg-cream px-5 pt-8 pb-10 space-y-4"></div>
 
     </section>
 
@@ -1227,7 +1227,8 @@
       const practice=silentPracticeLibrary[key];if(!practice)return;
       silentPracticeSession={key,answers:Array(practice.questions.length).fill(''),step:0,nextStep:''};
       document.getElementById('silentPracticeHome').classList.add('hidden');
-      document.getElementById('silentPracticeFlow').classList.remove('hidden');
+      const flow=document.getElementById('silentPracticeFlow');
+      flow.classList.remove('hidden');flow.scrollTop=0;
       renderSilentPracticeStep();
     }
     function startRandomSilentPractice(){
