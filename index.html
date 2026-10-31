@@ -904,7 +904,7 @@
     const API = 'https://future-self-server-weuq.onrender.com/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
     const DEFAULT_STATE = {
       user: { name: 'Гость', isPremium: false, access: 'FREE' },
-      boardElements: [], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
+      boardElements: [], deletedBoardItemIds: [], futureScript: { idealDay: '', identity: '', leavingBehind: '' },
       goals: [{ id: 'g1', title: 'Создать личный проект', cat: 'career', completed: false }], trackers: [], gratitudes: [], feelings: [], practiceDays: [], yesNoOracle: { date: '', used: 0, answer: '' }
     };
     const initData = tg?.initData || '';
@@ -942,18 +942,18 @@
     }
     async function loadCloudState() {
       if(!initData)return;
-      const localDeletedIds=Array.isArray(appState.deletedFutureLetterIds)?appState.deletedFutureLetterIds.map(String):[];
+      const localDeletedIds=Array.isArray(appState.deletedFutureLetterIds)?appState.deletedFutureLetterIds.map(String):[];const localDeletedBoardIds=Array.isArray(appState.deletedBoardItemIds)?appState.deletedBoardItemIds.map(String):[];
       const data=await api('/state');
       if(data.state&&typeof data.state==='object'&&!Array.isArray(data.state)){
         const remote=data.state;
-        const deletedIds=[...new Set([...localDeletedIds,...(Array.isArray(remote.deletedFutureLetterIds)?remote.deletedFutureLetterIds.map(String):[])])];
+        const deletedIds=[...new Set([...localDeletedIds,...(Array.isArray(remote.deletedFutureLetterIds)?remote.deletedFutureLetterIds.map(String):[])])];const deletedBoardIds=[...new Set([...localDeletedBoardIds,...(Array.isArray(remote.deletedBoardItemIds)?remote.deletedBoardItemIds.map(String):[])])];
         appState={...DEFAULT_STATE,...remote,user:{...DEFAULT_STATE.user,...(remote.user||{})}};
-        appState.deletedFutureLetterIds=deletedIds;
+        appState.deletedFutureLetterIds=deletedIds;appState.deletedBoardItemIds=deletedBoardIds;appState.boardElements=(Array.isArray(appState.boardElements)?appState.boardElements:[]).filter(item=>!deletedBoardIds.includes(String(item.id)));
         appState.futureScriptHistory=(Array.isArray(appState.futureScriptHistory)?appState.futureScriptHistory:[]).filter(entry=>!deletedIds.includes(String(entry.id)));
         appState.futureScript={idealDay:'',identity:'',leavingBehind:''};
         appState.futureScriptLegacyMigrationDone=true;
         try{localStorage.setItem(storageKey,JSON.stringify(appState));}catch(e){console.warn('Local cache unavailable:',e);}
-        if(JSON.stringify(deletedIds)!==JSON.stringify(remote.deletedFutureLetterIds||[])||(remote.futureScript||{}).idealDay||(remote.futureScript||{}).identity||(remote.futureScript||{}).leavingBehind||(remote.futureScriptHistory||[]).some(entry=>deletedIds.includes(String(entry.id)))){
+        if(JSON.stringify(deletedIds)!==JSON.stringify(remote.deletedFutureLetterIds||[])||JSON.stringify(deletedBoardIds)!==JSON.stringify(remote.deletedBoardItemIds||[])||(remote.boardElements||[]).some(item=>deletedBoardIds.includes(String(item.id)))||(remote.futureScript||{}).idealDay||(remote.futureScript||{}).identity||(remote.futureScript||{}).leavingBehind||(remote.futureScriptHistory||[]).some(entry=>deletedIds.includes(String(entry.id)))){
           cloudStateReady=true;
           scheduleCloudStateSave();
         }
@@ -1226,7 +1226,7 @@
     function resizeSelectedBoardItem(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(item){item.width=Number(value);saveState();renderVisionBoard();}}
     function rotateSelectedBoardItem(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(!item||item.type!=='image')return;item.rotation=Number(value);const label=document.getElementById('boardRotationValue');if(label)label.innerText=item.rotation+'°';const el=document.querySelector('.board-item[data-id="'+CSS.escape(item.id)+'"]');if(el)el.style.transform='rotate('+item.rotation+'deg)';saveState();}
     function updateSelectedBoardCaption(value){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(item){if(item.type==='text')item.text=value;else item.title=value;saveState();renderVisionBoard();}}
-    function deleteBoardItemById(id){if(!id)return;appState.boardElements=appState.boardElements.filter(x=>x.id!==id);if(selectedBoardItemId===id)selectedBoardItemId=null;saveState();renderVisionBoard();}function deleteSelectedBoardItem(){deleteBoardItemById(selectedBoardItemId);}function changeSelectedBoardLayer(direction){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(!item||item.type!=='image')return;const layers=appState.boardElements.map((x,i)=>({item:x,z:Number.isFinite(Number(x.zIndex))?Number(x.zIndex):i+1}));const edge=direction==='front'?Math.max(...layers.map(x=>x.z)):Math.min(...layers.map(x=>x.z));item.zIndex=edge+(direction==='front'?1:-1);saveState();renderVisionBoard();showToast(direction==='front'?'Фото перемещено вперёд':'Фото перемещено назад');}
+    function deleteBoardItemById(id){if(!id)return;appState.deletedBoardItemIds=[...new Set([...(Array.isArray(appState.deletedBoardItemIds)?appState.deletedBoardItemIds.map(String):[]),String(id)])];appState.boardElements=appState.boardElements.filter(x=>String(x.id)!==String(id));if(selectedBoardItemId===id)selectedBoardItemId=null;saveState();renderVisionBoard();}function deleteSelectedBoardItem(){deleteBoardItemById(selectedBoardItemId);}function changeSelectedBoardLayer(direction){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(!item||item.type!=='image')return;const layers=appState.boardElements.map((x,i)=>({item:x,z:Number.isFinite(Number(x.zIndex))?Number(x.zIndex):i+1}));const edge=direction==='front'?Math.max(...layers.map(x=>x.z)):Math.min(...layers.map(x=>x.z));item.zIndex=edge+(direction==='front'?1:-1);saveState();renderVisionBoard();showToast(direction==='front'?'Фото перемещено вперёд':'Фото перемещено назад');}
     function addBoardText(){const text=prompt('Напиши фразу или аффирмацию для карты:');if(!text?.trim())return;const id=String(Date.now());appState.boardElements.push({id,type:'text',text:text.trim(),bgColor:'#F7E8EF',x:20+(appState.boardElements.length%2)*130,y:20+Math.floor(appState.boardElements.length/2)*100,width:150});saveState();renderVisionBoard();selectBoardItem(id);}
     function setBoardTextBackground(color){const item=appState.boardElements.find(x=>x.id===selectedBoardItemId);if(!item||item.type!=='text'||!/^#[0-9A-F]{6}$/i.test(color))return;item.bgColor=color;saveState();renderVisionBoard();syncBoardItemTools(item);}
     function handleBoardPhotoUpload(event){const files=Array.from(event.target.files||[]);if(!files.length)return;let done=0;files.forEach(file=>{if(!file.type.startsWith('image/')){done++;return;}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1800,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);const data=canvas.toDataURL('image/jpeg',.92),width=140,pos=boardPlacement(width);appState.boardElements.push({id:String(Date.now()+done+Math.random()),type:'image',url:data,title:file.name.replace(/\.[^.]+$/,''),...pos,width,style:'free'});done++;if(done===files.length){selectedBoardItemId=null;hideBoardItemTools();saveState();renderVisionBoard();showToast('Фотографии добавлены на карту');}};img.onerror=()=>{done++;if(done===files.length)showToast('Не удалось загрузить некоторые фото');};img.src=reader.result;};reader.readAsDataURL(file);});event.target.value='';}
