@@ -791,15 +791,24 @@
         <div class="space-y-1"><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">БЕЗ ЗВУКА И СПЕШКИ</p><h3 class="text-base font-extrabold text-mauve">Тихие практики</h3><p class="text-[10px] text-mauve-light">Небольшие упражнения, чтобы разобраться в себе. Один вопрос за раз — в своём темпе.</p></div>
         <button onclick="startRandomSilentPractice()" class="w-full rounded-2xl p-4 text-left text-white shadow-card-float flex items-center justify-between" style="background:linear-gradient(120deg,#76545B,#B77D86)"><span><span class="block text-[10px] uppercase tracking-widest text-white/70 font-bold">Не знаешь, с чего начать?</span><span class="block text-sm font-extrabold mt-1">Случайная встреча с собой</span><span class="block text-[10px] text-white/80 mt-1">Я выберу практику за тебя</span></span><span class="text-2xl">✧</span></button>
         <div class="grid grid-cols-2 gap-2">
-          <div class="min-w-0"><button onclick="openSilentPractice('mind')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">☁️</span><span class="block text-xs font-bold text-mauve mt-2">Разгрузить голову</span><span class="block text-[9px] text-mauve-light mt-1">Когда слишком много мыслей · 5 мин</span></button><div id="silentPracticeHistory-mind" class="mt-1"></div></div>
-          <div class="min-w-0"><button onclick="openSilentPractice('return')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🤍</span><span class="block text-xs font-bold text-mauve mt-2">Вернуться к себе</span><span class="block text-[9px] text-mauve-light mt-1">Понять своё состояние · 3–5 мин</span></button><div id="silentPracticeHistory-return" class="mt-1"></div></div>
-          <div class="min-w-0"><button onclick="openSilentPractice('dialogue')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🪞</span><span class="block text-xs font-bold text-mauve mt-2">Диалог с собой</span><span class="block text-[9px] text-mauve-light mt-1">Честные вопросы · 7 мин</span></button><div id="silentPracticeHistory-dialogue" class="mt-1"></div></div>
-          <div class="min-w-0"><button onclick="openSilentPractice('release')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🍂</span><span class="block text-xs font-bold text-mauve mt-2">Отпустить лишнее</span><span class="block text-[9px] text-mauve-light mt-1">Разобраться, что держит · 7 мин</span></button><div id="silentPracticeHistory-release" class="mt-1"></div></div>
-          <div class="min-w-0"><button onclick="openSilentPractice('wishes')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">✧</span><span class="block text-xs font-bold text-mauve mt-2">Мои настоящие желания</span><span class="block text-[9px] text-mauve-light mt-1">Отделить своё от чужого · 7 мин</span></button><div id="silentPracticeHistory-wishes" class="mt-1"></div></div>
-          <div class="min-w-0"><button onclick="openSilentPractice('restart')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🌅</span><span class="block text-xs font-bold text-mauve mt-2">Начать заново</span><span class="block text-[9px] text-mauve-light mt-1">Найти первый шаг · 5 мин</span></button><div id="silentPracticeHistory-restart" class="mt-1"></div></div>
+          <div class="min-w-0"><button onclick="openSilentPractice('mind')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">☁️</span><span class="block text-xs font-bold text-mauve mt-2">Разгрузить голову</span><span class="block text-[9px] text-mauve-light mt-1">Когда слишком много мыслей · 5 мин</span></button></div>
+          <div class="min-w-0"><button onclick="openSilentPractice('return')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🤍</span><span class="block text-xs font-bold text-mauve mt-2">Вернуться к себе</span><span class="block text-[9px] text-mauve-light mt-1">Понять своё состояние · 3–5 мин</span></button></div>
+          <div class="min-w-0"><button onclick="openSilentPractice('dialogue')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🪞</span><span class="block text-xs font-bold text-mauve mt-2">Диалог с собой</span><span class="block text-[9px] text-mauve-light mt-1">Честные вопросы · 7 мин</span></button></div>
+          <div class="min-w-0"><button onclick="openSilentPractice('release')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🍂</span><span class="block text-xs font-bold text-mauve mt-2">Отпустить лишнее</span><span class="block text-[9px] text-mauve-light mt-1">Разобраться, что держит · 7 мин</span></button></div>
+          <div class="min-w-0"><button onclick="openSilentPractice('wishes')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">✧</span><span class="block text-xs font-bold text-mauve mt-2">Мои настоящие желания</span><span class="block text-[9px] text-mauve-light mt-1">Отделить своё от чужого · 7 мин</span></button></div>
+          <div class="min-w-0"><button onclick="openSilentPractice('restart')" class="glass-card w-full rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🌅</span><span class="block text-xs font-bold text-mauve mt-2">Начать заново</span><span class="block text-[9px] text-mauve-light mt-1">Найти первый шаг · 5 мин</span></button></div>
         </div>
       </div>
 
+      <div id="silentPracticeDetail" class="hidden space-y-3 pt-2 pb-6">
+        <button type="button" onclick="closeSilentPractice()" class="!inline-flex items-center gap-1.5 text-[11px] font-semibold text-mauve-light px-1 py-1"><i class="fa-solid fa-arrow-left text-[10px]"></i><span>К практикам</span></button>
+        <div class="glass-card rounded-3xl p-4 border border-blush space-y-3">
+          <div class="text-2xl" id="silentPracticeDetailIcon">✧</div>
+          <div><p class="text-[10px] uppercase tracking-widest text-dusty font-bold">ТИХАЯ ПРАКТИКА</p><h3 id="silentPracticeDetailTitle" class="text-base font-extrabold text-mauve mt-1"></h3><p id="silentPracticeDetailIntro" class="text-xs leading-relaxed text-mauve-light mt-2"></p></div>
+          <button id="silentPracticeStartButton" onclick="beginSilentPractice()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Начать практику</button>
+        </div>
+        <div class="space-y-2"><div class="flex items-center justify-between"><h4 class="text-xs font-extrabold text-mauve">Мои прошлые прохождения</h4><span id="silentPracticeHistoryCount" class="text-[10px] text-mauve-light"></span></div><div id="silentPracticeDetailHistory"></div></div>
+      </div>
       <div id="silentPracticeFlow" class="hidden w-full max-w-md mx-auto px-5 pt-3 pb-10 space-y-4" style="position:relative;overflow:visible;min-height:0;touch-action:pan-y;"></div>
       <button id="practiceFolderExitButton" type="button" onclick="backToPracticeHub()" class="hidden">Назад</button>
 
@@ -1422,13 +1431,29 @@
       return {questions:sets[selected],actionPrompt};
     }
     let silentPracticeSession=null;
+    let silentPracticeSelectedKey=null;
     function openSilentPractice(key){
       const practice=silentPracticeLibrary[key];if(!practice)return;
+      silentPracticeSelectedKey=key;
+      const home=document.getElementById('silentPracticeHome');home?.classList.add('hidden');if(home)home.style.display='none';
+      const flow=document.getElementById('silentPracticeFlow');flow?.classList.add('hidden');if(flow)flow.style.display='none';
+      const detail=document.getElementById('silentPracticeDetail');detail?.classList.remove('hidden');if(detail)detail.style.display='block';
+      const icons={mind:'☁️',return:'🤍',dialogue:'🪞',release:'🍂',wishes:'✧',restart:'🌅'};
+      document.getElementById('silentPracticeDetailIcon').textContent=icons[key]||'✧';
+      document.getElementById('silentPracticeDetailTitle').textContent=practice.title;
+      document.getElementById('silentPracticeDetailIntro').textContent=practice.intro;
+      document.getElementById('silentPracticeStartButton').textContent='Начать практику';
+      document.getElementById('silentPracticeExitButton')?.classList.add('hidden');
+      renderSilentPracticeHistory(key);
+    }
+    function beginSilentPractice(){
+      const key=silentPracticeSelectedKey;
       const variation=chooseSilentPracticeQuestions(key);
       silentPracticeSession={key,questions:variation.questions,actionPrompt:variation.actionPrompt,answers:Array(variation.questions.length).fill(''),step:0,nextStep:''};
       const home=document.getElementById('silentPracticeHome');
-      home.classList.add('hidden');
+      home?.classList.add('hidden');
       if(home)home.style.display='none';
+      const detail=document.getElementById('silentPracticeDetail');detail?.classList.add('hidden');if(detail)detail.style.display='none';
       document.getElementById('practiceFolderExitButton')?.classList.add('hidden');
       const flow=document.getElementById('silentPracticeFlow');
       flow.classList.remove('hidden');flow.style.display='block';flow.scrollTop=0;
@@ -1530,10 +1555,9 @@
       const visible=entries.slice(0,3),rest=entries.slice(3);
       return visible.map(render).join('')+(rest.length?'<details class="mt-2"><summary class="list-none cursor-pointer flex items-center justify-center gap-2 py-2 text-[10px] font-bold text-dusty"><span>'+label+' · '+rest.length+'</span><i class="fa-solid fa-chevron-down text-[9px]"></i></summary><div class="space-y-2 mt-2">'+rest.map(render).join('')+'</div></details>':'');
     }
-    function renderSilentPracticeHistory(){
+    function renderSilentPracticeHistory(key){
       const items=Array.isArray(appState.silentPracticeHistory)?appState.silentPracticeHistory:[];
-      Object.keys(silentPracticeLibrary).forEach(key=>{
-        const el=document.getElementById('silentPracticeHistory-'+key);if(!el)return;
+      const el=document.getElementById('silentPracticeDetailHistory');if(!el||!key)return;
         const entries=items.filter(item=>item&&item.key===key);
         const renderEntry=item=>{
           const answers=Array.isArray(item.answers)?item.answers:[];
@@ -1543,15 +1567,15 @@
           return `<details class="bg-white/80 border border-blush rounded-xl mb-2 overflow-hidden"><summary class="list-none cursor-pointer flex items-center justify-between gap-2 p-3"><span class="text-[10px] font-bold text-mauve">Практика от ${escapeHtml(item.date||'')}</span><span class="text-[9px] text-dusty">Посмотреть ответы⌄</span></summary><div class="px-3 pb-3 space-y-2">${detailRows||'<p class="text-[10px] text-mauve-light">В этой записи нет ответов на вопросы.</p>'}${action}</div></details>`;
         };
         const visible=entries.slice(0,3),rest=entries.slice(3);
+        document.getElementById("silentPracticeHistoryCount").textContent=entries.length?String(entries.length)+" записей":"";
         el.innerHTML=entries.length?`<div class="pt-2"><p class="text-[9px] uppercase tracking-widest text-dusty font-bold mb-2">Твои записи · ${entries.length}</p>${visible.map(renderEntry).join('')}${rest.length?`<details class="mt-1"><summary class="list-none cursor-pointer flex items-center justify-center gap-2 py-2 text-[10px] font-bold text-dusty"><span>Показать остальные · ${rest.length}</span><i class="fa-solid fa-chevron-down text-[9px]"></i></summary><div class="mt-2">${rest.map(renderEntry).join('')}</div></details>`:''}</div>`:'';
-      });
     }
     function exitSilentPracticeToMenu(){
       closeSilentPractice();
       switchTab('vision');
     }
     function closeSilentPractice(){
-      silentPracticeSession=null;const flow=document.getElementById('silentPracticeFlow');flow?.classList.add('hidden');if(flow)flow.style.display='none';document.getElementById('silentPracticeExitButton')?.classList.add('hidden');const home=document.getElementById('silentPracticeHome');home?.classList.remove('hidden');if(home)home.style.display='block';
+      silentPracticeSession=null;const flow=document.getElementById('silentPracticeFlow');flow?.classList.add('hidden');if(flow)flow.style.display='none';document.getElementById('silentPracticeExitButton')?.classList.add('hidden');const detail=document.getElementById('silentPracticeDetail');detail?.classList.add('hidden');if(detail)detail.style.display='none';const home=document.getElementById('silentPracticeHome');home?.classList.remove('hidden');if(home)home.style.display='block';
     }
     function syncSilentPracticeHistoryToTracker(){appState.practiceDays=Array.isArray(appState.practiceDays)?appState.practiceDays:[];appState.practiceSessions=Array.isArray(appState.practiceSessions)?appState.practiceSessions:[];let changed=false;(appState.silentPracticeHistory||[]).forEach(item=>{if(!item||!item.id||!/^\d{4}-\d{2}-\d{2}$/.test(item.date||''))return;if(appState.practiceSessions.some(session=>session.sourceId===item.id))return;const legacy=appState.practiceSessions.find(session=>!session.sourceId&&session.name===item.title&&session.date===item.date);if(legacy){legacy.sourceId=item.id;changed=true;}else{appState.practiceSessions.unshift({id:'silent-'+item.id,sourceId:item.id,date:item.date,name:item.title,completedAt:item.date+'T12:00:00'});changed=true;}if(!appState.practiceDays.includes(item.date)){appState.practiceDays.push(item.date);changed=true;}});appState.practiceSessions=appState.practiceSessions.slice(0,200);if(changed)saveState();}
     function renderPracticeProgress(){syncSilentPracticeHistoryToTracker();const sessions=Array.isArray(appState.practiceSessions)?appState.practiceSessions:[],sessionDays=sessions.map(item=>item.date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)),days=[...new Set([...(appState.practiceDays||[]),...sessionDays].filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)))].sort(),count=Math.min(30,days.length),percent=Math.round(count/30*100),countEl=document.getElementById('practiceProgressCount'),bar=document.getElementById('practiceProgressBar'),hint=document.getElementById('practiceProgressHint'),sessionEl=document.getElementById('practiceSessionCount'),streakEl=document.getElementById('practiceStreakCount');if(!countEl||!bar||!hint||!sessionEl||!streakEl)return;countEl.innerText=count+'/30';bar.style.width=percent+'%';sessionEl.innerText=String(sessions.length);let streak=0;const day=new Date();if(!days.includes(localDayKey()))day.setDate(day.getDate()-1);while(days.includes(day.getFullYear()+'-'+String(day.getMonth()+1).padStart(2,'0')+'-'+String(day.getDate()).padStart(2,'0'))){streak++;day.setDate(day.getDate()-1);}streakEl.innerText=String(streak);const done=days.includes(localDayKey());hint.innerText=count>=30?'Ты завершила 30-дневный цикл. Отличная работа!':done?'Сегодня практика уже засчитана. Возвращайся завтра.':'Каждая завершённая дыхательная или тихая практика сохраняется в общем трекере.';}
