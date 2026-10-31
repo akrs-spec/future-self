@@ -1783,6 +1783,20 @@ function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const 
     async function revokeFriendAccess(id){try{await api('/admin/revoke',{telegramId:id});showToast('Доступ отозван');loadFriendUsers();}catch(e){showToast(e.message);}}
     async function loadFriendUsers(){const c=document.getElementById('friendUsersList');try{const data=await api('/admin/users');c.innerHTML=data.users.length?data.users.map(u=>`<div class="flex items-center justify-between bg-milk rounded-xl p-2"><div><b>${escapeHtml(u.name||'Пользователь')}</b><p>ID: ${escapeHtml(u.telegramId)} · ${escapeHtml(u.access)}${u.expiresAt?' · до '+new Date(u.expiresAt).toLocaleDateString('ru-RU'):''}</p></div><button onclick="revokeFriendAccess('${u.telegramId}')" class="text-red-700 underline">Отозвать</button></div>`).join(''):'<p>Пока нет выданных доступов.</p>';}catch(e){c.innerHTML='<p>'+escapeHtml(e.message)+'</p>';}}
     async function simulateTelegramPay(){try{const result=await api('/payments/create-invoice',{plan:'pro_monthly'});if(!result.invoiceLink)throw new Error('Сервер не вернул ссылку на оплату');if(tg?.openInvoice)tg.openInvoice(result.invoiceLink,(status)=>{if(status==='paid'){showToast('Оплата подтверждена. Обновляю доступ…');initAccount();}else if(status==='cancelled')showToast('Оплата отменена');else showToast('Платёж не завершён');});else window.open(result.invoiceLink,'_blank');}catch(e){showToast(e.message || 'Не удалось создать счёт на оплату. Попробуй ещё раз.');}}
+    // Закрываем экранную клавиатуру при касании вне активного поля ввода.
+    document.addEventListener('pointerdown',(event)=>{
+      const active=document.activeElement;
+      if(!active || !active.matches('input,textarea,select,[contenteditable="true"]'))return;
+      const target=event.target;
+      if(target instanceof Element && target.closest('input,textarea,select,[contenteditable="true"]'))return;
+      active.blur();
+    },true);
+    document.addEventListener('keydown',(event)=>{
+      if(event.key==='Escape'){
+        const active=document.activeElement;
+        if(active && active.matches('input,textarea,select,[contenteditable="true"]'))active.blur();
+      }
+    });
     window.addEventListener('load',async()=>{
       await initAccount();
       try{await loadCloudState();}catch(e){console.error('Cloud state load failed:',e);showToast('Не удалось загрузить облачные данные. Использую сохранение на устройстве.');}
