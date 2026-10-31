@@ -342,7 +342,7 @@
 
           <button onclick="openDailySection('calendar')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">▦</span><p class="text-xs font-bold text-mauve mt-2">Календарь активности</p><p class="text-[9px] text-mauve-light mt-1">Твои дни с собой</p></button>
 
-        </div>
+        <button onclick="openDailySection('museum')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">🏛️</span><p class="text-xs font-bold text-mauve mt-2">Музей моей жизни</p><p class="text-[9px] text-mauve-light mt-1">Сохраняй моменты, которые хочется помнить</p></button></div>
       </div>
         <button onclick="openDailySection('pause')" class="w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left shadow-sm" style="background:linear-gradient(115deg,#F8ECEE,#FFF9F9)">
           <span class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#EED9DD">↗</span>
@@ -512,6 +512,17 @@
         <div id="timeCapsuleList" class="space-y-2"></div>
       </div>
 
+      <div id="dailySection-museum" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <div class="rounded-3xl p-5 text-center" style="background:linear-gradient(145deg,#F2E8ED,#E8D5D9)"><div class="text-3xl">🏛️</div><h3 class="text-xl font-extrabold text-mauve mt-2">Музей моей жизни</h3><p class="text-xs text-mauve-light mt-2">Собирай моменты, людей, места и маленькие победы, которые хочется сохранить. Это твоя личная экспозиция — без оценок и идеальной картинки.</p></div>
+        <div class="glass-card rounded-2xl border border-blush p-3 space-y-2">
+          <input id="museumTitle" maxlength="70" placeholder="Название момента" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve">
+          <textarea id="museumNote" rows="3" maxlength="700" placeholder="Что произошло? Почему ты хочешь это запомнить?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y"></textarea>
+          <input id="museumPlace" maxlength="70" placeholder="Место или человек (необязательно)" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve">
+          <button onclick="saveMuseumMoment()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Добавить в музей</button>
+        </div>
+        <div id="museumTimeline" class="space-y-2"></div>
+      </div>
       <div id="dailySection-calendar" class="hidden space-y-4">
         <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
         <div><h3 class="text-xl font-extrabold text-mauve">Календарь активности</h3><p class="text-xs text-mauve-light mt-1">Отмечай не идеальные серии, а дни, когда ты находила время для себя.</p></div>
@@ -695,6 +706,13 @@
           <button onclick="openAddGoalModal()" class="px-3 py-2 bg-mauve text-blush-light text-[10px] font-bold rounded-xl"><i class="fa-solid fa-plus mr-1"></i>Добавить</button>
         </div>
         <div id="goalsContainer" class="space-y-2"></div>
+        <button type="button" onclick="openLifeExperiment()" class="w-full rounded-2xl border border-blush p-3 flex items-center gap-3 text-left" style="background:linear-gradient(110deg,#F3EAF0,#FFF8F4)"><span class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#EADCE8">🧪</span><span class="flex-1"><span class="block text-xs font-extrabold text-mauve">Лаборатория экспериментов</span><span class="block text-[10px] text-mauve-light mt-1">Попробуй новый способ действовать в течение 7 дней</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
+        <div id="lifeExperimentPanel" class="hidden rounded-2xl border border-blush bg-white p-3 space-y-3">
+          <div class="flex items-center justify-between"><h3 class="text-sm font-extrabold text-mauve">Эксперимент недели</h3><button onclick="closeLifeExperiment()" class="text-xs text-dusty">Закрыть ×</button></div>
+          <p id="lifeExperimentPrompt" class="text-xs leading-relaxed text-mauve-light">Выбери эксперимент, который хочется попробовать — не нужно выполнять его идеально.</p>
+          <div id="lifeExperimentChoices" class="space-y-2"></div>
+          <div id="lifeExperimentActive" class="hidden space-y-2"><p id="lifeExperimentTitle" class="text-xs font-bold text-mauve"></p><p id="lifeExperimentProgress" class="text-[10px] text-dusty"></p><textarea id="lifeExperimentNote" rows="2" placeholder="Что заметила сегодня?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea><button onclick="saveLifeExperimentDay()" class="w-full py-2.5 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить наблюдение</button><div id="lifeExperimentHistory" class="space-y-2"></div></div>
+        </div>
       </div>
 
       <div id="pathHabitsView" class="hidden space-y-3">
@@ -739,6 +757,18 @@
           <span class="block text-[10px] font-bold text-dusty mt-3">Открыть <i class="fa-solid fa-arrow-right ml-1"></i></span>
         </button>
 
+        <button type="button" onclick="openDecisionRoom()" class="col-span-2 rounded-2xl p-3 text-left border border-blush flex items-center gap-3" style="background:linear-gradient(110deg,#F4EAF0,#FFF8F4)"><span class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="background:#EADCE8">⚖️</span><span class="flex-1"><span class="block text-xs font-extrabold text-mauve">Комната решений</span><span class="block text-[10px] text-mauve-light mt-1">Разложи сложный выбор на части и услышь себя</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
+      </div>
+      <div id="decisionRoom" class="hidden rounded-2xl border border-blush bg-white p-4 space-y-3">
+        <button type="button" onclick="closeDecisionRoom()" class="text-[11px] font-bold text-dusty"><i class="fa-solid fa-arrow-left mr-1"></i> К практикам</button>
+        <h3 class="text-lg font-extrabold text-mauve">Комната решений</h3>
+        <p class="text-xs text-mauve-light">Не будем решать за тебя. Поможем отделить факты, желания, страхи и следующий небольшой шаг.</p>
+        <textarea id="decisionSituation" rows="3" placeholder="Какой выбор сейчас перед тобой?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
+        <textarea id="decisionWant" rows="2" placeholder="Чего я хочу, если убрать ожидания других?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
+        <textarea id="decisionFear" rows="2" placeholder="Чего я боюсь в каждом варианте?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
+        <textarea id="decisionCost" rows="2" placeholder="Что будет, если я ничего не изменю?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
+        <textarea id="decisionStep" rows="2" placeholder="Какой безопасный маленький шаг я могу сделать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
+        <button type="button" onclick="saveDecisionRoom()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить размышление</button><div id="decisionHistory" class="space-y-2"></div>
       </div>
       </div>
       <!-- BREATHWORK VISUALIZER CARD -->
@@ -1312,6 +1342,7 @@
       if (key === 'capsule') renderTimeCapsules();
       if (key === 'fills') renderFillsMe();
       if (key === 'calendar') renderActivityCalendar();
+      if (key === 'museum') renderMuseumMoments();
       if (key === 'challenge') renderWeeklyChallenge();
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'instant'});
     }
@@ -1994,6 +2025,42 @@ function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const 
         if(active && active.matches('input,textarea,select,[contenteditable="true"]'))active.blur();
       }
     });
+
+    // Личные коллекции и эксперименты — сохраняются в общем состоянии пользователя.
+    function saveMuseumMoment(){
+      const title=document.getElementById('museumTitle').value.trim(),note=document.getElementById('museumNote').value.trim(),place=document.getElementById('museumPlace').value.trim();
+      if(!title&&!note){showToast('Добавь название или описание момента');return;}
+      appState.museumMoments=Array.isArray(appState.museumMoments)?appState.museumMoments:[];
+      appState.museumMoments.unshift({id:'museum-'+Date.now(),title:title||'Важный момент',note,place,date:new Date().toISOString()});
+      appState.museumMoments=appState.museumMoments.slice(0,150);saveState();
+      ['museumTitle','museumNote','museumPlace'].forEach(id=>document.getElementById(id).value='');renderMuseumMoments();showToast('Момент сохранён в твоём музее');
+    }
+    function renderMuseumMoments(){
+      const c=document.getElementById('museumTimeline');if(!c)return;const a=Array.isArray(appState.museumMoments)?appState.museumMoments:[];
+      c.innerHTML=a.length?a.map((m,i)=>'<article class="glass-card rounded-2xl border border-blush p-3 space-y-1"><div class="flex justify-between gap-2"><p class="text-xs font-extrabold text-mauve">'+escapeHtml(m.title)+'</p><button onclick="deleteMuseumMoment('+i+')" class="text-dusty text-xs" aria-label="Удалить">×</button></div><p class="text-[9px] text-dusty">'+new Date(m.date).toLocaleDateString('ru-RU')+(m.place?' · '+escapeHtml(m.place):'')+'</p>'+(m.note?'<p class="text-xs text-mauve-light whitespace-pre-wrap">'+escapeHtml(m.note)+'</p>':'')+'</article>').join(''):'<p class="text-center text-[10px] text-mauve-light py-4">Пока музей пуст. Сохрани здесь момент, к которому захочется вернуться.</p>';
+    }
+    function deleteMuseumMoment(i){if(!confirm('Убрать этот момент из музея?'))return;appState.museumMoments.splice(i,1);saveState();renderMuseumMoments();}
+    const lifeExperiments=[
+      {title:'Неделя маленькой смелости',desc:'Каждый день сделай одно небольшое действие, которое обычно откладываешь из-за неловкости или сомнений.'},
+      {title:'7 дней без автоматического «да»',desc:'Перед согласием сделай паузу и спроси себя, действительно ли у тебя есть желание и ресурс.'},
+      {title:'Неделя новых впечатлений',desc:'Каждый день добавляй в привычный день одну новую деталь: маршрут, место, занятие или разговор.'},
+      {title:'7 дней замечать сравнение',desc:'Замечай моменты сравнения себя с другими и возвращай внимание к собственным обстоятельствам и желаниям.'}
+    ];
+    function openLifeExperiment(){document.getElementById('lifeExperimentPanel').classList.remove('hidden');renderLifeExperiment();}
+    function closeLifeExperiment(){document.getElementById('lifeExperimentPanel').classList.add('hidden');}
+    function renderLifeExperiment(){
+      const choices=document.getElementById('lifeExperimentChoices'),active=document.getElementById('lifeExperimentActive'),exp=appState.lifeExperiment;
+      if(!exp||exp.finished){active.classList.add('hidden');choices.classList.remove('hidden');choices.innerHTML=lifeExperiments.map((e,i)=>'<button onclick="startLifeExperiment('+i+')" class="w-full text-left rounded-xl bg-milk p-3"><b class="block text-xs text-mauve">'+e.title+'</b><span class="text-[10px] text-mauve-light">'+e.desc+'</span></button>').join('');document.getElementById('lifeExperimentPrompt').textContent='Выбери один эксперимент на ближайшую неделю. Можно остановиться или сменить его в любой момент.';return;}
+      choices.classList.add('hidden');active.classList.remove('hidden');document.getElementById('lifeExperimentTitle').textContent=exp.title;document.getElementById('lifeExperimentProgress').textContent='Дней с наблюдениями: '+exp.entries.length+' из 7';document.getElementById('lifeExperimentNote').value='';document.getElementById('lifeExperimentHistory').innerHTML=exp.entries.map(x=>'<p class="rounded-lg bg-milk p-2 text-[10px] text-mauve">'+escapeHtml(x.date)+' · '+escapeHtml(x.note)+'</p>').join('')||'<p class="text-[10px] text-mauve-light">Здесь появятся твои наблюдения.</p>';
+    }
+    function startLifeExperiment(i){appState.lifeExperiment={title:lifeExperiments[i].title,desc:lifeExperiments[i].desc,startedAt:new Date().toISOString(),entries:[],finished:false};saveState();renderLifeExperiment();}
+    function saveLifeExperimentDay(){const note=document.getElementById('lifeExperimentNote').value.trim();if(!note){showToast('Запиши хотя бы одно наблюдение');return;}const e=appState.lifeExperiment;if(!e)return;e.entries.push({date:new Date().toLocaleDateString('ru-RU'),note});if(e.entries.length>=7)e.finished=true;saveState();renderLifeExperiment();showToast(e.finished?'Эксперимент завершён — посмотри, что ты заметила':'Наблюдение сохранено');}
+    function openDecisionRoom(){document.getElementById('practiceHub').classList.add('hidden');document.getElementById('decisionRoom').classList.remove('hidden');document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});renderDecisionHistory();}
+    function closeDecisionRoom(){document.getElementById('decisionRoom').classList.add('hidden');document.getElementById('practiceHub').classList.remove('hidden');}
+    function saveDecisionRoom(){const ids=['decisionSituation','decisionWant','decisionFear','decisionCost','decisionStep'];const values=ids.map(id=>document.getElementById(id).value.trim());if(!values[0]){showToast('Опиши ситуацию, в которой нужно разобраться');return;}appState.decisionEntries=Array.isArray(appState.decisionEntries)?appState.decisionEntries:[];appState.decisionEntries.unshift({id:'decision-'+Date.now(),values,date:new Date().toLocaleDateString('ru-RU')});appState.decisionEntries=appState.decisionEntries.slice(0,30);saveState();ids.forEach(id=>document.getElementById(id).value='');renderDecisionHistory();showToast('Размышление сохранено');}
+    function renderDecisionHistory(){const c=document.getElementById('decisionHistory');if(!c)return;const a=appState.decisionEntries||[];c.innerHTML=a.length?'<p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Сохранённые размышления</p>'+a.map((e,i)=>'<div class="rounded-xl bg-milk p-3 space-y-1"><p class="text-[9px] text-dusty">'+escapeHtml(e.date)+'</p>'+e.values.map((v,j)=>v?'<p class="text-[10px] text-mauve"><b>'+['Ситуация','Желание','Страх','Если ничего не менять','Маленький шаг'][j]+':</b> '+escapeHtml(v)+'</p>':'').join('')+'</div>').join(''):'';
+    }
+
     window.addEventListener('load',async()=>{
       await initAccount();
       try{await loadCloudState();}catch(e){console.error('Cloud state load failed:',e);showToast('Не удалось загрузить облачные данные. Использую сохранение на устройстве.');}
