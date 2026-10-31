@@ -1283,7 +1283,7 @@
     function renderSilentPracticeFinish(){
       const flow=document.getElementById('silentPracticeFlow');const session=silentPracticeSession;if(!flow||!session)return;
       const title=silentPracticeLibrary[session.key].title;
-      flow.innerHTML=`<div class="sticky z-[80] -mx-5 px-5 pt-1 pb-1 flex justify-start pointer-events-none" style="top:0"><button type="button" onclick="closeSilentPractice()" aria-label="Вернуться к практикам" class="pointer-events-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/95 border border-blush shadow-sm text-[10px] font-semibold text-mauve leading-none"><i class="fa-solid fa-arrow-left text-[9px]"></i><span>К практикам</span></button></div>
+      flow.innerHTML=`
         <div class="rounded-3xl p-5 border border-blush text-center space-y-3" style="background:linear-gradient(145deg,#F7E6E8,#FFF9F9)">
           <div class="w-14 h-14 rounded-full bg-white/80 flex items-center justify-center text-2xl mx-auto">✧</div>
           <p class="text-[10px] uppercase tracking-widest text-dusty font-bold">Ты уделила время себе</p><h3 class="text-xl font-extrabold text-mauve">${escapeHtml(title)}</h3>
