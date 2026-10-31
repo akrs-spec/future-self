@@ -1252,7 +1252,9 @@
     function openSilentPractice(key){
       const practice=silentPracticeLibrary[key];if(!practice)return;
       silentPracticeSession={key,answers:Array(practice.questions.length).fill(''),step:0,nextStep:''};
-      document.getElementById('silentPracticeHome').classList.add('hidden');
+      const home=document.getElementById('silentPracticeHome');
+      home.classList.add('hidden');
+      if(home)home.style.display='none';
       document.getElementById('practiceFolderExitButton')?.classList.add('hidden');
       const flow=document.getElementById('silentPracticeFlow');
       flow.classList.remove('hidden');flow.style.display='block';flow.scrollTop=0;
