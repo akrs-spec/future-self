@@ -1320,7 +1320,7 @@
         </div>`;
       flow.scrollIntoView({behavior:'smooth',block:'start'});
     }
-    function saveSilentPractice(){
+    async function saveSilentPractice(){
       const session=silentPracticeSession;if(!session||session.saved)return;
       const practice=silentPracticeLibrary[session.key];const answers=session.answers.map((answer,i)=>({question:practice.questions[i],answer}));
       appState.silentPracticeHistory=Array.isArray(appState.silentPracticeHistory)?appState.silentPracticeHistory:[];
