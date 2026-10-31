@@ -342,7 +342,7 @@
 
           
 
-        <button onclick="openDailySection('selfGame')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">🪞</span><p class="text-xs font-bold text-mauve mt-2">Кто ты на самом деле?</p><p class="text-[9px] text-mauve-light mt-1">Игра о твоих выборах</p></button><button onclick="openDailySection('altLives')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">🌀</span><p class="text-xs font-bold text-mauve mt-2">А если бы…</p><p class="text-[9px] text-mauve-light mt-1">Альтернативные сценарии</p></button><button onclick="openDailySection('patterns')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">⌁</span><p class="text-xs font-bold text-mauve mt-2">Детектор повторений</p><p class="text-[9px] text-mauve-light mt-1">Темы в твоих записях</p></button><button onclick="openDailySection('chance')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">🎲</span><p class="text-xs font-bold text-mauve mt-2">Случайность</p><p class="text-[9px] text-mauve-light mt-1">Неожиданное задание дня</p></button><button onclick="openDailySection('museum')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">🏛️</span><p class="text-xs font-bold text-mauve mt-2">Музей моей жизни</p><p class="text-[9px] text-mauve-light mt-1">Сохраняй моменты, которые хочется помнить</p></button></div>
+        <button onclick="openDailySection('chance')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">🎲</span><p class="text-xs font-bold text-mauve mt-2">Случайность</p><p class="text-[9px] text-mauve-light mt-1">Неожиданное задание дня</p></button></div>
       </div>
         <button onclick="openDailySection('pause')" class="w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left shadow-sm" style="background:linear-gradient(115deg,#F8ECEE,#FFF9F9)">
           <span class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#EED9DD">↗</span>
@@ -512,18 +512,8 @@
         <div id="timeCapsuleList" class="space-y-2"></div>
       </div>
 
-      <div id="dailySection-selfGame" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty">← Назад</button><h3 class="text-xl font-extrabold text-mauve">Кто ты на самом деле?</h3><p class="text-xs text-mauve-light">Выбирай интуитивно. Это исследование твоих реакций, а не тест с ярлыком.</p><div id="selfGameBody" class="space-y-3"></div></div><div id="dailySection-altLives" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty">← Назад</button><h3 class="text-xl font-extrabold text-mauve">А если бы…</h3><p class="text-xs text-mauve-light">Примерь альтернативный путь и посмотри, что откликается.</p><div id="altLivesBody" class="space-y-3"></div></div><div id="dailySection-patterns" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty">← Назад</button><h3 class="text-xl font-extrabold text-mauve">Детектор повторений</h3><p class="text-xs text-mauve-light">Гипотезы по словам в твоих записях, не психологическое заключение.</p><button onclick="analyzeLifePatterns()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs">Найти повторяющиеся темы</button><div id="patternsResult" class="space-y-2"></div></div><div id="dailySection-chance" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty">← Назад</button><h3 class="text-xl font-extrabold text-mauve">Случайность</h3><div id="chanceTask" class="rounded-2xl bg-white border border-blush p-4 text-center"></div><button onclick="drawChanceTask(true)" class="w-full py-3 rounded-xl bg-mauve text-white text-xs">Другое задание</button><div id="chanceCollection" class="space-y-2"></div></div>
-      <div id="dailySection-museum" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <div class="rounded-3xl p-5 text-center" style="background:linear-gradient(145deg,#F2E8ED,#E8D5D9)"><div class="text-3xl">🏛️</div><h3 class="text-xl font-extrabold text-mauve mt-2">Музей моей жизни</h3><p class="text-xs text-mauve-light mt-2">Собирай моменты, людей, места и маленькие победы, которые хочется сохранить. Это твоя личная экспозиция — без оценок и идеальной картинки.</p></div>
-        <div class="glass-card rounded-2xl border border-blush p-3 space-y-2">
-          <input id="museumTitle" maxlength="70" placeholder="Название момента" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve">
-          <textarea id="museumNote" rows="3" maxlength="700" placeholder="Что произошло? Почему ты хочешь это запомнить?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y"></textarea>
-          <input id="museumPlace" maxlength="70" placeholder="Место или человек (необязательно)" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve">
-          <button onclick="saveMuseumMoment()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Добавить в музей</button>
-        </div>
-        <div id="museumTimeline" class="space-y-2"></div>
-      </div>
+      </div></div></div><div id="dailySection-chance" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty">← Назад</button><h3 class="text-xl font-extrabold text-mauve">Случайность</h3><div id="chanceTask" class="rounded-2xl bg-white border border-blush p-4 text-center"></div><button onclick="drawChanceTask(true)" class="w-full py-3 rounded-xl bg-mauve text-white text-xs">Другое задание</button><div id="chanceCollection" class="space-y-2"></div></div>
+      
       
 
       
@@ -703,13 +693,7 @@
           <button onclick="openAddGoalModal()" class="px-3 py-2 bg-mauve text-blush-light text-[10px] font-bold rounded-xl"><i class="fa-solid fa-plus mr-1"></i>Добавить</button>
         </div>
         <div id="goalsContainer" class="space-y-2"></div>
-        <button type="button" onclick="openLifeExperiment()" class="w-full rounded-2xl border border-blush p-3 flex items-center gap-3 text-left" style="background:linear-gradient(110deg,#F3EAF0,#FFF8F4)"><span class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:#EADCE8">🧪</span><span class="flex-1"><span class="block text-xs font-extrabold text-mauve">Лаборатория экспериментов</span><span class="block text-[10px] text-mauve-light mt-1">Попробуй новый способ действовать в течение 7 дней</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
-        <div id="lifeExperimentPanel" class="hidden rounded-2xl border border-blush bg-white p-3 space-y-3">
-          <div class="flex items-center justify-between"><h3 class="text-sm font-extrabold text-mauve">Эксперимент недели</h3><button onclick="closeLifeExperiment()" class="text-xs text-dusty">Закрыть ×</button></div>
-          <p id="lifeExperimentPrompt" class="text-xs leading-relaxed text-mauve-light">Выбери эксперимент, который хочется попробовать — не нужно выполнять его идеально.</p>
-          <div id="lifeExperimentChoices" class="space-y-2"></div>
-          <div id="lifeExperimentActive" class="hidden space-y-2"><p id="lifeExperimentTitle" class="text-xs font-bold text-mauve"></p><p id="lifeExperimentProgress" class="text-[10px] text-dusty"></p><textarea id="lifeExperimentNote" rows="2" placeholder="Что заметила сегодня?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea><button onclick="saveLifeExperimentDay()" class="w-full py-2.5 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить наблюдение</button><div id="lifeExperimentHistory" class="space-y-2"></div></div>
-        </div>
+        
       </div>
 
       <div id="pathHabitsView" class="hidden space-y-3">
@@ -754,19 +738,9 @@
           <span class="block text-[10px] font-bold text-dusty mt-3">Открыть <i class="fa-solid fa-arrow-right ml-1"></i></span>
         </button>
 
-        <button type="button" onclick="openDecisionRoom()" class="col-span-2 rounded-2xl p-3 text-left border border-blush flex items-center gap-3" style="background:linear-gradient(110deg,#F4EAF0,#FFF8F4)"><span class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="background:#EADCE8">⚖️</span><span class="flex-1"><span class="block text-xs font-extrabold text-mauve">Комната решений</span><span class="block text-[10px] text-mauve-light mt-1">Разложи сложный выбор на части и услышь себя</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
+        
       </div>
-      <div id="decisionRoom" class="hidden rounded-2xl border border-blush bg-white p-4 space-y-3">
-        <button type="button" onclick="closeDecisionRoom()" class="text-[11px] font-bold text-dusty"><i class="fa-solid fa-arrow-left mr-1"></i> К практикам</button>
-        <h3 class="text-lg font-extrabold text-mauve">Комната решений</h3>
-        <p class="text-xs text-mauve-light">Не будем решать за тебя. Поможем отделить факты, желания, страхи и следующий небольшой шаг.</p>
-        <textarea id="decisionSituation" rows="3" placeholder="Какой выбор сейчас перед тобой?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
-        <textarea id="decisionWant" rows="2" placeholder="Чего я хочу, если убрать ожидания других?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
-        <textarea id="decisionFear" rows="2" placeholder="Чего я боюсь в каждом варианте?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
-        <textarea id="decisionCost" rows="2" placeholder="Что будет, если я ничего не изменю?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
-        <textarea id="decisionStep" rows="2" placeholder="Какой безопасный маленький шаг я могу сделать?" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve"></textarea>
-        <button type="button" onclick="saveDecisionRoom()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить размышление</button><div id="decisionHistory" class="space-y-2"></div>
-      </div>
+      
       </div>
       <!-- BREATHWORK VISUALIZER CARD -->
       <div id="breathPracticeSection" class="hidden space-y-3">
