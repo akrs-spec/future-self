@@ -1556,6 +1556,7 @@
       return visible.map(render).join('')+(rest.length?'<details class="mt-2"><summary class="list-none cursor-pointer flex items-center justify-center gap-2 py-2 text-[10px] font-bold text-dusty"><span>'+label+' · '+rest.length+'</span><i class="fa-solid fa-chevron-down text-[9px]"></i></summary><div class="space-y-2 mt-2">'+rest.map(render).join('')+'</div></details>':'');
     }
     function renderSilentPracticeHistory(key){
+      key=key||silentPracticeSelectedKey;
       const items=Array.isArray(appState.silentPracticeHistory)?appState.silentPracticeHistory:[];
       const el=document.getElementById('silentPracticeDetailHistory');if(!el||!key)return;
         const entries=items.filter(item=>item&&item.key===key);
