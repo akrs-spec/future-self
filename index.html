@@ -141,20 +141,21 @@
     .goal-swipe-row { position: relative; overflow: hidden; border-radius: 1rem; touch-action: pan-y; }
     .goal-swipe-delete { position: absolute; inset: 0 0 0 auto; width: 76px; display: flex; align-items: center; justify-content: center; background: #b96d78; color: white; font-size: 11px; font-weight: 700; }
     .goal-swipe-content { position: relative; z-index: 1; transition: transform .18s ease; background: #fff; }
+    /* Страница свободно прокручивается при касании пустой области доски.
+       Запрет системных жестов действует только непосредственно на перемещаемом элементе. */
     .board-item {
       touch-action: none;
       overscroll-behavior: contain;
       -webkit-user-select: none;
       user-select: none;
+      -webkit-user-drag: none;
     }
     #visionCanvasContainer {
-      -webkit-overflow-scrolling: auto;
-      overscroll-behavior: contain;
-      touch-action: none !important;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: auto;
+      touch-action: pan-y;
     }
-    #visionCanvasContainer * {
-      touch-action: none !important;
-    }
+    #boardCanvas { touch-action: pan-y; }
     .board-item {
       cursor: grab;
       transition: box-shadow 0.2s ease;
@@ -1221,7 +1222,7 @@
     function boardPointerPoint(e){const rect=document.getElementById('boardCanvas').getBoundingClientRect();return{x:e.clientX-rect.left,y:e.clientY-rect.top};}
     function boardGestureSnapshot(item){return{x:item.x,y:item.y,width:item.width,rotation:item.rotation||0};}
     function boardPointerAngle(a,b){return Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;}
-    function handleBoardPointerDown(e){if(e.target.closest('input,button'))return;const canvas=document.getElementById('boardCanvas'),el=e.target.closest('.board-item');if(!el){if(boardPointers.size===0)clearBoardSelection();return;}const id=el.dataset.id,item=appState.boardElements.find(x=>x.id===id);if(!item)return;e.preventDefault();selectedBoardItemId=id;const tools=document.getElementById('boardElementTools');tools?.classList.remove('hidden');syncBoardItemTools(item);if(item.type==='image'){const maxZ=Math.max(0,...appState.boardElements.map((x,i)=>Number.isFinite(Number(x.zIndex))?Number(x.zIndex):i+1));item.zIndex=maxZ+1;el.style.zIndex=String(item.zIndex);saveState();}canvas.setPointerCapture?.(e.pointerId);const point=boardPointerPoint(e);if(!boardGesture||boardGesture.itemId!==id){boardPointers.clear();boardPointers.set(e.pointerId,{...point,itemId:id});boardGesture={itemId:id,start:boardGestureSnapshot(item),moved:false,singleOrigin:point};}else{boardPointers.set(e.pointerId,{...point,itemId:id});if(boardPointers.size===2){const pts=[...boardPointers.values()];boardGesture.start=boardGestureSnapshot(item);boardGesture.startPoints=pts;boardGesture.startDistance=Math.max(1,Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y));boardGesture.startAngle=boardPointerAngle(pts[0],pts[1]);boardGesture.startMid={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};}}}
+    function handleBoardPointerDown(e){if(e.target.closest('input,button'))return;const canvas=document.getElementById('boardCanvas'),el=e.target.closest('.board-item');if(!el){if(boardPointers.size===0)clearBoardSelection();return;}const id=el.dataset.id,item=appState.boardElements.find(x=>x.id===id);if(!item)return;e.preventDefault();selectedBoardItemId=id;const tools=document.getElementById('boardElementTools');tools?.classList.remove('hidden');syncBoardItemTools(item);if(item.type==='image'){const maxZ=Math.max(0,...appState.boardElements.map((x,i)=>Number.isFinite(Number(x.zIndex))?Number(x.zIndex):i+1));item.zIndex=maxZ+1;el.style.zIndex=String(item.zIndex);saveState();}el.setPointerCapture?.(e.pointerId);const point=boardPointerPoint(e);if(!boardGesture||boardGesture.itemId!==id){boardPointers.clear();boardPointers.set(e.pointerId,{...point,itemId:id});boardGesture={itemId:id,start:boardGestureSnapshot(item),moved:false,singleOrigin:point};}else{boardPointers.set(e.pointerId,{...point,itemId:id});if(boardPointers.size===2){const pts=[...boardPointers.values()];boardGesture.start=boardGestureSnapshot(item);boardGesture.startPoints=pts;boardGesture.startDistance=Math.max(1,Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y));boardGesture.startAngle=boardPointerAngle(pts[0],pts[1]);boardGesture.startMid={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};}}}
     function handleBoardPointerMove(e){if(!boardPointers.has(e.pointerId)||!boardGesture)return;e.preventDefault();const p=boardPointerPoint(e);boardPointers.set(e.pointerId,{...p,itemId:boardGesture.itemId});const item=appState.boardElements.find(x=>x.id===boardGesture.itemId),el=document.querySelector('.board-item[data-id="'+CSS.escape(boardGesture.itemId)+'"]');if(!item||!el)return;const rect=document.getElementById('boardCanvas').getBoundingClientRect();if(boardPointers.size>=2&&boardGesture.startPoints){const pts=[...boardPointers.values()].slice(0,2),distance=Math.max(1,Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y)),mid={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2},angle=boardPointerAngle(pts[0],pts[1]);item.width=Math.max(55,Math.min(260,boardGesture.start.width*distance/boardGesture.startDistance));item.x=Math.max(0,Math.min(rect.width-item.width,boardGesture.start.x+mid.x-boardGesture.startMid.x));item.y=Math.max(0,Math.min(rect.height-65,boardGesture.start.y+mid.y-boardGesture.startMid.y));let rotation=boardGesture.start.rotation+(angle-boardGesture.startAngle);while(rotation>180)rotation-=360;while(rotation< -180)rotation+=360;item.rotation=rotation;}else{const origin=boardGesture.singleOrigin||p;item.x=Math.max(0,Math.min(rect.width-item.width,boardGesture.start.x+p.x-origin.x));item.y=Math.max(0,Math.min(rect.height-65,boardGesture.start.y+p.y-origin.y));}if(Math.abs(p.x-(boardGesture.singleOrigin?.x??p.x))>4||Math.abs(p.y-(boardGesture.singleOrigin?.y??p.y))>4||boardPointers.size>1)boardGesture.moved=true;el.style.left=item.x+'px';el.style.top=item.y+'px';el.style.width=item.width+'px';el.style.transform='rotate('+(item.rotation||0)+'deg)';}
     function handleBoardPointerEnd(e){if(!boardPointers.has(e.pointerId)||!boardGesture)return;boardPointers.delete(e.pointerId);if(boardPointers.size===1){const remaining=[...boardPointers.values()][0],item=appState.boardElements.find(x=>x.id===boardGesture.itemId);if(item){boardGesture.start=boardGestureSnapshot(item);boardGesture.singleOrigin={x:remaining.x,y:remaining.y};delete boardGesture.startPoints;}}if(boardPointers.size===0){const id=boardGesture.itemId,moved=boardGesture.moved;boardGesture=null;const item=appState.boardElements.find(x=>x.id===id);if(item){selectedBoardItemId=id;const tools=document.getElementById('boardElementTools');tools.classList.remove('hidden');syncBoardItemTools(item);renderVisionBoard();}if(moved)saveState();}}
     function startBoardDrag(e){handleBoardPointerDown(e);}
