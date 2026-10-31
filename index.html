@@ -890,7 +890,10 @@
     function syncAppViewportHeight() {
       const telegramHeight = Number(tg?.viewportHeight || 0);
       const visualHeight = Number(window.visualViewport?.height || 0);
-      const height = telegramHeight > 0 ? telegramHeight : visualHeight > 0 ? visualHeight : window.innerHeight;
+      const editingText = document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
+      // iOS/Telegram may keep viewportHeight unchanged while the keyboard is open.
+      // In that case the visual viewport is the real available app height.
+      const height = editingText && visualHeight > 0 ? visualHeight : telegramHeight > 0 ? telegramHeight : visualHeight > 0 ? visualHeight : window.innerHeight;
       if (height > 0) document.documentElement.style.setProperty('--app-viewport-height', height + 'px');
 
       // Telegram fullscreen can extend beneath the iPhone status bar/notch.
@@ -907,6 +910,34 @@
     tg?.onEvent?.('fullscreenChanged', syncAppViewportHeight);
     window.addEventListener('resize', syncAppViewportHeight);
     window.visualViewport?.addEventListener('resize', syncAppViewportHeight);
+    // Keep the focused editor visible above the on-screen keyboard (especially in the challenge journal).
+    let editorRevealTimer=null;
+    document.addEventListener('focusin',(event)=>{
+      if(!event.target.matches('input,textarea,select,[contenteditable="true"]'))return;
+      syncAppViewportHeight();
+      clearTimeout(editorRevealTimer);
+      editorRevealTimer=setTimeout(()=>{
+        const field=event.target,main=document.querySelector('body > main');
+        if(!field.isConnected)return;
+        const rect=field.getBoundingClientRect(),viewport=window.visualViewport;
+        const visibleBottom=viewport?viewport.offsetTop+viewport.height:window.innerHeight;
+        if(rect.bottom>visibleBottom-20 || rect.top<20){
+          field.scrollIntoView({behavior:'smooth',block:'center'});
+        }
+        if(main)main.style.scrollPaddingBottom='calc(45vh + 24px + env(safe-area-inset-bottom))';
+      },280);
+    });
+    document.addEventListener('focusout',(event)=>{
+      if(!event.target.matches('input,textarea,select,[contenteditable="true"]'))return;
+      setTimeout(()=>{
+        const editing=document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
+        if(!editing){
+          const main=document.querySelector('body > main');
+          if(main)main.style.scrollPaddingBottom='';
+          syncAppViewportHeight();
+        }
+      },80);
+    });
 
     const API = 'https://future-self-server-weuq.onrender.com/api'; // Backend must validate Telegram initData and grant ADMIN only to Telegram ID 7738464404.
     const DEFAULT_STATE = {
