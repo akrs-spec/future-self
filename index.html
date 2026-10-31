@@ -699,6 +699,21 @@
       </div>
 
       <div class="glass-card rounded-2xl p-4 border border-blush space-y-3"><div class="flex items-center justify-between"><div><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">Твой ритм</p><h3 class="text-sm font-extrabold text-mauve">30 дней практики</h3></div><span id="practiceProgressCount" class="text-xl font-extrabold text-mauve tabular-nums">0/30</span></div><div class="h-2 rounded-full bg-powder overflow-hidden"><div id="practiceProgressBar" class="h-full rounded-full bg-dusty transition-all" style="width:0%"></div></div><div class="grid grid-cols-2 gap-2"><div class="rounded-xl bg-milk p-3"><p class="text-[9px] uppercase tracking-wider text-mauve-light">Выполнено практик</p><p id="practiceSessionCount" class="text-lg font-extrabold text-mauve">0</p></div><div class="rounded-xl bg-milk p-3"><p class="text-[9px] uppercase tracking-wider text-mauve-light">Серия дней</p><p id="practiceStreakCount" class="text-lg font-extrabold text-mauve">0</p></div></div><p id="practiceProgressHint" class="text-[10px] text-mauve-light">Практика засчитается автоматически после 12 полных циклов дыхания.</p></div>
+      <div id="silentPracticeHome" class="space-y-3">
+        <div class="space-y-1"><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">БЕЗ ЗВУКА И СПЕШКИ</p><h3 class="text-base font-extrabold text-mauve">Тихие практики</h3><p class="text-[10px] text-mauve-light">Небольшие упражнения, чтобы разобраться в себе. Один вопрос за раз — в своём темпе.</p></div>
+        <button onclick="startRandomSilentPractice()" class="w-full rounded-2xl p-4 text-left text-white shadow-card-float flex items-center justify-between" style="background:linear-gradient(120deg,#76545B,#B77D86)"><span><span class="block text-[10px] uppercase tracking-widest text-white/70 font-bold">Не знаешь, с чего начать?</span><span class="block text-sm font-extrabold mt-1">Случайная встреча с собой</span><span class="block text-[10px] text-white/80 mt-1">Я выберу практику за тебя</span></span><span class="text-2xl">✧</span></button>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="openSilentPractice('mind')" class="glass-card rounded-2xl p-3 text-left border border-blush"><span class="text-xl">☁️</span><span class="block text-xs font-bold text-mauve mt-2">Разгрузить голову</span><span class="block text-[9px] text-mauve-light mt-1">Когда слишком много мыслей · 5 мин</span></button>
+          <button onclick="openSilentPractice('return')" class="glass-card rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🤍</span><span class="block text-xs font-bold text-mauve mt-2">Вернуться к себе</span><span class="block text-[9px] text-mauve-light mt-1">Понять своё состояние · 3–5 мин</span></button>
+          <button onclick="openSilentPractice('dialogue')" class="glass-card rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🪞</span><span class="block text-xs font-bold text-mauve mt-2">Диалог с собой</span><span class="block text-[9px] text-mauve-light mt-1">Честные вопросы · 7 мин</span></button>
+          <button onclick="openSilentPractice('release')" class="glass-card rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🍂</span><span class="block text-xs font-bold text-mauve mt-2">Отпустить лишнее</span><span class="block text-[9px] text-mauve-light mt-1">Разобраться, что держит · 7 мин</span></button>
+          <button onclick="openSilentPractice('wishes')" class="glass-card rounded-2xl p-3 text-left border border-blush"><span class="text-xl">✧</span><span class="block text-xs font-bold text-mauve mt-2">Мои настоящие желания</span><span class="block text-[9px] text-mauve-light mt-1">Отделить своё от чужого · 7 мин</span></button>
+          <button onclick="openSilentPractice('restart')" class="glass-card rounded-2xl p-3 text-left border border-blush"><span class="text-xl">🌅</span><span class="block text-xs font-bold text-mauve mt-2">Начать заново</span><span class="block text-[9px] text-mauve-light mt-1">Найти первый шаг · 5 мин</span></button>
+        </div>
+        <div id="silentPracticeHistory" class="space-y-2"></div>
+      </div>
+      <div id="silentPracticeFlow" class="hidden space-y-3"></div>
+
       <!-- BREATHWORK VISUALIZER CARD -->
       <div class="glass-card rounded-3xl p-5 border border-blush shadow-card-float text-center space-y-4 relative overflow-hidden">
         <div class="flex justify-between items-center">
@@ -987,7 +1002,7 @@
       document.querySelectorAll('.nav-btn').forEach(btn=>{btn.classList.remove('text-dusty');btn.classList.add('text-mauve-light');});
       document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
       const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
-      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='practices') renderPracticeProgress();
+      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='practices'){renderPracticeProgress();renderSilentPracticeHistory();}
     }
     const pauseActivities = [
       {time:5,title:'Сделай себе маленький апгрейд',description:'Выбери одну деталь, которая давно раздражает: хаос на экране телефона, переполненная сумка, косметика без места. Удели ей пять минут. Не устраивай генеральную уборку — просто убери один визуальный шум.'},
@@ -1214,6 +1229,86 @@
     function runBreathLoop(){const phases=BREATH_PATTERNS[activeBreathKey].phases;let i=0;function step(){if(!isBreathingActive)return;let [name,duration,scale]=phases[i];let n=duration;triggerBreathHaptic();document.getElementById('breathPhaseText').innerText=name;document.getElementById('breathTimerNum').innerText=n;document.getElementById('breathCircle').style.transform='scale('+scale+')';breathInterval=setInterval(()=>{n--;document.getElementById('breathTimerNum').innerText=n;if(n<=0){clearInterval(breathInterval);i=(i+1)%phases.length;if(i===0){breathSessionCycles++;if(breathSessionCycles>=12){completeBreathPractice();return;}}step();}},1000);}step();}
     function completeBreathPractice(){clearInterval(breathInterval);isBreathingActive=false;breathSessionCycles=0;document.getElementById('breathPlayIcon').className='fa-solid fa-check';document.getElementById('breathPlayText').innerText='Практика завершена';document.getElementById('breathPhaseText').innerText='Завершено';document.getElementById('breathTimerNum').innerText='✓';document.getElementById('breathCircle').style.transform='scale(1)';recordPracticeCompletion('Дыхательная практика');showToast('Практика завершена и добавлена в трекер');}
     function recordPracticeCompletion(name){const today=localDayKey();appState.practiceDays=Array.isArray(appState.practiceDays)?appState.practiceDays:[];appState.practiceSessions=Array.isArray(appState.practiceSessions)?appState.practiceSessions:[];if(!appState.practiceDays.includes(today))appState.practiceDays.push(today);appState.practiceSessions.unshift({id:String(Date.now()),date:today,name,completedAt:new Date().toISOString()});appState.practiceSessions=appState.practiceSessions.slice(0,200);saveState();renderPracticeProgress();}
+    const silentPracticeLibrary={
+      mind:{title:'Разгрузить голову',intro:'Не нужно прямо сейчас решать всё. Давай сначала разложим мысли по местам.',questions:['Что сейчас занимает больше всего места в твоей голове?','Какая часть этой ситуации действительно зависит от тебя?','Что можно отложить, делегировать или пока не решать?']},
+      return:{title:'Вернуться к себе',intro:'Ненадолго остановись и обрати внимание на то, что происходит внутри.',questions:['Как ты чувствуешь себя прямо сейчас — не как «надо», а на самом деле?','Чего тебе сейчас не хватает больше всего?','Что могло бы поддержать тебя сегодня хотя бы немного?']},
+      dialogue:{title:'Диалог с собой',intro:'Здесь не нужно подбирать правильные слова. Попробуй ответить так, как есть.',questions:['О чём ты давно хочешь сказать себе честно?','Какой страх или сомнение ты обычно стараешься не замечать?','Что бы ты ответила близкому человеку, если бы он оказался на твоём месте?']},
+      release:{title:'Отпустить лишнее',intro:'Не обязательно отпускать всё сразу. Достаточно понять, что больше не хочется нести в одиночку.',questions:['За что или за что именно ты продолжаешь держаться?','Что в этой ситуации находится вне твоего контроля?','Что ты хотела бы перестать требовать от себя?']},
+      wishes:{title:'Мои настоящие желания',intro:'Попробуй на время убрать ожидания других людей и прислушаться к себе.',questions:['Чего тебе хочется, если не думать о том, как это будет выглядеть со стороны?','Какое желание ты часто откладываешь или обесцениваешь?','По каким признакам ты поймёшь, что живёшь ближе к своей версии счастья?']},
+      restart:{title:'Начать заново',intro:'Новая глава не обязана начинаться с большого решения. Иногда достаточно одного ясного шага.',questions:['Что в своей жизни ты больше не хочешь оставлять без изменений?','Какой перемены ты хочешь на самом деле, а не потому что «пора»?','Что мешает начать — и что помогло бы сделать начало легче?']}
+    };
+    let silentPracticeSession=null;
+    function openSilentPractice(key){
+      const practice=silentPracticeLibrary[key];if(!practice)return;
+      silentPracticeSession={key,answers:Array(practice.questions.length).fill(''),step:0,nextStep:''};
+      document.getElementById('silentPracticeHome').classList.add('hidden');
+      document.getElementById('silentPracticeFlow').classList.remove('hidden');
+      renderSilentPracticeStep();
+    }
+    function startRandomSilentPractice(){
+      const keys=Object.keys(silentPracticeLibrary);const previous=appState.lastSilentPracticeKey;
+      const choices=keys.filter(key=>key!==previous);const key=choices[Math.floor(Math.random()*choices.length)]||keys[0];
+      appState.lastSilentPracticeKey=key;saveState();openSilentPractice(key);
+    }
+    function renderSilentPracticeStep(){
+      const flow=document.getElementById('silentPracticeFlow');const session=silentPracticeSession;if(!flow||!session)return;
+      const practice=silentPracticeLibrary[session.key],step=session.step,total=practice.questions.length;
+      if(step>total){renderSilentPracticeFinish();return;}
+      const isAction=step===total,progress=isAction?100:Math.round((step+1)/(total+1)*100);
+      const prompt=isAction?'Какой один небольшой шаг ты готова сделать в ближайшие сутки?':practice.questions[step];
+      const value=isAction?session.nextStep:session.answers[step];
+      flow.innerHTML=`<button onclick="closeSilentPractice()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> К практикам</button>
+        <div class="glass-card rounded-3xl p-5 border border-blush space-y-4">
+          <div class="flex justify-between items-center"><span class="text-[10px] uppercase tracking-widest text-dusty font-bold">${escapeHtml(practice.title)}</span><span class="text-[10px] text-mauve-light">${isAction?'Завершение':(step+1)+' из '+(total+1)}</span></div>
+          <div class="h-1.5 rounded-full bg-powder overflow-hidden"><div class="h-full rounded-full bg-dusty" style="width:${progress}%"></div></div>
+          <p class="text-[11px] leading-relaxed text-mauve-light">${step===0?escapeHtml(practice.intro):'Не торопись. Здесь нет правильных или неправильных ответов.'}</p>
+          <h3 class="text-lg leading-snug font-extrabold text-mauve">${escapeHtml(prompt)}</h3>
+          <textarea id="silentPracticeAnswer" rows="5" maxlength="3000" placeholder="Запиши всё, что приходит в голову…" class="w-full resize-none bg-milk border border-blush rounded-2xl p-3 text-sm text-mauve placeholder:text-mauve-light/60 focus:outline-none focus:ring-1 focus:ring-dusty">${escapeHtml(value||'')}</textarea>
+          <div class="flex gap-2"><button onclick="stepSilentPractice(-1)" ${step===0?'disabled':''} class="px-4 py-3 rounded-xl bg-white border border-blush text-mauve text-xs font-bold disabled:opacity-40">Назад</button><button onclick="stepSilentPractice(1)" class="flex-1 py-3 rounded-xl bg-mauve text-white text-xs font-bold">${isAction?'Завершить практику':'Далее'}</button></div>
+          <p class="text-[9px] text-mauve-light text-center">Ответы сохранятся только после завершения практики.</p>
+        </div>`;
+      flow.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    function stepSilentPractice(direction){
+      const session=silentPracticeSession;if(!session)return;
+      const field=document.getElementById('silentPracticeAnswer');const value=field?field.value.trim():'';
+      const total=silentPracticeLibrary[session.key].questions.length;
+      if(session.step<total)session.answers[session.step]=value;else session.nextStep=value;
+      session.step=Math.max(0,Math.min(total,session.step+direction));
+      if(direction>0&&session.step===total&&total===0){renderSilentPracticeFinish();return;}
+      if(direction>0&&session.step===total+1){renderSilentPracticeFinish();return;}
+      renderSilentPracticeStep();
+    }
+    function renderSilentPracticeFinish(){
+      const flow=document.getElementById('silentPracticeFlow');const session=silentPracticeSession;if(!flow||!session)return;
+      const title=silentPracticeLibrary[session.key].title;
+      flow.innerHTML=`<button onclick="closeSilentPractice()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> К практикам</button>
+        <div class="rounded-3xl p-5 border border-blush text-center space-y-3" style="background:linear-gradient(145deg,#F7E6E8,#FFF9F9)">
+          <div class="w-14 h-14 rounded-full bg-white/80 flex items-center justify-center text-2xl mx-auto">✧</div>
+          <p class="text-[10px] uppercase tracking-widest text-dusty font-bold">Ты уделила время себе</p><h3 class="text-xl font-extrabold text-mauve">${escapeHtml(title)}</h3>
+          <p class="text-xs leading-relaxed text-mauve-light">Не обязательно сразу менять всё. Иногда уже важно заметить, что происходит внутри, и выбрать один следующий шаг.</p>
+          <button onclick="saveSilentPractice()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить результат</button>
+        </div>`;
+      flow.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    function saveSilentPractice(){
+      const session=silentPracticeSession;if(!session)return;
+      const practice=silentPracticeLibrary[session.key];const answers=session.answers.map((answer,i)=>({question:practice.questions[i],answer}));
+      appState.silentPracticeHistory=Array.isArray(appState.silentPracticeHistory)?appState.silentPracticeHistory:[];
+      appState.silentPracticeHistory.unshift({id:'sp-'+Date.now(),key:session.key,title:practice.title,date:localDayKey(),answers,nextStep:session.nextStep||''});
+      appState.silentPracticeHistory=appState.silentPracticeHistory.slice(0,50);
+      saveState();recordPracticeCompletion(practice.title);silentPracticeSession=null;
+      document.getElementById('silentPracticeFlow').classList.add('hidden');document.getElementById('silentPracticeHome').classList.remove('hidden');
+      renderSilentPracticeHistory();showToast('Результат сохранён');
+    }
+    function renderSilentPracticeHistory(){
+      const el=document.getElementById('silentPracticeHistory');if(!el)return;
+      const items=(appState.silentPracticeHistory||[]).slice(0,3);
+      el.innerHTML=items.length?`<div class="pt-2"><p class="text-[10px] uppercase tracking-widest text-dusty font-bold mb-2">Недавние практики</p>${items.map(item=>`<div class="bg-white/80 border border-blush rounded-xl p-3 mb-2"><div class="flex justify-between gap-2"><span class="text-xs font-bold text-mauve">${escapeHtml(item.title)}</span><span class="text-[9px] text-mauve-light">${escapeHtml(item.date||'')}</span></div>${item.nextStep?`<p class="text-[10px] text-mauve-light mt-1">Следующий шаг: ${escapeHtml(item.nextStep)}</p>`:''}</div>`).join('')}</div>`:'';
+    }
+    function closeSilentPractice(){
+      silentPracticeSession=null;document.getElementById('silentPracticeFlow').classList.add('hidden');document.getElementById('silentPracticeHome').classList.remove('hidden');
+    }
     function renderPracticeProgress(){const days=[...new Set((appState.practiceDays||[]).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)))].sort(),count=Math.min(30,days.length),percent=Math.round(count/30*100),countEl=document.getElementById('practiceProgressCount'),bar=document.getElementById('practiceProgressBar'),hint=document.getElementById('practiceProgressHint'),sessions=document.getElementById('practiceSessionCount'),streakEl=document.getElementById('practiceStreakCount');if(!countEl||!bar||!hint||!sessions||!streakEl)return;countEl.innerText=count+'/30';bar.style.width=percent+'%';sessions.innerText=String((appState.practiceSessions||[]).length);let streak=0;const day=new Date();if(!days.includes(localDayKey()))day.setDate(day.getDate()-1);while(days.includes(day.getFullYear()+'-'+String(day.getMonth()+1).padStart(2,'0')+'-'+String(day.getDate()).padStart(2,'0'))){streak++;day.setDate(day.getDate()-1);}streakEl.innerText=String(streak);const done=days.includes(localDayKey());hint.innerText=count>=30?'Ты завершила 30-дневный цикл. Отличная работа!':done?'Сегодня практика уже засчитана. Возвращайся завтра.':'Трекер обновится сам после завершения дыхательной сессии.';}
     let openGoalSwipeId=null;function renderGoals(){const c=document.getElementById('goalsContainer');c.innerHTML=appState.goals.map(g=>`<div class="goal-swipe-row mb-2" data-goal-id="${escapeHtml(g.id)}"><button type="button" class="goal-swipe-delete" onclick="deleteGoal('${g.id}')"><i class="fa-regular fa-trash-can mr-1"></i>Удалить</button><div onclick="if(!openGoalSwipeId)openEditGoal('${g.id}')" class="goal-swipe-content glass-card rounded-2xl p-3 border border-blush flex justify-between items-center cursor-pointer" data-goal-content><div class="min-w-0 pr-2"><h4 class="text-xs font-bold text-mauve ${g.completed?'line-through text-mauve-light':''}">${escapeHtml(g.title)}</h4><span class="text-[9px] text-mauve-light font-semibold">${escapeHtml(g.cat)}</span></div><button onclick="toggleGoal('${g.id}')" class="w-7 h-7 flex-shrink-0 rounded-full ${g.completed?'bg-dusty text-white':'bg-milk border border-blush text-mauve-light'}"><i class="fa-solid fa-check text-xs"></i></button></div></div>`).join('');c.querySelectorAll('.goal-swipe-row').forEach(row=>{let startX=0,startY=0,dx=0,dragging=false;const content=row.querySelector('[data-goal-content]');row.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;startX=e.clientX;startY=e.clientY;dx=0;dragging=true;content.style.transition='none';});row.addEventListener('pointermove',e=>{if(!dragging)return;const x=e.clientX-startX,y=e.clientY-startY;if(Math.abs(y)>Math.abs(x)+5){dragging=false;content.style.transition='';return;}if(Math.abs(x)>8){dx=Math.max(-76,Math.min(0,x));content.style.transform='translateX('+dx+'px)';}});const finish=()=>{if(!dragging)return;dragging=false;content.style.transition='';if(dx<=-35){if(openGoalSwipeId&&openGoalSwipeId!==row.dataset.goalId){const prev=c.querySelector('[data-goal-id="'+CSS.escape(openGoalSwipeId)+'"] [data-goal-content]');if(prev)prev.style.transform='translateX(0)';}openGoalSwipeId=row.dataset.goalId;content.style.transform='translateX(-76px)';}else{content.style.transform='translateX(0)';if(openGoalSwipeId===row.dataset.goalId)openGoalSwipeId=null;}};row.addEventListener('pointerup',finish);row.addEventListener('pointercancel',finish);});const done=appState.goals.filter(g=>g.completed).length;document.getElementById('statActiveGoals').innerText=appState.goals.length-done;document.getElementById('statCompletedGoals').innerText=done;document.getElementById('statGoalProgressPercent').innerText=(appState.goals.length?Math.round(done/appState.goals.length*100):0)+'%';renderTrackers();}function deleteGoal(id){const goal=appState.goals.find(g=>g.id===id);if(!goal)return;if(!confirm('Удалить эту цель?'))return;appState.goals=appState.goals.filter(g=>g.id!==id);if(openGoalSwipeId===id)openGoalSwipeId=null;saveState();renderGoals();showToast('Цель удалена');}
     function toggleGoal(id){const g=appState.goals.find(x=>x.id===id);if(g){g.completed=!g.completed;saveState();renderGoals();}}
@@ -1633,7 +1728,7 @@ function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const 
         appState.futureScript={idealDay:'',identity:'',leavingBehind:''};
         saveState();
       }
-      renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderDailyTarot();renderFateBall();renderFutureScriptHistory();
+      renderVisionBoard();renderGoals();renderGratitude();renderFeelings();renderPracticeProgress();renderSilentPracticeHistory();renderDailyTarot();renderFateBall();renderFutureScriptHistory();
     });
   </script>
 </body>
