@@ -761,7 +761,7 @@
       </div>
 
       <div id="silentPracticeHome" class="hidden space-y-3">
-        <button type="button" onclick="backToPracticeHub()" class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-mauve-light hover:text-mauve px-1 py-1"><i class="fa-solid fa-arrow-left text-[10px]"></i><span>Назад</span></button>
+        <button id="silentPracticeBackButton" type="button" onclick="backToPracticeHub()" class="!inline-flex items-center gap-1.5 text-[11px] font-semibold text-mauve-light hover:text-mauve px-1 py-1"><i class="fa-solid fa-arrow-left text-[10px]"></i><span>Назад</span></button>
         <div class="space-y-1"><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">БЕЗ ЗВУКА И СПЕШКИ</p><h3 class="text-base font-extrabold text-mauve">Тихие практики</h3><p class="text-[10px] text-mauve-light">Небольшие упражнения, чтобы разобраться в себе. Один вопрос за раз — в своём темпе.</p></div>
         <button onclick="startRandomSilentPractice()" class="w-full rounded-2xl p-4 text-left text-white shadow-card-float flex items-center justify-between" style="background:linear-gradient(120deg,#76545B,#B77D86)"><span><span class="block text-[10px] uppercase tracking-widest text-white/70 font-bold">Не знаешь, с чего начать?</span><span class="block text-sm font-extrabold mt-1">Случайная встреча с собой</span><span class="block text-[10px] text-white/80 mt-1">Я выберу практику за тебя</span></span><span class="text-2xl">✧</span></button>
         <div class="grid grid-cols-2 gap-2">
@@ -1364,7 +1364,7 @@
       breath.style.display='none';
       silent.style.display='none';
       if(folder==='breath'){breath.classList.remove('hidden');breath.style.display='block';}
-      if(folder==='silent'){silent.classList.remove('hidden');silent.style.display='block';const back=document.getElementById('silentPracticeBackButton');if(back){back.classList.remove('hidden');back.style.display='inline-flex';}}
+      if(folder==='silent'){silent.classList.remove('hidden');silent.style.display='block';const back=document.getElementById('silentPracticeBackButton');if(back){back.classList.remove('hidden');back.style.display='inline-flex';back.style.visibility='visible';}}
       exit?.classList.add('hidden');
       document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});
     }
