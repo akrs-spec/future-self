@@ -107,8 +107,23 @@
     /* Give text editors the full Telegram viewport while the iOS keyboard is open. */
     body.keyboard-open > nav { display: none !important; }
     body.keyboard-open > main {
-      padding-bottom: calc(24px + env(safe-area-inset-bottom));
-      scroll-padding-bottom: 24px;
+      padding-top: 0 !important;
+      padding-bottom: 8px !important;
+      scroll-padding-bottom: 8px;
+      min-height: 0 !important;
+      max-height: var(--app-viewport-height, 100dvh);
+    }
+    body.keyboard-open #silentPracticeFlow {
+      padding-bottom: 8px !important;
+      margin-bottom: 0 !important;
+      max-height: none !important;
+    }
+    body.keyboard-open #silentPracticeFlow > .glass-card {
+      margin-bottom: 0 !important;
+    }
+    body.keyboard-open #silentPracticeFlow textarea {
+      min-height: 112px;
+      max-height: 30dvh;
     }
 
     .glass-card {
@@ -932,6 +947,21 @@
       if (!event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
       syncAppViewportHeight();
       clearTimeout(editorRevealTimer);
+      if (event.target.id === 'silentPracticeAnswer') {
+        document.body.classList.add('keyboard-open');
+        [250, 500, 800].forEach(delay => setTimeout(() => {
+          const field = document.getElementById('silentPracticeAnswer');
+          const main = document.querySelector('body > main');
+          if (!field || !main || document.activeElement !== field) return;
+          const visibleBottom = window.visualViewport
+            ? window.visualViewport.offsetTop + window.visualViewport.height
+            : window.innerHeight;
+          const rect = field.getBoundingClientRect();
+          if (rect.bottom > visibleBottom - 18) {
+            main.scrollTop += rect.bottom - visibleBottom + 18;
+          }
+        }, delay));
+      }
       // iOS keyboard animation and Telegram viewport updates settle asynchronously.
       document.body.classList.add('keyboard-open');
       [120, 300, 550, 850].forEach(delay => setTimeout(() => {
