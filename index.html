@@ -108,6 +108,10 @@
     body.keyboard-open {
       height: var(--app-viewport-height, 100dvh) !important;
       min-height: 0 !important;
+      /* The app shell uses justify-between and pb-24 for its bottom nav.
+         Once the keyboard hides the nav, those rules create a large empty gap. */
+      justify-content: flex-start !important;
+      padding-bottom: 0 !important;
     }
     body.keyboard-open > nav { display: none !important; }
     body.keyboard-open > main {
