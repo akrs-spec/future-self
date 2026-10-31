@@ -1010,7 +1010,7 @@
       document.querySelectorAll('.nav-btn').forEach(btn=>{btn.classList.remove('text-dusty');btn.classList.add('text-mauve-light');});
       document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
       const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
-      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='practices'){renderPracticeProgress();renderSilentPracticeHistory();}
+      if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='practices'){document.querySelector('main')?.scrollTo({top:0,behavior:'auto'});renderPracticeProgress();renderSilentPracticeHistory();}
     }
     const pauseActivities = [
       {time:5,title:'Сделай себе маленький апгрейд',description:'Выбери одну деталь, которая давно раздражает: хаос на экране телефона, переполненная сумка, косметика без места. Удели ей пять минут. Не устраивай генеральную уборку — просто убери один визуальный шум.'},
@@ -1294,7 +1294,7 @@
           <div class="flex gap-2"><button onclick="stepSilentPractice(-1)" ${step===0?'disabled':''} class="px-4 py-3 rounded-xl bg-white border border-blush text-mauve text-xs font-bold disabled:opacity-40">Назад</button><button onclick="stepSilentPractice(1)" class="flex-1 py-3 rounded-xl bg-mauve text-white text-xs font-bold">${isAction?'Завершить практику':'Далее'}</button></div>
           <p class="text-[9px] text-mauve-light text-center">Ответы сохранятся только после завершения практики.</p>
         </div>`;
-      flow.scrollIntoView({behavior:'smooth',block:'start'});
+      flow.scrollTop=0;
     }
     function stepSilentPractice(direction){
       const session=silentPracticeSession;if(!session)return;
@@ -1318,7 +1318,7 @@
           <button onclick="saveSilentPractice()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить результат</button>
           </div>
         </div>`;
-      flow.scrollIntoView({behavior:'smooth',block:'start'});
+      flow.scrollTop=0;
     }
     async function saveSilentPractice(){
       const session=silentPracticeSession;if(!session||session.saved)return;
