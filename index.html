@@ -1106,18 +1106,31 @@
        entries.sort((a,b)=>String(b.createdAt||b.date).localeCompare(String(a.createdAt||a.date)));
        if(hist)hist.innerHTML=entries.length?'<h4 class="text-xs font-bold text-mauve pt-2">История ответов</h4>'+entries.map(v=>'<div class="glass-card rounded-xl border border-blush p-3"><p class="text-[9px] text-dusty">'+escapeHtml(v.date||String(v.createdAt||'').slice(0,10))+'</p><p class="text-xs font-bold text-mauve mt-1">'+escapeHtml(v.question||'Вопрос дня')+'</p><p class="text-xs text-mauve-light mt-2 whitespace-pre-wrap">'+escapeHtml(v.answer||'')+'</p></div>').join(''):'<p class="text-center text-[10px] text-mauve-light py-3">Сохранённые ответы будут появляться здесь по порядку.</p>';
      }
-     function saveDailyQuestionAnswer(){
+     async function saveDailyQuestionAnswer(){
        const input=document.getElementById('dailyQuestionAnswer'),answer=input?.value.trim();
        if(!answer){showToast('Запиши хотя бы пару слов');return;}
        const today=localDayKey(),now=new Date().toISOString(),question=dailyQuestionFor(today);
        appState.dailyQuestionAnswers=appState.dailyQuestionAnswers||{};
        appState.dailyQuestionAnswers[today]={question,answer,updatedAt:now};
        appState.dailyQuestionHistory=Array.isArray(appState.dailyQuestionHistory)?appState.dailyQuestionHistory:[];
-       appState.dailyQuestionHistory.unshift({id:String(Date.now()),date:today,question,answer,createdAt:now});
+       const existing=appState.dailyQuestionHistory.find(entry=>entry.date===today);
+       if(existing){existing.question=question;existing.answer=answer;existing.createdAt=now;}
+       else appState.dailyQuestionHistory.unshift({id:String(Date.now()),date:today,question,answer,createdAt:now});
        appState.dailyQuestionHistory=appState.dailyQuestionHistory.slice(0,300);
-       saveState();
-       const stored=JSON.parse(localStorage.getItem(storageKey)||'{}');
-       if(stored.dailyQuestionAnswers?.[today]?.answer!==answer){showToast('Не удалось подтвердить сохранение. Попробуй ещё раз');return;}
+       const locallySaved=saveState();
+       if(!locallySaved){showToast('Не удалось сохранить ответ на устройстве. Попробуй ещё раз');return;}
+       if(initData){
+         if(!cloudStateReady){showToast('Профиль ещё загружается. Подожди немного и попробуй снова');return;}
+         clearTimeout(cloudSaveTimer);
+         const snapshot=JSON.stringify(appState);
+         cloudSaveQueue=cloudSaveQueue.catch(()=>{}).then(async()=>{
+           const response=await fetch(API+'/state',{method:'POST',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':initData},body:JSON.stringify({state:JSON.parse(snapshot)})});
+           const data=await response.json().catch(()=>({}));
+           if(!response.ok)throw new Error(data.error||'Не удалось сохранить ответ в профиле');
+         });
+         try{await cloudSaveQueue;}
+         catch(error){console.error('Daily question cloud save failed:',error);showToast('Ответ сохранён на устройстве, но не синхронизирован. Попробуй ещё раз');return;}
+       }
        renderQuestionOfDay();input.value='';showToast('Ответ сохранён в истории');
      }
     function dateIsDue(date){return !!date&&date<=localDayKey();}
