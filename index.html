@@ -717,7 +717,7 @@
       </div>
       <!-- BREATHWORK VISUALIZER CARD -->
       <div id="breathPracticeSection" class="hidden space-y-3">
-        <button type="button" onclick="backToPracticeHub()" class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-mauve-light hover:text-mauve px-1 py-1"><i class="fa-solid fa-arrow-left text-[10px]"></i><span>Назад</span></button>
+        <button id="silentPracticeBackButton" type="button" onclick="backToPracticeHub()" class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-mauve-light hover:text-mauve px-1 py-1"><i class="fa-solid fa-arrow-left text-[10px]"></i><span>Назад</span></button>
         <div class="glass-card rounded-3xl p-5 border border-blush shadow-card-float text-center space-y-4 relative overflow-hidden">
         <div class="flex justify-between items-center">
           <span class="text-[10px] font-bold text-mauve uppercase tracking-wider">ДЫХАТЕЛЬНЫЙ ТРЕНАЖЕР</span>
@@ -1364,7 +1364,7 @@
       breath.style.display='none';
       silent.style.display='none';
       if(folder==='breath'){breath.classList.remove('hidden');breath.style.display='block';}
-      if(folder==='silent'){silent.classList.remove('hidden');silent.style.display='block';}
+      if(folder==='silent'){silent.classList.remove('hidden');silent.style.display='block';const back=document.getElementById('silentPracticeBackButton');if(back){back.classList.remove('hidden');back.style.display='inline-flex';}}
       exit?.classList.add('hidden');
       document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});
     }
