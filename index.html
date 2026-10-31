@@ -84,6 +84,11 @@
       flex: 0 0 auto;
     }
 
+    body > main { scroll-behavior:smooth; touch-action:pan-y; }
+    #tab-practices { min-height:0; }
+    #silentPracticeFlow { max-height:none; -webkit-overflow-scrolling:auto; }
+    #silentPracticeFlow textarea { touch-action:pan-y; }
+
     body > main {
       flex: 1 1 auto;
       min-height: 0;
@@ -774,7 +779,7 @@
         </div>
         <div id="silentPracticeHistory" class="space-y-2"></div>
       </div>
-      <div id="silentPracticeFlow" class="fixed left-0 right-0 bottom-0 z-[60] hidden w-full max-w-md mx-auto overflow-y-auto overscroll-contain bg-cream px-5 pt-3 pb-10 space-y-4" style="top:calc(max(env(safe-area-inset-top),var(--telegram-safe-top,0px)) + 4px)"></div>
+      <div id="silentPracticeFlow" class="hidden w-full max-w-md mx-auto px-5 pt-3 pb-10 space-y-4" style="position:relative;overflow:visible;min-height:0;touch-action:pan-y;"></div>
       <button id="practiceFolderExitButton" type="button" onclick="backToPracticeHub()" class="hidden">Назад</button>
 
     </section>
