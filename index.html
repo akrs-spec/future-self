@@ -1260,9 +1260,8 @@
       const field=document.getElementById('silentPracticeAnswer');const value=field?field.value.trim():'';
       const total=silentPracticeLibrary[session.key].questions.length;
       if(session.step<total)session.answers[session.step]=value;else session.nextStep=value;
+      if(direction>0&&session.step===total){renderSilentPracticeFinish();return;}
       session.step=Math.max(0,Math.min(total,session.step+direction));
-      if(direction>0&&session.step===total&&total===0){renderSilentPracticeFinish();return;}
-      if(direction>0&&session.step===total+1){renderSilentPracticeFinish();return;}
       renderSilentPracticeStep();
     }
     function renderSilentPracticeFinish(){
@@ -1278,14 +1277,35 @@
       flow.scrollIntoView({behavior:'smooth',block:'start'});
     }
     function saveSilentPractice(){
-      const session=silentPracticeSession;if(!session)return;
+      const session=silentPracticeSession;if(!session||session.saved)return;
       const practice=silentPracticeLibrary[session.key];const answers=session.answers.map((answer,i)=>({question:practice.questions[i],answer}));
       appState.silentPracticeHistory=Array.isArray(appState.silentPracticeHistory)?appState.silentPracticeHistory:[];
       appState.silentPracticeHistory.unshift({id:'sp-'+Date.now(),key:session.key,title:practice.title,date:localDayKey(),answers,nextStep:session.nextStep||''});
       appState.silentPracticeHistory=appState.silentPracticeHistory.slice(0,50);
-      saveState();recordPracticeCompletion(practice.title);silentPracticeSession=null;
-      document.getElementById('silentPracticeFlow').classList.add('hidden');document.getElementById('silentPracticeHome').classList.remove('hidden');
-      renderSilentPracticeHistory();showToast('Результат сохранён');
+      session.saved=true;
+      const localSaved=saveState();
+      recordPracticeCompletion(practice.title);
+      renderSilentPracticeHistory();
+      const flow=document.getElementById('silentPracticeFlow');
+      flow.innerHTML=`<div class="min-h-[75vh] flex flex-col justify-center text-center space-y-5 py-8">
+        <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl" style="background:linear-gradient(145deg,#F7E6E8,#E8C5C8)">🤍</div>
+        <p class="text-[10px] uppercase tracking-[.25em] text-dusty font-bold">FUTURE SELF</p>
+        <h3 class="text-2xl font-extrabold text-mauve">Ты большая молодец.</h3>
+        <p class="text-sm leading-relaxed text-mauve-light">Ты остановилась, уделила время себе и честно прислушалась к своим мыслям. Это уже важный шаг. Не обесценивай его — тебе не нужно менять всю жизнь за один день.</p>
+        <div class="rounded-2xl bg-white/80 border border-blush p-4 text-left space-y-1">
+          <p class="text-[10px] uppercase tracking-widest text-dusty font-bold">Твоя практика завершена</p>
+          <p class="text-sm font-bold text-mauve">${escapeHtml(practice.title)}</p>
+          <p class="text-[10px] text-mauve-light">${localSaved?'Результат сохранён на этом устройстве.':'Не удалось подтвердить сохранение на устройстве.'}</p>
+        </div>
+        <button onclick="finishSilentPractice()" class="w-full py-3.5 rounded-xl bg-mauve text-white text-xs font-bold">Вернуться к практикам</button>
+      </div>`;
+      flow.scrollTop=0;
+    }
+    function finishSilentPractice(){
+      silentPracticeSession=null;
+      document.getElementById('silentPracticeFlow').classList.add('hidden');
+      document.getElementById('silentPracticeHome').classList.remove('hidden');
+      renderSilentPracticeHistory();renderPracticeProgress();
     }
     function renderSilentPracticeHistory(){
       const el=document.getElementById('silentPracticeHistory');if(!el)return;
