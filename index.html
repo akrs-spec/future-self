@@ -340,7 +340,7 @@
 
 
 
-          <button onclick="openDailySection('calendar')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">▦</span><p class="text-xs font-bold text-mauve mt-2">Календарь активности</p><p class="text-[9px] text-mauve-light mt-1">Твои дни с собой</p></button>
+          
 
         <button onclick="openDailySection('museum')" class="glass-card rounded-2xl border border-blush p-3 text-left"><span class="text-lg">🏛️</span><p class="text-xs font-bold text-mauve mt-2">Музей моей жизни</p><p class="text-[9px] text-mauve-light mt-1">Сохраняй моменты, которые хочется помнить</p></button></div>
       </div>
@@ -523,11 +523,7 @@
         </div>
         <div id="museumTimeline" class="space-y-2"></div>
       </div>
-      <div id="dailySection-calendar" class="hidden space-y-4">
-        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
-        <div><h3 class="text-xl font-extrabold text-mauve">Календарь активности</h3><p class="text-xs text-mauve-light mt-1">Отмечай не идеальные серии, а дни, когда ты находила время для себя.</p></div>
-        <div class="glass-card rounded-2xl border border-blush p-4 space-y-3"><div class="flex items-center justify-between"><button onclick="changeActivityMonth(-1)" class="w-9 h-9 rounded-full bg-milk text-mauve">‹</button><p id="activityMonthTitle" class="text-sm font-extrabold text-mauve"></p><button onclick="changeActivityMonth(1)" class="w-9 h-9 rounded-full bg-milk text-mauve">›</button></div><div class="grid grid-cols-7 gap-1 text-center text-[9px] text-dusty"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div><div id="activityCalendarGrid" class="grid grid-cols-7 gap-1 text-center"></div><p class="text-[9px] text-mauve-light">Розовая отметка означает, что в этот день была хотя бы одна запись или активность.</p></div><div id="activityCalendarSummary" class="text-xs text-mauve-light text-center"></div>
-      </div>
+      
 
       
     </section>
@@ -1291,10 +1287,6 @@
     function toggleFavorite(type,id,title,body,date){if(!String(body||'').trim()){showToast('Сначала сохрани запись');return;}appState.favorites=appState.favorites||[];const key=type+':'+id;const index=appState.favorites.findIndex(x=>x.key===key);if(index>=0){appState.favorites.splice(index,1);showToast('Убрано из избранного');}else{appState.favorites.unshift({key,type,id,title,body,date});showToast('Добавлено в избранное');}saveState();if(document.getElementById('dailySection-favorites')&&!document.getElementById('dailySection-favorites').classList.contains('hidden'))renderFavorites();renderGratitude();renderFeelings();}
     function renderFavorites(){const c=document.getElementById('favoritesList');if(!c)return;const list=appState.favorites||[];c.innerHTML=list.length?savedEntriesWithMore(list,(f,i)=>'<div class="glass-card rounded-xl border border-blush p-3 space-y-2"><div class="flex justify-between gap-2"><div><p class="text-[9px] text-dusty">'+escapeHtml(f.type)+'</p><p class="text-xs font-bold text-mauve">'+escapeHtml(f.title)+'</p></div><button onclick="removeFavorite('+i+')" class="text-dusty">♥</button></div><p class="text-xs text-mauve-light whitespace-pre-wrap">'+escapeHtml(f.body)+'</p><p class="text-[9px] text-dusty">'+escapeHtml(f.date||'')+'</p></div>','Все избранное'):'<p class="text-center text-xs text-mauve-light py-4">Здесь будут записи, которые ты отметишь сердечком.</p>';}
     function removeFavorite(index){appState.favorites.splice(index,1);saveState();renderFavorites();renderGratitude();renderFeelings();}
-    let activityMonth=new Date();
-    function changeActivityMonth(delta){activityMonth=new Date(activityMonth.getFullYear(),activityMonth.getMonth()+delta,1);renderActivityCalendar();}
-    function activityDateSet(){const dates=new Set();const add=x=>{const d=String(x.createdAt||'').slice(0,10);if(/^\d{4}-\d{2}-\d{2}$/.test(d))dates.add(d);};['gratitudes','feelings','futureScriptHistory','fillsMe','timeCapsules'].forEach(k=>(appState[k]||[]).forEach(add));Object.keys(appState.dailyQuestionAnswers||{}).forEach(d=>dates.add(d));return dates;}
-    function renderActivityCalendar(){const grid=document.getElementById('activityCalendarGrid');if(!grid)return;const y=activityMonth.getFullYear(),m=activityMonth.getMonth(),first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),offset=(first.getDay()+6)%7,active=activityDateSet(),today=localDayKey();document.getElementById('activityMonthTitle').textContent=first.toLocaleDateString('ru-RU',{month:'long',year:'numeric'});let html='';for(let i=0;i<offset;i++)html+='<span></span>';for(let day=1;day<=days;day++){const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0'),yes=active.has(key);html+='<div class="py-2 rounded-lg text-[11px] '+(yes?'bg-blush text-mauve font-extrabold':'text-mauve-light')+(key===today?' ring-1 ring-mauve':'')+'">'+day+(yes?'<span class="block text-[7px]">•</span>':'<span class="block text-[7px]">&nbsp;</span>')+'</div>';}grid.innerHTML=html;document.getElementById('activityCalendarSummary').textContent='Активных дней в этом месяце: '+[...active].filter(d=>d.startsWith(y+'-'+String(m+1).padStart(2,'0'))).length;}
     let shareCardTheme='rose';
     function setShareCardTheme(theme){shareCardTheme=theme;renderShareCard();}
     function renderShareCard(){const text=document.getElementById('shareCardText').value.trim();if(!text){showToast('Сначала напиши текст для карточки');return;}const card=document.getElementById('shareCardCanvas'),author=document.getElementById('shareCardAuthor').value.trim();const themes={rose:{bg:'linear-gradient(145deg,#F8E9EB,#E8C5C8)',color:'#5A3D42'},cream:{bg:'linear-gradient(145deg,#FBF6EF,#E9DDCE)',color:'#66564D'},night:{bg:'linear-gradient(145deg,#6B535B,#332A31)',color:'#FFF4F2'}};card.style.background=themes[shareCardTheme].bg;card.style.color=themes[shareCardTheme].color;document.getElementById('shareCardPreviewText').textContent=text;document.getElementById('shareCardPreviewAuthor').textContent=author?'— '+author:'';document.getElementById('shareCardPreview').classList.remove('hidden');}
@@ -1341,7 +1333,6 @@
       if (key === 'question') renderQuestionOfDay();
       if (key === 'capsule') renderTimeCapsules();
       if (key === 'fills') renderFillsMe();
-      if (key === 'calendar') renderActivityCalendar();
       if (key === 'museum') renderMuseumMoments();
       if (key === 'challenge') renderWeeklyChallenge();
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'instant'});
