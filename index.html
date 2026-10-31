@@ -1199,7 +1199,9 @@
         return '<article class="glass-card rounded-2xl border border-blush p-4 space-y-3"><div class="flex items-center justify-between gap-2"><div><p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Глава '+String(entries.length-index).padStart(2,'0')+'</p><p class="text-sm font-extrabold text-mauve mt-1">С чего всё начиналось</p></div><p class="text-[9px] text-dusty">'+myStoryDateLabel(entry.createdAt)+'</p></div>'+answersHtml+'<div class="space-y-2 pt-1">'+reflectionHtml+'</div></article>';
       }).join('');
       const intro=document.getElementById('myStoryIntro');if(intro)intro.classList.toggle('hidden',entries.length>0);
+      if(entries.length)c.insertAdjacentHTML('beforeend','<button onclick="startMyStoryChapter()" class="w-full py-3 rounded-xl border border-blush text-xs font-bold text-mauve">＋ Начать новую главу</button>');
     }
+    function startMyStoryChapter(){const intro=document.getElementById('myStoryIntro');if(!intro)return;intro.classList.remove('hidden');intro.scrollIntoView({behavior:'smooth',block:'start'});}
 
     function openDailySection(key) {
       const panels = document.querySelectorAll('[id^="dailySection-"]');
