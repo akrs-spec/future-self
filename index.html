@@ -924,22 +924,34 @@
       if (!response.ok) throw new Error(data.error || 'Ошибка сервера');
       return data;
     }
+    async function persistCloudState(snapshot, keepalive=false) {
+      const response=await fetch(API+'/state',{method:'POST',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':initData},body:JSON.stringify({state:JSON.parse(snapshot)}),keepalive});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.error||'Не удалось сохранить данные на сервере');
+      cloudSyncErrorShown=false;
+    }
     function scheduleCloudStateSave() {
       if (!initData || !cloudStateReady) return;
       clearTimeout(cloudSaveTimer);
       cloudSaveTimer=setTimeout(()=>{
         const snapshot=JSON.stringify(appState);
-        cloudSaveQueue=cloudSaveQueue.catch(()=>{}).then(async()=>{
-          const response=await fetch(API+'/state',{method:'POST',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':initData},body:JSON.stringify({state:JSON.parse(snapshot)})});
-          const data=await response.json().catch(()=>({}));
-          if(!response.ok)throw new Error(data.error||'Не удалось сохранить данные на сервере');
-          cloudSyncErrorShown=false;
-        }).catch(error=>{
+        cloudSaveQueue=cloudSaveQueue.catch(()=>{}).then(()=>persistCloudState(snapshot)).catch(error=>{
           console.error('Cloud save failed:',error);
           if(!cloudSyncErrorShown){cloudSyncErrorShown=true;showToast('Не удалось синхронизировать данные. Они пока сохранены на устройстве.');}
         });
       },350);
     }
+    function flushCloudStateSave() {
+      if(!initData||!cloudStateReady)return;
+      clearTimeout(cloudSaveTimer);
+      const snapshot=JSON.stringify(appState);
+      cloudSaveQueue=cloudSaveQueue.catch(()=>{}).then(()=>persistCloudState(snapshot)).catch(error=>{
+        console.error('Cloud save on app close failed:',error);
+        if(!cloudSyncErrorShown){cloudSyncErrorShown=true;showToast('Не удалось синхронизировать данные. Проверь интернет и открой карту ещё раз.');}
+      });
+    }
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushCloudStateSave();});
+    window.addEventListener('pagehide',flushCloudStateSave);
     async function loadCloudState() {
       if(!initData)return;
       const localDeletedIds=Array.isArray(appState.deletedFutureLetterIds)?appState.deletedFutureLetterIds.map(String):[];const localDeletedBoardIds=Array.isArray(appState.deletedBoardItemIds)?appState.deletedBoardItemIds.map(String):[];
