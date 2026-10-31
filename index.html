@@ -1365,10 +1365,67 @@
       wishes:{title:'Мои настоящие желания',intro:'Попробуй на время убрать ожидания других людей и прислушаться к себе.',questions:['Чего тебе хочется, если не думать о том, как это будет выглядеть со стороны?','Какое желание ты часто откладываешь или обесцениваешь?','По каким признакам ты поймёшь, что живёшь ближе к своей версии счастья?']},
       restart:{title:'Начать заново',intro:'Новая глава не обязана начинаться с большого решения. Иногда достаточно одного ясного шага.',questions:['Что в своей жизни ты больше не хочешь оставлять без изменений?','Какой перемены ты хочешь на самом деле, а не потому что «пора»?','Что мешает начать — и что помогло бы сделать начало легче?']}
     };
+    const silentPracticeQuestionSets={
+      mind:[
+        ['Что сейчас занимает больше всего места в твоей голове?','Какая часть этой ситуации действительно зависит от тебя?','Что можно отложить, делегировать или пока не решать?'],
+        ['Какая мысль сегодня возвращается снова и снова?','Что в этой мысли факт, а что — твои предположения или тревоги?','Что помогло бы тебе почувствовать чуть больше ясности?'],
+        ['Если бы можно было на час выключить одну заботу, что бы ты выбрала?','Какую задачу ты пытаешься удержать в голове вместо того, чтобы записать или решить её?','С чего можно начать, чтобы стало хотя бы на один шаг легче?'],
+        ['Что из всего происходящего действительно требует твоего внимания сегодня?','Что ты пытаешься контролировать, хотя сейчас не можешь на это повлиять?','Как ты можешь дать своей голове немного передышки?']
+      ],
+      return:[
+        ['Как ты чувствуешь себя прямо сейчас — не как «надо», а на самом деле?','Чего тебе сейчас не хватает больше всего?','Что могло бы поддержать тебя сегодня хотя бы немного?'],
+        ['Что ты ощущаешь в теле прямо сейчас?','Какое чувство ты чаще всего откладываешь на потом?','Что ты можешь сделать сегодня, чтобы отнестись к себе бережнее?'],
+        ['В какой момент за последнее время ты чувствовала себя по-настоящему собой?','Что в последнее время забирает у тебя силы?','Что возвращает тебе ощущение спокойствия или интереса к жизни?'],
+        ['Если убрать ожидания окружающих, чего хочется именно тебе?','В чём ты давно не спрашивала себя, чего хочешь?','Какой небольшой жест заботы о себе будет уместен сегодня?']
+      ],
+      dialogue:[
+        ['О чём ты давно хочешь сказать себе честно?','Какой страх или сомнение ты обычно стараешься не замечать?','Что бы ты ответила близкому человеку, если бы он оказался на твоём месте?'],
+        ['Какую правду о себе тебе сейчас непросто признать?','За что ты себя критикуешь чаще, чем заслуживаешь?','Какие слова тебе важно услышать от самой себя?'],
+        ['В какой ситуации ты поступаешь не так, как на самом деле чувствуешь?','Чего ты боишься, если позволишь себе быть честной?','Какой ответ ты уже знаешь, но пока не решаешься принять?'],
+        ['Что ты хотела бы объяснить себе из прошлого?','Где ты слишком строга к себе?','Какой поддержки тебе не хватает и можешь ли ты дать её себе сейчас?']
+      ],
+      release:[
+        ['За что или за что именно ты продолжаешь держаться?','Что в этой ситуации находится вне твоего контроля?','Что ты хотела бы перестать требовать от себя?'],
+        ['Какая ситуация продолжает забирать твои силы, даже когда ничего не происходит?','Что ты можешь изменить, а что уже пора перестать пытаться контролировать?','Какой груз ты могла бы сегодня немного ослабить?'],
+        ['Чьи ожидания ты несёшь на себе?','Что случится, если ты позволишь себе не оправдать чьё-то ожидание?','От чего ты готова освободить хотя бы часть своего внимания?'],
+        ['Что ты продолжаешь делать только из чувства долга или вины?','Что ты боишься потерять, если отпустишь это?','Какой маленький шаг поможет вернуть себе свободу выбора?']
+      ],
+      wishes:[
+        ['Чего тебе хочется, если не думать о том, как это будет выглядеть со стороны?','Какое желание ты часто откладываешь или обесцениваешь?','По каким признакам ты поймёшь, что живёшь ближе к своей версии счастья?'],
+        ['О чём ты мечтаешь, но редко говоришь вслух?','Какое желание ты считаешь «несвоевременным»?','Что можно попробовать уже сейчас, не дожидаясь идеального момента?'],
+        ['Как выглядел бы твой обычный день, если бы в нём было больше того, что тебе действительно нравится?','Чего в твоей жизни стало бы больше, если бы ты чаще выбирала себя?','Какое желание заслуживает не очередного откладывания, а внимания?'],
+        ['Что тебе нравилось делать раньше, но постепенно исчезло из жизни?','Какое новое впечатление тебе давно хочется получить?','Как ты можешь приблизиться к этому желанию самым простым способом?']
+      ],
+      restart:[
+        ['Что в своей жизни ты больше не хочешь оставлять без изменений?','Какой перемены ты хочешь на самом деле, а не потому что «пора»?','Что мешает начать — и что помогло бы сделать начало легче?'],
+        ['Что ты хотела бы начать, если бы не требовала от себя идеального результата?','Какой прошлый опыт может стать для тебя опорой сейчас?','Какой первый шаг займёт не больше 15 минут?'],
+        ['В какой сфере тебе особенно хочется обновления?','Что стоит перестать ждать от себя перед тем, как начать?','Как будет выглядеть самый реалистичный первый шаг?'],
+        ['Что ты можешь сделать иначе уже на этой неделе?','Какую привычку или решение ты готова оставить в прошлом?','Что поможет тебе не бросить начатое после первого сложного дня?']
+      ]
+    };
+    const silentPracticeActionPrompts=[
+      'Какой один небольшой шаг ты готова сделать в ближайшие сутки?',
+      'Что ты можешь сделать для себя уже сегодня, даже если это займёт всего пять минут?',
+      'Какое действие поможет тебе поддержать себя в этой ситуации?',
+      'Что из того, о чём ты подумала, хочется попробовать воплотить первым?'
+    ];
+    function chooseSilentPracticeQuestions(key){
+      const sets=silentPracticeQuestionSets[key]||[silentPracticeLibrary[key].questions];
+      appState.silentPracticeLastQuestionSet=appState.silentPracticeLastQuestionSet||{};
+      const previous=appState.silentPracticeLastQuestionSet[key];
+      const options=sets.map((_,index)=>index).filter(index=>index!==previous);
+      const selected=options[Math.floor(Math.random()*options.length)]??0;
+      appState.silentPracticeLastQuestionSet[key]=selected;
+      const prompts=silentPracticeActionPrompts.filter(prompt=>prompt!==appState.silentPracticeLastActionPrompt);
+      const actionPrompt=prompts[Math.floor(Math.random()*prompts.length)]||silentPracticeActionPrompts[0];
+      appState.silentPracticeLastActionPrompt=actionPrompt;
+      saveState();
+      return {questions:sets[selected],actionPrompt};
+    }
     let silentPracticeSession=null;
     function openSilentPractice(key){
       const practice=silentPracticeLibrary[key];if(!practice)return;
-      silentPracticeSession={key,answers:Array(practice.questions.length).fill(''),step:0,nextStep:''};
+      const variation=chooseSilentPracticeQuestions(key);\n      silentPracticeSession={key,questions:variation.questions,actionPrompt:variation.actionPrompt,answers:Array(variation.questions.length).fill(''),step:0,nextStep:''};
       const home=document.getElementById('silentPracticeHome');
       home.classList.add('hidden');
       if(home)home.style.display='none';
@@ -1385,10 +1442,10 @@
     }
     function renderSilentPracticeStep(){
       const flow=document.getElementById('silentPracticeFlow');const session=silentPracticeSession;if(!flow||!session)return;
-      const practice=silentPracticeLibrary[session.key],step=session.step,total=practice.questions.length;
+      const practice=silentPracticeLibrary[session.key],questions=session.questions||practice.questions,step=session.step,total=questions.length;
       if(step>total){renderSilentPracticeFinish();return;}
       const isAction=step===total,progress=isAction?100:Math.round((step+1)/(total+1)*100);
-      const prompt=isAction?'Какой один небольшой шаг ты готова сделать в ближайшие сутки?':practice.questions[step];
+      const prompt=isAction?(session.actionPrompt||'Какой один небольшой шаг ты готова сделать в ближайшие сутки?'):questions[step];
       const value=isAction?session.nextStep:session.answers[step];
       flow.innerHTML=`
         <div class="glass-card rounded-3xl p-5 border border-blush space-y-4">
@@ -1406,7 +1463,7 @@
     function stepSilentPractice(direction){
       const session=silentPracticeSession;if(!session)return;
       const field=document.getElementById('silentPracticeAnswer');const value=field?field.value.trim():'';
-      const total=silentPracticeLibrary[session.key].questions.length;
+      const total=(session.questions||silentPracticeLibrary[session.key].questions).length;
       if(session.step<total)session.answers[session.step]=value;else session.nextStep=value;
       if(direction>0&&session.step===total){renderSilentPracticeFinish();return;}
       session.step=Math.max(0,Math.min(total,session.step+direction));
@@ -1429,9 +1486,9 @@
     }
     async function saveSilentPractice(){
       const session=silentPracticeSession;if(!session||session.saved)return;
-      const practice=silentPracticeLibrary[session.key];const answers=session.answers.map((answer,i)=>({question:practice.questions[i],answer}));
+      const practice=silentPracticeLibrary[session.key];const questions=session.questions||practice.questions;const answers=session.answers.map((answer,i)=>({question:questions[i],answer}));
       appState.silentPracticeHistory=Array.isArray(appState.silentPracticeHistory)?appState.silentPracticeHistory:[];
-      const historyRecord={id:'sp-'+Date.now(),key:session.key,title:practice.title,date:localDayKey(),answers,nextStep:session.nextStep||''};
+      const historyRecord={id:'sp-'+Date.now(),key:session.key,title:practice.title,date:localDayKey(),answers,nextStep:session.nextStep||'',actionPrompt:session.actionPrompt||''};
       appState.silentPracticeHistory.unshift(historyRecord);
       appState.silentPracticeHistory=appState.silentPracticeHistory.slice(0,50);
       session.saved=true;
