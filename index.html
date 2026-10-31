@@ -1249,7 +1249,7 @@
       document.getElementById('silentPracticeHome').classList.add('hidden');
       document.getElementById('practiceFolderExitButton')?.classList.add('hidden');
       const flow=document.getElementById('silentPracticeFlow');
-      flow.classList.remove('hidden');flow.scrollTop=0;
+      flow.classList.remove('hidden');flow.style.display='block';flow.scrollTop=0;
       document.getElementById('silentPracticeExitButton')?.classList.remove('hidden');
       renderSilentPracticeStep();
     }
@@ -1343,7 +1343,7 @@
       switchTab('vision');
     }
     function closeSilentPractice(){
-      silentPracticeSession=null;document.getElementById('silentPracticeFlow').classList.add('hidden');document.getElementById('silentPracticeExitButton')?.classList.add('hidden');document.getElementById('silentPracticeHome').classList.remove('hidden');document.getElementById('practiceFolderExitButton')?.classList.remove('hidden');
+      silentPracticeSession=null;const flow=document.getElementById('silentPracticeFlow');flow?.classList.add('hidden');if(flow)flow.style.display='none';document.getElementById('silentPracticeExitButton')?.classList.add('hidden');const home=document.getElementById('silentPracticeHome');home?.classList.remove('hidden');if(home)home.style.display='block';
     }
     function syncSilentPracticeHistoryToTracker(){appState.practiceDays=Array.isArray(appState.practiceDays)?appState.practiceDays:[];appState.practiceSessions=Array.isArray(appState.practiceSessions)?appState.practiceSessions:[];let changed=false;(appState.silentPracticeHistory||[]).forEach(item=>{if(!item||!item.id||!/^\d{4}-\d{2}-\d{2}$/.test(item.date||''))return;if(appState.practiceSessions.some(session=>session.sourceId===item.id))return;const legacy=appState.practiceSessions.find(session=>!session.sourceId&&session.name===item.title&&session.date===item.date);if(legacy){legacy.sourceId=item.id;changed=true;}else{appState.practiceSessions.unshift({id:'silent-'+item.id,sourceId:item.id,date:item.date,name:item.title,completedAt:item.date+'T12:00:00'});changed=true;}if(!appState.practiceDays.includes(item.date)){appState.practiceDays.push(item.date);changed=true;}});appState.practiceSessions=appState.practiceSessions.slice(0,200);if(changed)saveState();}
     function renderPracticeProgress(){syncSilentPracticeHistoryToTracker();const sessions=Array.isArray(appState.practiceSessions)?appState.practiceSessions:[],sessionDays=sessions.map(item=>item.date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)),days=[...new Set([...(appState.practiceDays||[]),...sessionDays].filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)))].sort(),count=Math.min(30,days.length),percent=Math.round(count/30*100),countEl=document.getElementById('practiceProgressCount'),bar=document.getElementById('practiceProgressBar'),hint=document.getElementById('practiceProgressHint'),sessionEl=document.getElementById('practiceSessionCount'),streakEl=document.getElementById('practiceStreakCount');if(!countEl||!bar||!hint||!sessionEl||!streakEl)return;countEl.innerText=count+'/30';bar.style.width=percent+'%';sessionEl.innerText=String(sessions.length);let streak=0;const day=new Date();if(!days.includes(localDayKey()))day.setDate(day.getDate()-1);while(days.includes(day.getFullYear()+'-'+String(day.getMonth()+1).padStart(2,'0')+'-'+String(day.getDate()).padStart(2,'0'))){streak++;day.setDate(day.getDate()-1);}streakEl.innerText=String(streak);const done=days.includes(localDayKey());hint.innerText=count>=30?'Ты завершила 30-дневный цикл. Отличная работа!':done?'Сегодня практика уже засчитана. Возвращайся завтра.':'Каждая завершённая дыхательная или тихая практика сохраняется в общем трекере.';}
@@ -1351,20 +1351,32 @@
       const hub=document.getElementById('practiceHub');
       const breath=document.getElementById('breathPracticeSection');
       const silent=document.getElementById('silentPracticeHome');
+      const flow=document.getElementById('silentPracticeFlow');
       const exit=document.getElementById('practiceFolderExitButton');
+      if(!hub||!breath||!silent)return;
+      flow?.classList.add('hidden');
+      if(flow)flow.style.display='none';
       document.getElementById('silentPracticeExitButton')?.classList.add('hidden');
-      hub?.classList.add('hidden');
-      breath?.classList.toggle('hidden',folder!=='breath');
-      silent?.classList.toggle('hidden',folder!=='silent');
-      exit?.classList.remove('hidden');
+      hub.classList.add('hidden');
+      breath.classList.add('hidden');
+      silent.classList.add('hidden');
+      breath.style.display='none';
+      silent.style.display='none';
+      if(folder==='breath'){breath.classList.remove('hidden');breath.style.display='block';}
+      if(folder==='silent'){silent.classList.remove('hidden');silent.style.display='block';}
+      exit?.classList.add('hidden');
       document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});
     }
     function backToPracticeHub(){
-      document.getElementById('breathPracticeSection')?.classList.add('hidden');
-      document.getElementById('silentPracticeHome')?.classList.add('hidden');
+      const breath=document.getElementById('breathPracticeSection');
+      const silent=document.getElementById('silentPracticeHome');
+      const flow=document.getElementById('silentPracticeFlow');
+      breath?.classList.add('hidden');silent?.classList.add('hidden');
+      if(breath)breath.style.display='none';if(silent)silent.style.display='none';
+      flow?.classList.add('hidden');if(flow)flow.style.display='none';
       document.getElementById('practiceFolderExitButton')?.classList.add('hidden');
       document.getElementById('silentPracticeExitButton')?.classList.add('hidden');
-      document.getElementById('practiceHub')?.classList.remove('hidden');
+      const hub=document.getElementById('practiceHub');hub?.classList.remove('hidden');if(hub)hub.style.display='';
       document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});
     }
     function scrollToPracticeSection(id){const target=document.getElementById(id);if(target)target.scrollIntoView({behavior:'smooth',block:'start'});}
