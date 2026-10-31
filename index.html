@@ -278,6 +278,7 @@
       </div>
 
       <div id="dailyJournalHome" class="space-y-2">
+        <button onclick="openDailySection('challenge')" class="w-full rounded-2xl border border-blush p-4 flex items-center gap-3 text-left shadow-sm" style="background:linear-gradient(115deg,#F3E8F0,#FFF8F4)"><span class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="background:#EAD9E8">✧</span><span class="flex-1"><span class="block text-xs font-extrabold text-mauve">Челлендж на 7 дней</span><span class="block text-[10px] text-mauve-light mt-1">Семь дней маленьких шагов и честных записей</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
         <button onclick="openDailySection('affirmation')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left"><span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">✧</span><span class="flex-1"><span class="block text-xs font-bold text-mauve">Аффирмация дня</span><span class="block text-[10px] text-mauve-light mt-1">Напоминание, к которому можно возвращаться</span></span><i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i></button>
         <button onclick="openDailySection('gratitude')" class="glass-card w-full p-4 rounded-2xl border border-blush flex items-center gap-3 text-left">
           <span class="w-10 h-10 rounded-xl bg-milk flex items-center justify-center text-lg">🤍</span>
@@ -316,6 +317,10 @@
         </button>
       </div>
 
+      <div id="dailySection-challenge" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <div id="weeklyChallengeContent" class="space-y-3"></div>
+      </div>
       <div id="dailySection-affirmation" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button><div class="rounded-[2rem] p-6 min-h-[390px] relative overflow-hidden flex flex-col justify-between text-center shadow-card-float" style="background:radial-gradient(circle at 15% 12%,rgba(255,255,255,.72),transparent 30%),radial-gradient(circle at 88% 82%,rgba(201,139,147,.38),transparent 34%),linear-gradient(145deg,#F7E6E8 0%,#E8C5C8 48%,#C98B93 100%);"><div class="absolute -top-12 -right-10 w-44 h-44 rounded-full border border-white/40"></div><div class="absolute top-8 -left-8 w-28 h-28 rounded-full border border-white/40"></div><div class="relative"><p class="text-[10px] tracking-[.3em] uppercase font-bold text-mauve/70">FUTURE SELF · DAILY WORD</p><div class="w-14 h-14 mx-auto mt-8 rounded-full border border-white/70 bg-white/25 flex items-center justify-center text-3xl text-mauve">✧</div></div><div class="relative py-8"><p class="text-[10px] uppercase tracking-[.25em] font-bold text-mauve/60 mb-5">Аффирмация дня</p><p id="dailyAffirmationText" class="font-sans text-2xl leading-relaxed font-extrabold text-mauve">Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью.</p><div class="w-12 h-px bg-mauve/40 mx-auto mt-7"></div></div><div class="relative space-y-3"><p class="text-[10px] text-mauve/70">Прочитай медленно и побудь с этой мыслью</p><p class="text-[10px] text-mauve/70">Новая мысль будет ждать тебя при следующем посещении</p></div></div></div>
 
       <div id="dailySection-gratitude" class="hidden space-y-4">
@@ -707,12 +712,7 @@
           <span class="block text-[10px] text-mauve-light mt-1">Вопросы и время для себя</span>
           <span class="block text-[10px] font-bold text-dusty mt-3">Открыть <i class="fa-solid fa-arrow-right ml-1"></i></span>
         </button>
-        <button type="button" onclick="openPracticeFolder('challenges')" class="rounded-2xl p-4 text-left border border-blush shadow-sm" style="background:linear-gradient(145deg,#F1E8F0,#FFF8F3)">
-          <span class="relative flex items-center justify-center w-full h-24 mb-3 overflow-hidden rounded-xl" style="background:radial-gradient(circle at 50% 55%,rgba(255,255,255,.95),rgba(226,207,225,.65) 48%,rgba(220,195,205,.12) 72%)"><span class="absolute w-20 h-20 rounded-full border border-white/80"></span><span class="absolute w-14 h-14 rounded-full border border-white/70"></span><i class="fa-solid fa-calendar-heart relative text-4xl text-dusty drop-shadow-sm"></i></span>
-          <span class="block text-sm font-extrabold text-mauve">Челленджи недели</span>
-          <span class="block text-[10px] text-mauve-light mt-1">Одна тема · семь маленьких шагов</span>
-          <span class="block text-[10px] font-bold text-dusty mt-3">Открыть <i class="fa-solid fa-arrow-right ml-1"></i></span>
-        </button>
+
       </div>
       </div>
       <!-- BREATHWORK VISUALIZER CARD -->
@@ -1235,6 +1235,7 @@
       if (key === 'capsule') renderTimeCapsules();
       if (key === 'fills') renderFillsMe();
       if (key === 'calendar') renderActivityCalendar();
+      if (key === 'challenge') renderWeeklyChallenge();
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
     }
     function closeDailySection() {
@@ -1444,37 +1445,38 @@
       ['Какое чувство я чаще всего испытываю в последнее время? Что за ним стоит?','Вспомни недавнюю ситуацию: что было фактом, а что — твоей интерпретацией?','Какая потребность может скрываться за моей сильной эмоцией?','Как я обычно реагирую в напряжении и чего на самом деле хочу в этот момент?','Где мне важно обозначить личную границу? Что мешает?','Как ещё можно объяснить ситуацию, которая меня задела?','Какой вывод о своих реакциях я хочу забрать с собой?'],
       ['Какие три чувства я хочу чаще испытывать в своей обычной жизни?','Что в моём расписании уже соответствует жизни, которую я выбираю, а что нет?','От чего я готова освободить немного пространства?','Какой выбор сегодня будет поддерживать мои ценности?','Какие люди и занятия помогают мне становиться собой?','Какой маленький фрагмент желаемой жизни я могу создать уже сегодня?','Что я хочу продолжить делать на следующей неделе ради себя?']
     ];
+    function weeklyChallengeProgress(key='active'){appState.weeklyChallengeProgress=appState.weeklyChallengeProgress||{};return appState.weeklyChallengeProgress[key]||(appState.weeklyChallengeProgress[key]={completed:[],entries:{}});}
     function renderWeeklyChallenge(){
       const c=document.getElementById('weeklyChallengeContent');if(!c)return;
-      const key=weeklyChallengeWeekKey(),challenge=weeklyChallengeForWeek(key),progress=weeklyChallengeProgress(key),done=progress.completed||[];
-      const startDate=new Date(...key.split('-').map((v,i)=>i===1?Number(v)-1:Number(v)));
-      const today=new Date(),todayDate=new Date(today.getFullYear(),today.getMonth(),today.getDate());
-      const dayIndex=Math.max(0,Math.min(6,Math.floor((todayDate-startDate)/86400000)));
-      const pct=Math.round(done.length/7*100);
-      if(weeklyChallengeView==='archive'){
-        const entries=Object.keys(appState.weeklyChallengeProgress||{}).filter(k=>k<key).sort().reverse();
-        c.innerHTML='<div class="flex items-center justify-between"><p class="text-sm font-extrabold text-mauve">Архив недель</p><button onclick="weeklyChallengeView=\'current\';renderWeeklyChallenge()" class="text-[10px] font-bold text-dusty">К текущей неделе</button></div>'+(entries.length?entries.map(k=>{const ch=weeklyChallengeForWeek(k),p=appState.weeklyChallengeProgress[k]||{},count=(p.completed||[]).length,notes=Object.keys(p.entries||{}).sort((a,b)=>Number(a)-Number(b)).map(i=>'<div class="mt-2 pt-2 border-t border-blush"><p class="text-[10px] font-bold text-mauve">День '+(Number(i)+1)+'</p><p class="text-xs text-mauve-light whitespace-pre-wrap">'+escapeHtml(p.entries[i])+'</p></div>').join('');return '<div class="glass-card rounded-2xl border border-blush p-4"><p class="text-[9px] uppercase tracking-widest text-dusty">'+new Date(...k.split('-').map((v,i)=>i===1?Number(v)-1:Number(v))).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+'</p><p class="font-extrabold text-sm text-mauve mt-1">'+ch.title+'</p><p class="text-[10px] text-mauve-light">'+count+' из 7 дней пройдено</p><div class="h-1.5 bg-powder rounded-full overflow-hidden mt-2"><div class="h-full bg-dusty" style="width:'+Math.round(count/7*100)+'%"></div></div>'+notes+'</div>';}).join(''):'<p class="text-xs text-mauve-light text-center py-6">Здесь будут сохраняться твои недельные записи.</p>')+'<button onclick="weeklyChallengeView=\'current\';renderWeeklyChallenge()" class="w-full rounded-xl border border-blush p-3 text-xs font-bold text-mauve">Вернуться к челленджу</button>';
+      const p=weeklyChallengeProgress('active'),done=p.completed||[],challenge=weeklyChallengeLibrary[Number(p.challengeIndex)||0],entries=p.entries||(p.entries={});
+      if(!p.startedAt){
+        c.innerHTML='<div class="rounded-3xl p-5 border border-blush space-y-3 text-center" style="background:linear-gradient(145deg,#F7E9EC,#FFF9F6)"><span class="text-3xl">✧</span><p class="text-[10px] font-bold tracking-widest text-dusty uppercase">СЕМЬ ДНЕЙ ДЛЯ СЕБЯ</p><h3 class="text-2xl font-extrabold text-mauve">Начни с одного шага</h3><p class="text-xs text-mauve-light leading-relaxed">'+challenge.subtitle+'</p><p class="text-xs text-mauve-light">Каждый день будет открываться одно задание и вопрос для письменной практики. Твои семь дней начнутся только тогда, когда ты нажмёшь кнопку.</p><button onclick="startWeeklyChallenge()" class="w-full rounded-xl bg-mauve text-white py-3 text-xs font-bold">Начать челлендж</button></div>';
         return;
       }
-      const task=challenge.tasks[dayIndex],prompt=(weeklyChallengePrompts[weeklyChallengeLibrary.indexOf(challenge)]||weeklyChallengePrompts[0])[dayIndex];
-      const entries=progress.entries||(progress.entries={}),saved=entries[dayIndex]||'',isDone=done.includes(dayIndex);
-      const dayDots=Array.from({length:7},(_,i)=>'<span class="flex-1 h-1.5 rounded-full '+(done.includes(i)?'bg-dusty':i===dayIndex?'bg-mauve/40':'bg-white')+'"></span>').join('');
-      c.innerHTML='<div class="rounded-3xl p-4 border border-blush shadow-sm space-y-3" style="background:linear-gradient(145deg,#F7E9EC,#FFF9F6)"><div class="flex justify-between items-center"><span class="text-[9px] font-bold tracking-widest text-dusty uppercase">ЧЕЛЛЕНДЖ НЕДЕЛИ</span><span class="text-[10px] font-bold text-mauve">'+done.length+'/7 дней</span></div><h4 class="text-2xl font-extrabold text-mauve">'+challenge.title+'</h4><p class="text-xs text-mauve-light leading-relaxed">'+challenge.subtitle+'</p><div class="flex gap-1.5">'+dayDots+'</div><p class="text-[10px] text-mauve-light">Каждый день — одна тема и одна письменная практика. Иди в своём темпе.</p></div><div class="flex items-center justify-between"><p class="text-sm font-extrabold text-mauve">Твоя практика на сегодня</p><button onclick="weeklyChallengeView=\'archive\';renderWeeklyChallenge()" class="text-[10px] font-bold text-dusty"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Архив</button></div><div class="glass-card rounded-3xl border border-blush p-4 space-y-3"><div class="flex items-center justify-between"><span class="text-[9px] uppercase tracking-widest text-dusty font-bold">ДЕНЬ '+(dayIndex+1)+' ИЗ 7</span>'+(isDone?'<span class="text-[9px] text-dusty font-bold"><i class="fa-solid fa-check mr-1"></i>Сохранено</span>':'<span class="text-[9px] text-mauve-light">Выдели 5–10 минут</span>')+'</div><h4 class="text-lg font-extrabold text-mauve">'+task[0]+'</h4><p class="text-xs text-mauve-light leading-relaxed">'+task[1]+'</p><div class="rounded-2xl p-3 space-y-2" style="background:#F9F1F3"><p class="text-[9px] uppercase tracking-widest text-dusty font-bold">ВОПРОС ДЛЯ РАЗМЫШЛЕНИЯ</p><p class="text-sm font-semibold text-mauve leading-relaxed">'+prompt+'</p></div><textarea id="weeklyChallengeEntry" rows="6" class="w-full rounded-2xl border border-blush bg-white/85 p-3 text-sm text-mauve outline-none resize-y" placeholder="Запиши всё, что приходит в голову. Здесь не нужно искать правильные ответы...">'+escapeHtml(saved)+'</textarea><p class="text-[10px] text-mauve-light">Твоя запись останется в архиве этой недели. Можно вернуться к ней позже.</p><button onclick="saveWeeklyChallengeEntry()" class="w-full rounded-xl '+(isDone?'border border-blush bg-white text-mauve':'bg-mauve text-white')+' py-3 text-xs font-bold">'+(isDone?'Обновить запись':'Сохранить ответ и завершить день')+'</button></div>';
+      const start=new Date(p.startedAt),today=new Date(),startDay=new Date(start.getFullYear(),start.getMonth(),start.getDate()),todayDay=new Date(today.getFullYear(),today.getMonth(),today.getDate()),elapsed=Math.max(0,Math.floor((todayDay-startDay)/86400000));
+      const dayIndex=Math.min(6,done.length,elapsed),isDone=done.includes(dayIndex),task=challenge.tasks[dayIndex],prompt=(weeklyChallengePrompts[Number(p.challengeIndex)||0]||weeklyChallengePrompts[0])[dayIndex],saved=entries[dayIndex]||'',pct=Math.round(done.length/7*100);
+      const dots=Array.from({length:7},(_,i)=>'<span class="flex-1 h-1.5 rounded-full '+(done.includes(i)?'bg-dusty':i===dayIndex?'bg-mauve/40':'bg-white')+'"></span>').join('');
+      const waiting=elapsed<done.length;
+      c.innerHTML='<div class="rounded-3xl p-4 border border-blush shadow-sm space-y-3" style="background:linear-gradient(145deg,#F7E9EC,#FFF9F6)"><div class="flex justify-between items-center"><span class="text-[9px] font-bold tracking-widest text-dusty uppercase">ТВОЙ ЧЕЛЛЕНДЖ</span><span class="text-[10px] font-bold text-mauve">'+done.length+'/7 дней</span></div><h4 class="text-xl font-extrabold text-mauve">'+challenge.title+'</h4><p class="text-xs text-mauve-light leading-relaxed">'+challenge.subtitle+'</p><div class="flex gap-1.5">'+dots+'</div><div class="h-1.5 bg-powder rounded-full overflow-hidden"><div class="h-full bg-dusty" style="width:'+pct+'%"></div></div><p class="text-[10px] text-mauve-light">Начат '+start.toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+'. Следующий день откроется по твоему личному отсчёту.</p></div>'+(done.length>=7?'<div class="glass-card rounded-3xl border border-blush p-5 text-center space-y-3"><span class="text-3xl">🤍</span><h4 class="text-lg font-extrabold text-mauve">Ты прошла все семь дней</h4><p class="text-xs text-mauve-light">Сохрани свои записи и возвращайся к ним, когда захочешь.</p>'+Object.keys(entries).sort((a,b)=>Number(a)-Number(b)).map(i=>'<div class="text-left border-t border-blush pt-2"><p class="text-[10px] font-bold text-mauve">День '+(Number(i)+1)+'</p><p class="text-xs text-mauve-light whitespace-pre-wrap">'+escapeHtml(entries[i])+'</p></div>').join('')+'</div>':'<div class="glass-card rounded-3xl border border-blush p-4 space-y-3"><div class="flex items-center justify-between"><span class="text-[9px] uppercase tracking-widest text-dusty font-bold">ДЕНЬ '+(dayIndex+1)+' ИЗ 7</span>'+(isDone?'<span class="text-[9px] text-dusty font-bold">Сохранено</span>':'<span class="text-[9px] text-mauve-light">5–10 минут для себя</span>')+'</div>'+(waiting?'<div class="rounded-2xl p-4 text-center" style="background:#F9F1F3"><p class="text-sm font-bold text-mauve">Ты уже выполнила задание на сегодня 🤍</p><p class="text-xs text-mauve-light mt-2">Следующее задание откроется завтра. А пока можешь перечитать свою запись.</p></div>':'<h4 class="text-lg font-extrabold text-mauve">'+task[0]+'</h4><p class="text-xs text-mauve-light leading-relaxed">'+task[1]+'</p><div class="rounded-2xl p-3 space-y-2" style="background:#F9F1F3"><p class="text-[9px] uppercase tracking-widest text-dusty font-bold">ВОПРОС ДЛЯ РАЗМЫШЛЕНИЯ</p><p class="text-sm font-semibold text-mauve leading-relaxed">'+prompt+'</p></div>')+'<textarea id="weeklyChallengeEntry" rows="6" class="w-full rounded-2xl border border-blush bg-white/85 p-3 text-sm text-mauve outline-none resize-y" placeholder="Запиши свои мысли — здесь не нужны правильные ответы...">'+escapeHtml(saved)+'</textarea><button onclick="saveWeeklyChallengeEntry()" class="w-full rounded-xl '+(isDone?'border border-blush bg-white text-mauve':'bg-mauve text-white')+' py-3 text-xs font-bold">'+(isDone?'Обновить запись':'Сохранить ответ и завершить день')+'</button></div>');
+    }
+    function startWeeklyChallenge(){
+      const p=weeklyChallengeProgress('active');if(p.startedAt)return;
+      p.startedAt=new Date().toISOString();p.challengeIndex=Number(p.challengeIndex)||0;p.completed=[];p.entries={};saveState();renderWeeklyChallenge();
     }
     function saveWeeklyChallengeEntry(){
-      const key=weeklyChallengeWeekKey(),p=weeklyChallengeProgress(key),today=new Date(),startDate=new Date(...key.split('-').map((v,i)=>i===1?Number(v)-1:Number(v))),dayIndex=Math.max(0,Math.min(6,Math.floor((new Date(today.getFullYear(),today.getMonth(),today.getDate())-startDate)/86400000))),el=document.getElementById('weeklyChallengeEntry'),value=el?.value.trim()||'';
-      if(!value){showToast('Сначала запиши свои мысли');el?.focus();return;}
-      p.entries=p.entries||{};p.entries[dayIndex]=value;p.completed=p.completed||[];if(!p.completed.includes(dayIndex))p.completed.push(dayIndex);p.completed.sort((a,b)=>a-b);p.updatedAt=new Date().toISOString();saveState();showToast('Твоя запись сохранена');renderWeeklyChallenge();
+      const p=weeklyChallengeProgress('active'),done=p.completed||[],start=new Date(p.startedAt),now=new Date(),elapsed=Math.max(0,Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-new Date(start.getFullYear(),start.getMonth(),start.getDate()))/86400000)),dayIndex=Math.min(6,done.length,elapsed),value=document.getElementById('weeklyChallengeEntry')?.value.trim()||'';
+      if(!p.startedAt){showToast('Сначала начни челлендж');return;}
+      if(elapsed<done.length){showToast('Следующее задание откроется завтра');return;}
+      if(!value){showToast('Сначала запиши свои мысли');document.getElementById('weeklyChallengeEntry')?.focus();return;}
+      p.entries=p.entries||{};p.entries[dayIndex]=value;p.completed=p.completed||[];if(!p.completed.includes(dayIndex))p.completed.push(dayIndex);p.updatedAt=new Date().toISOString();saveState();showToast('Твоя запись сохранена');renderWeeklyChallenge();
     }
     function openPracticeFolder(folder){
       const hub=document.getElementById('practiceHub');
       const breath=document.getElementById('breathPracticeSection');
       const silent=document.getElementById('silentPracticeHome');
-      const challenges=document.getElementById('weeklyChallengeSection');
       const flow=document.getElementById('silentPracticeFlow');
       const exit=document.getElementById('practiceFolderExitButton');
       if(!hub||!breath||!silent)return;
-      challenges?.classList.add('hidden');if(challenges)challenges.style.display='none';
       flow?.classList.add('hidden');
       if(flow)flow.style.display='none';
       document.getElementById('silentPracticeExitButton')?.classList.add('hidden');
@@ -1485,16 +1487,14 @@
       silent.style.display='none';
       if(folder==='breath'){breath.classList.remove('hidden');breath.style.display='block';}
       if(folder==='silent'){silent.classList.remove('hidden');silent.style.display='block';silent.style.paddingTop='8px';const back=silent.querySelector('button[onclick="backToPracticeHub()"]');if(back){back.classList.remove('hidden');back.style.display='inline-flex';back.style.visibility='visible';}}
-      if(folder==='challenges'){challenges?.classList.remove('hidden');if(challenges)challenges.style.display='block';renderWeeklyChallenge();}
       exit?.classList.add('hidden');
       document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});
     }
     function backToPracticeHub(){
       const breath=document.getElementById('breathPracticeSection');
       const silent=document.getElementById('silentPracticeHome');
-      const challenges=document.getElementById('weeklyChallengeSection');
       const flow=document.getElementById('silentPracticeFlow');
-      breath?.classList.add('hidden');silent?.classList.add('hidden');challenges?.classList.add('hidden');if(challenges)challenges.style.display='none';
+      breath?.classList.add('hidden');silent?.classList.add('hidden');
       if(breath)breath.style.display='none';if(silent)silent.style.display='none';
       flow?.classList.add('hidden');if(flow)flow.style.display='none';
       document.getElementById('practiceFolderExitButton')?.classList.add('hidden');
