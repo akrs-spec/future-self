@@ -104,6 +104,12 @@
     body > nav {
       padding-bottom: calc(8px + env(safe-area-inset-bottom));
     }
+    /* Give text editors the full Telegram viewport while the iOS keyboard is open. */
+    body.keyboard-open > nav { display: none !important; }
+    body.keyboard-open > main {
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+      scroll-padding-bottom: 24px;
+    }
 
     .glass-card {
       background: rgba(255, 255, 255, 0.88);
@@ -903,6 +909,7 @@
       const deviceTop = Number(tg?.safeAreaInset?.top || 0);
       const contentTop = Number(tg?.contentSafeAreaInset?.top || 0);
       document.documentElement.style.setProperty('--telegram-safe-top', (deviceTop + contentTop) + 'px');
+      document.body.classList.toggle('keyboard-open', !!editingText);
       if (editingText) revealFocusedEditor();
     }
     function revealFocusedEditor() {
@@ -934,9 +941,17 @@
       syncAppViewportHeight();
       clearTimeout(editorRevealTimer);
       // iOS keyboard animation and Telegram viewport updates settle asynchronously.
+      document.body.classList.add('keyboard-open');
       [120, 300, 550, 850].forEach(delay => setTimeout(() => {
         syncAppViewportHeight();
         revealFocusedEditor();
+        const main = document.querySelector('body > main');
+        const field = document.activeElement;
+        if (main && field?.isConnected) {
+          const r = field.getBoundingClientRect();
+          const bottom = window.visualViewport ? window.visualViewport.offsetTop + window.visualViewport.height : window.innerHeight;
+          if (r.bottom > bottom - 24) main.scrollTop += r.bottom - bottom + 24;
+        }
       }, delay));
     });
     document.addEventListener('focusout', (event) => {
@@ -944,6 +959,7 @@
       setTimeout(() => {
         const editing = document.activeElement?.matches?.('input,textarea,select,[contenteditable="true"]');
         if (!editing) {
+          document.body.classList.remove('keyboard-open');
           document.documentElement.style.setProperty('--keyboard-viewport-height', '100dvh');
           syncAppViewportHeight();
         }
