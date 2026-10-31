@@ -301,6 +301,11 @@
           <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
         </button>
       </div>
+        <button onclick="openDailySection('story')" class="w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm" style="background:linear-gradient(115deg,#F4E9E8,#FBF5EF)">
+          <span class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl" style="background:#E9D8D5">✧</span>
+          <span class="flex-1"><span class="block text-xs font-bold text-mauve">Моя история</span><span class="block text-[10px] text-mauve-light mt-1">Сохраняй важные мысли и замечай, как меняешься</span></span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
+        </button>
       <div id="dailyToolsHome" class="space-y-3">
       <div class="pt-3 space-y-2">
         <p class="text-[10px] font-bold uppercase tracking-widest text-dusty px-1">Ещё немного для себя</p>
@@ -320,6 +325,25 @@
           <span class="flex-1"><span class="block text-xs font-bold text-mauve">Мне нужно переключиться</span><span class="block text-[10px] text-mauve-light mt-1">Один неожиданный план вместо импульсивного действия</span></span>
           <i class="fa-solid fa-chevron-right text-[10px] text-dusty"></i>
         </button>
+      </div>
+
+      <div id="dailySection-story" class="hidden space-y-4">
+        <button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button>
+        <div class="rounded-3xl p-5 space-y-2" style="background:linear-gradient(145deg,#F2E5E2,#E7D6D4 55%,#D8C4C5)">
+          <span class="text-[9px] font-bold tracking-[.25em] text-mauve/70">FUTURE SELF · YOUR STORY</span>
+          <h2 class="text-2xl font-extrabold text-mauve">Моя история</h2>
+          <p class="text-xs leading-relaxed text-mauve/80">Не нужно становиться кем-то другим за один день. Здесь можно оставить точку отсчёта — такой, какая ты есть сейчас.</p>
+        </div>
+        <div id="myStoryIntro" class="glass-card rounded-2xl border border-blush p-4 space-y-3">
+          <div><p class="text-xs font-extrabold text-mauve">Глава 01 · С чего всё начинается</p><p class="text-[10px] text-mauve-light mt-1">Ответь на вопросы в своём темпе. Можно написать пару слов или целую страницу.</p></div>
+          <div class="space-y-1"><label class="text-[10px] font-bold text-mauve">Что сейчас происходит в моей жизни?</label><textarea id="myStoryNow" rows="3" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve" placeholder="Моя жизнь сейчас..."></textarea></div>
+          <div class="space-y-1"><label class="text-[10px] font-bold text-mauve">Чего мне больше всего хочется?</label><textarea id="myStoryWants" rows="3" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve" placeholder="Мне хочется..."></textarea></div>
+          <div class="space-y-1"><label class="text-[10px] font-bold text-mauve">Что меня тревожит или удерживает?</label><textarea id="myStoryWorries" rows="3" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve" placeholder="Я часто думаю о..."></textarea></div>
+          <div class="space-y-1"><label class="text-[10px] font-bold text-mauve">От чего я хочу постепенно отказаться?</label><textarea id="myStoryRelease" rows="3" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve" placeholder="Я больше не хочу..."></textarea></div>
+          <div class="space-y-1"><label class="text-[10px] font-bold text-mauve">Какой я хочу видеть свою жизнь через год?</label><textarea id="myStoryFuture" rows="3" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve" placeholder="Через год я хочу..."></textarea></div>
+          <button onclick="saveMyStoryChapter()" class="w-full py-3 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить первую главу</button>
+        </div>
+        <div id="myStoryHistory" class="space-y-3"></div>
       </div>
 
       <div id="dailySection-affirmation" class="hidden space-y-4"><button onclick="closeDailySection()" class="text-[11px] font-bold text-dusty flex items-center gap-2 py-1"><i class="fa-solid fa-arrow-left"></i> Все разделы дневника</button><div class="rounded-[2rem] p-6 min-h-[390px] relative overflow-hidden flex flex-col justify-between text-center shadow-card-float" style="background:radial-gradient(circle at 15% 12%,rgba(255,255,255,.72),transparent 30%),radial-gradient(circle at 88% 82%,rgba(201,139,147,.38),transparent 34%),linear-gradient(145deg,#F7E6E8 0%,#E8C5C8 48%,#C98B93 100%);"><div class="absolute -top-12 -right-10 w-44 h-44 rounded-full border border-white/40"></div><div class="absolute top-8 -left-8 w-28 h-28 rounded-full border border-white/40"></div><div class="relative"><p class="text-[10px] tracking-[.3em] uppercase font-bold text-mauve/70">FUTURE SELF · DAILY WORD</p><div class="w-14 h-14 mx-auto mt-8 rounded-full border border-white/70 bg-white/25 flex items-center justify-center text-3xl text-mauve">✧</div></div><div class="relative py-8"><p class="text-[10px] uppercase tracking-[.25em] font-bold text-mauve/60 mb-5">Аффирмация дня</p><p id="dailyAffirmationText" class="font-sans text-2xl leading-relaxed font-extrabold text-mauve">Я с благодарностью принимаю изобилие и позволяю своим мечтам стать реальностью.</p><div class="w-12 h-px bg-mauve/40 mx-auto mt-7"></div></div><div class="relative space-y-3"><p class="text-[10px] text-mauve/70">Прочитай медленно и побудь с этой мыслью</p><p class="text-[10px] text-mauve/70">Новая мысль будет ждать тебя при следующем посещении</p></div></div></div>
@@ -1142,6 +1166,41 @@
         element.setAttribute('aria-hidden', 'true');
       }
     }
+    function myStoryDateLabel(value){const d=new Date(value);return Number.isNaN(d.getTime())?'':d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});}
+    function saveMyStoryChapter(){
+      const fields={now:'myStoryNow',wants:'myStoryWants',worries:'myStoryWorries',release:'myStoryRelease',future:'myStoryFuture'};
+      const answers={};Object.entries(fields).forEach(([key,id])=>answers[key]=document.getElementById(id)?.value.trim()||'');
+      if(!Object.values(answers).some(Boolean)){showToast('Добавь хотя бы одну мысль, чтобы сохранить главу');return;}
+      appState.myStoryChapters=Array.isArray(appState.myStoryChapters)?appState.myStoryChapters:[];
+      appState.myStoryChapters.unshift({id:'story-'+Date.now(),createdAt:new Date().toISOString(),answers,reflections:{}});
+      saveState();Object.values(fields).forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+      renderMyStory();showToast('Твоя глава сохранена');
+    }
+    function saveMyStoryReflection(id,period){
+      const entry=(appState.myStoryChapters||[]).find(x=>x.id===id);if(!entry)return;
+      const el=document.getElementById('myStoryReflection-'+id+'-'+period),value=el?.value.trim();if(!value){showToast('Напиши хотя бы пару слов');return;}
+      entry.reflections=entry.reflections||{};entry.reflections[period]={text:value,createdAt:new Date().toISOString()};
+      saveState();renderMyStory();showToast('Ответ сохранён');
+    }
+    function renderMyStory(){
+      const c=document.getElementById('myStoryHistory');if(!c)return;
+      const entries=Array.isArray(appState.myStoryChapters)?appState.myStoryChapters:[];
+      const labels={now:'Что происходило в моей жизни',wants:'Чего мне хотелось',worries:'Что меня тревожило',release:'От чего я хотела отказаться',future:'Какой я видела свою жизнь через год'};
+      const prompts={30:'Прошёл месяц. Что изменилось с того момента? Что получилось, а что оказалось совсем не таким, как ты ожидала?',365:'Прошёл год. Что ты хочешь сказать себе той, которая оставила эту запись? Что изменилось в тебе и твоей жизни?'};
+      c.innerHTML=entries.map((entry,index)=>{
+        const date=new Date(entry.createdAt),age=Math.max(0,Math.floor((Date.now()-date.getTime())/86400000)),answers=entry.answers||{},reflections=entry.reflections||{};
+        const answersHtml=Object.entries(labels).filter(([key])=>answers[key]).map(([key,label])=>'<div class="space-y-1"><p class="text-[9px] font-bold text-dusty uppercase">'+label+'</p><p class="text-xs leading-relaxed text-mauve whitespace-pre-wrap">'+escapeHtml(answers[key])+'</p></div>').join('');
+        const reflectionHtml=['30','365'].map(period=>{
+          const saved=reflections[period],ready=age>=Number(period);
+          if(saved)return '<div class="rounded-xl p-3 space-y-1" style="background:#F7EFED"><p class="text-[9px] font-bold text-dusty uppercase">Возвращение · '+(period==='30'?'через месяц':'через год')+'</p><p class="text-xs text-mauve whitespace-pre-wrap">'+escapeHtml(saved.text)+'</p><p class="text-[9px] text-dusty">'+myStoryDateLabel(saved.createdAt)+'</p></div>';
+          if(!ready)return '<div class="rounded-xl border border-dashed border-blush p-3"><p class="text-[10px] font-bold text-mauve">'+(period==='30'?'Через месяц':'Через год')+'</p><p class="text-[10px] text-mauve-light mt-1">Этот вопрос откроется '+myStoryDateLabel(new Date(date.getTime()+Number(period)*86400000).toISOString())+'.</p></div>';
+          return '<div class="rounded-xl p-3 space-y-2" style="background:#F7EFED"><p class="text-[10px] font-bold text-mauve">'+(period==='30'?'Твоя точка через месяц':'Твоя точка через год')+'</p><p class="text-[10px] leading-relaxed text-mauve-light">'+prompts[period]+'</p><textarea id="myStoryReflection-'+escapeHtml(entry.id)+'-'+period+'" rows="3" class="w-full bg-white border border-blush rounded-xl p-3 text-xs text-mauve" placeholder="Сейчас я..."></textarea><button onclick="saveMyStoryReflection(\''+escapeHtml(entry.id)+'\',\''+period+'\')" class="w-full py-2 rounded-xl bg-mauve text-white text-[10px] font-bold">Сохранить ответ</button></div>';
+        }).join('');
+        return '<article class="glass-card rounded-2xl border border-blush p-4 space-y-3"><div class="flex items-center justify-between gap-2"><div><p class="text-[9px] font-bold tracking-widest text-dusty uppercase">Глава '+String(entries.length-index).padStart(2,'0')+'</p><p class="text-sm font-extrabold text-mauve mt-1">С чего всё начиналось</p></div><p class="text-[9px] text-dusty">'+myStoryDateLabel(entry.createdAt)+'</p></div>'+answersHtml+'<div class="space-y-2 pt-1">'+reflectionHtml+'</div></article>';
+      }).join('');
+      const intro=document.getElementById('myStoryIntro');if(intro)intro.classList.toggle('hidden',entries.length>0);
+    }
+
     function openDailySection(key) {
       const panels = document.querySelectorAll('[id^="dailySection-"]');
       panels.forEach(panel => setDailyPanelVisible(panel, false));
@@ -1165,6 +1224,7 @@
       if (key === 'capsule') renderTimeCapsules();
       if (key === 'fills') renderFillsMe();
       if (key === 'calendar') renderActivityCalendar();
+      if (key === 'story') renderMyStory();
       document.querySelector('main')?.scrollTo({top: 0, behavior: 'smooth'});
     }
     function closeDailySection() {
