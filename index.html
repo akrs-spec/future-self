@@ -339,7 +339,28 @@
           FUTURE SELF • VISION
         </div>
       </div>
-    </section>
+    
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleExtra('doors')" aria-expanded="false" aria-controls="oracleExtraDoors" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8DDF0,#CFC0DD)">🚪</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Три двери</span><span class="block text-[10px] text-mauve-light mt-1">Выбери дверь и открой своё послание</span></span><span class="text-dusty text-lg">⌄</span></button>
+          <div id="oracleExtraDoors" class="hidden rounded-2xl border border-blush p-3 space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light text-center">Не думай слишком долго. Какая дверь притягивает первой?</p><div class="grid grid-cols-3 gap-2"><button onclick="revealOracleExtra('doors',0)" class="rounded-xl p-3 text-3xl border border-blush bg-white">♧<small class="block text-[9px] text-mauve mt-2">Первая</small></button><button onclick="revealOracleExtra('doors',1)" class="rounded-xl p-3 text-3xl border border-blush bg-white">✧<small class="block text-[9px] text-mauve mt-2">Вторая</small></button><button onclick="revealOracleExtra('doors',2)" class="rounded-xl p-3 text-3xl border border-blush bg-white">☾<small class="block text-[9px] text-mauve mt-2">Третья</small></button></div><div id="oracleExtraDoorsResult" class="hidden rounded-xl bg-white p-3 text-center space-y-2"></div><button onclick="resetOracleExtra('doors')" class="w-full text-[10px] text-dusty">Выбрать другую дверь</button></div>
+        </div>
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleExtra('sign')" aria-expanded="false" aria-controls="oracleExtraSign" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#F1E4E5,#E4C9D0)">✥</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Знак судьбы</span><span class="block text-[10px] text-mauve-light mt-1">Получи символ и его значение</span></span><span class="text-dusty text-lg">⌄</span></button>
+          <div id="oracleExtraSign" class="hidden rounded-2xl border border-blush p-4 text-center space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light">Какой знак сегодня найдёт тебя?</p><button onclick="revealOracleExtra('sign')" class="mx-auto w-24 h-24 rounded-full text-4xl border border-blush shadow-card-float" style="background:radial-gradient(circle at 35% 30%,#fff,#E8C5C8)">✧</button><div id="oracleExtraSignResult" class="hidden rounded-xl bg-white p-3 space-y-2"></div></div>
+        </div>
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleExtra('letter')" aria-expanded="false" aria-controls="oracleExtraLetter" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#F4E8E8,#E7CED2)">✉</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Тайное послание</span><span class="block text-[10px] text-mauve-light mt-1">Открой конверт с посланием для себя</span></span><span class="text-dusty text-lg">⌄</span></button>
+          <div id="oracleExtraLetter" class="hidden rounded-2xl border border-blush p-4 text-center space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light">Выбери тему, которая сейчас ближе</p><div class="grid grid-cols-2 gap-2"><button onclick="revealOracleExtra('letter','Любовь')" class="rounded-xl bg-white border border-blush p-3 text-xs text-mauve">♡ Любовь</button><button onclick="revealOracleExtra('letter','Деньги и дело')" class="rounded-xl bg-white border border-blush p-3 text-xs text-mauve">✧ Деньги и дело</button><button onclick="revealOracleExtra('letter','Перемены')" class="rounded-xl bg-white border border-blush p-3 text-xs text-mauve">☾ Перемены</button><button onclick="revealOracleExtra('letter','Мой путь')" class="rounded-xl bg-white border border-blush p-3 text-xs text-mauve">⌘ Мой путь</button></div><div id="oracleExtraLetterResult" class="hidden rounded-xl bg-white p-3 space-y-2"></div></div>
+        </div>
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleExtra('crossroads')" aria-expanded="false" aria-controls="oracleExtraCrossroads" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8E5EF,#D4CBE2)">⑂</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Перекрёсток</span><span class="block text-[10px] text-mauve-light mt-1">Выбери направление и получи подсказку</span></span><span class="text-dusty text-lg">⌄</span></button>
+          <div id="oracleExtraCrossroads" class="hidden rounded-2xl border border-blush p-4 space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light text-center">Какое направление сейчас откликается?</p><div class="space-y-2"><button onclick="revealOracleExtra('crossroads',0)" class="w-full rounded-xl bg-white border border-blush p-3 text-xs text-mauve text-left">Оставить прошлое позади</button><button onclick="revealOracleExtra('crossroads',1)" class="w-full rounded-xl bg-white border border-blush p-3 text-xs text-mauve text-left">Рискнуть и попробовать новое</button><button onclick="revealOracleExtra('crossroads',2)" class="w-full rounded-xl bg-white border border-blush p-3 text-xs text-mauve text-left">Остаться и укрепить то, что есть</button></div><div id="oracleExtraCrossroadsResult" class="hidden rounded-xl bg-white p-3 space-y-2"></div></div>
+        </div>
+        <div class="space-y-2">
+          <button type="button" onclick="toggleOracleExtra('moon')" aria-expanded="false" aria-controls="oracleExtraMoon" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E6E4F0,#D1CBE4)">☾</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Лунный оракул</span><span class="block text-[10px] text-mauve-light mt-1">Послание в настроении сегодняшней Луны</span></span><span class="text-dusty text-lg">⌄</span></button>
+          <div id="oracleExtraMoon" class="hidden rounded-2xl border border-blush p-4 text-center space-y-2" style="background:linear-gradient(145deg,#F1EDF5,#FFF9F8)"><div class="text-5xl" id="oracleMoonSymbol">☾</div><p id="oracleMoonPhase" class="text-[10px] font-bold tracking-widest text-dusty uppercase"></p><p id="oracleMoonMessage" class="text-xs leading-relaxed text-mauve"></p><p class="text-[9px] text-mauve-light">Символическое послание для настроения и размышления.</p></div>
+        </div>
+</section>
 
     <!-- 2. FUTURE SELF NARRATIVE SCRIPTING -->
     <section id="tab-daily" class="tab-content hidden space-y-4">
@@ -2003,6 +2024,67 @@ function chooseOracleStory(choiceIndex){
 
 function leaveOracleStory(){currentOracleStory=null;document.getElementById('oracleStory').classList.add('hidden');document.getElementById('oracleRoomsGrid').classList.remove('hidden');document.getElementById('oracleStoryChoices').classList.remove('hidden');document.getElementById('oracleStoryEnding').classList.add('hidden');}
 
+
+const oracleExtraData={
+ doors:[
+  {title:'За дверью тишины',text:'Не всё важное требует немедленного ответа. Иногда ясность приходит, когда ты перестаёшь торопить события. Сейчас стоит прислушаться к тому, что давно звучит внутри.'},
+  {title:'За дверью перемен',text:'Перед тобой может открыться непривычный маршрут. Не обязательно менять всё сразу: достаточно заметить возможность, которую раньше ты не рассматривала.'},
+  {title:'За дверью света',text:'Обрати внимание на то, что уже получается. Возможно, нужная опора ближе, чем кажется, а следующий шаг не такой сложный, как ты его представляешь.'}
+ ],
+ signs:[
+  ['🗝','Ключ','Символ доступа и новых возможностей. Иногда дверь открывается не силой, а правильным вопросом.','Какую возможность я пока не решаюсь рассмотреть?'],
+  ['🦋','Бабочка','Символ перемен и обновления. Не требуй от себя мгновенно стать другой — перемены складываются из небольших движений.','Что во мне уже меняется, даже если это пока незаметно?'],
+  ['⭐','Звезда','Символ ориентира и надежды. Не обязательно видеть весь путь, чтобы выбрать ближайшее направление.','Что сейчас помогает мне не терять свой ориентир?'],
+  ['🌙','Луна','Символ внутреннего мира и того, что пока не стало ясным. Не торопись делать выводы из одного ощущения.','Чему мне нужно дать время проявиться?'],
+  ['🪞','Зеркало','Символ честного взгляда на себя. Внешняя ситуация иногда подсвечивает то, что давно просит внимания.','Что эта ситуация показывает мне обо мне самой?'],
+  ['🌿','Росток','Символ начала и терпения. Маленькое действие тоже считается началом, даже если результат пока не виден.','Что я могу начать бережно и без спешки?']
+ ],
+ letters:{
+  'Любовь':['Не путай близость с необходимостью заслуживать внимание. Там, где есть взаимность, тебе не приходится постоянно угадывать своё место.','Каких отношений и какого отношения к себе я на самом деле хочу?'],
+  'Деньги и дело':['Не обесценивай маленькие шаги. Устойчивость часто рождается не из одного большого шанса, а из последовательных решений и готовности замечать возможности.','Какое действие приблизит меня к желаемому результату уже сейчас?'],
+  'Перемены':['Неизвестность не всегда означает опасность. Иногда старое уже стало тесным, а новому просто нужно немного пространства.','Что я готова отпустить, чтобы освободить место для нового?'],
+  'Мой путь':['Не обязательно идти по чужому маршруту, даже если он выглядит понятным и одобряемым. Твой темп и твои критерии тоже имеют значение.','По каким признакам я пойму, что живу свою жизнь?']
+ },
+ crossroads:[
+  ['Оставить прошлое позади','Не всё, что было важным, должно оставаться частью настоящего. Можно сохранить опыт, не продолжая повторять прежний сценарий.','Что я удерживаю только потому, что уже вложила в это много сил?'],
+  ['Попробовать новое','Любопытство иногда важнее уверенности. Необязательно обещать себе большой поворот — можно устроить небольшой эксперимент и посмотреть, что он покажет.','Какой безопасный маленький шаг позволит мне проверить новое направление?'],
+  ['Укрепить настоящее','Не каждый период требует перемен. Иногда самый смелый выбор — уделить внимание тому, что уже имеет ценность, и сделать это устойчивее.','Что в моей жизни заслуживает больше заботы и внимания?']
+ ]
+};
+function toggleOracleExtra(id){
+ const ids=['doors','sign','letter','crossroads','moon'];
+ const target=document.getElementById('oracleExtra'+id.charAt(0).toUpperCase()+id.slice(1));
+ if(!target)return;const open=target.classList.contains('hidden');
+ ids.forEach(key=>{const el=document.getElementById('oracleExtra'+key.charAt(0).toUpperCase()+key.slice(1));if(el)el.classList.toggle('hidden',key!==id||!open);});
+ document.querySelectorAll('#tab-future button[aria-controls^="oracleExtra"]').forEach(btn=>{const active=btn.getAttribute('aria-controls')===target.id&&open;btn.setAttribute('aria-expanded',String(active));const ch=btn.querySelector('span:last-child');if(ch)ch.textContent=active?'⌃':'⌄';});
+ if(id==='moon'&&open)renderOracleMoon();
+}
+function revealOracleExtra(type,value){
+ const box=document.getElementById('oracleExtra'+type.charAt(0).toUpperCase()+type.slice(1)+'Result');if(!box)return;
+ let title='',body='',question='';
+ if(type==='doors'){const x=oracleExtraData.doors[value];title=x.title;body=x.text;}
+ if(type==='sign'){const x=oracleExtraData.signs[Math.floor(Math.random()*oracleExtraData.signs.length)];title=x[0]+' '+x[1];body=x[2];question=x[3];}
+ if(type==='letter'){const x=oracleExtraData.letters[value];title='Послание: '+value;body=x[0];question=x[1];}
+ if(type==='crossroads'){const x=oracleExtraData.crossroads[value];title='Твой путь';body=x[1];question=x[2];}
+ box.innerHTML='<p class="text-[9px] font-bold tracking-widest text-dusty uppercase">ТВОЁ ПОСЛАНИЕ</p><h4 class="text-sm font-extrabold text-mauve">'+title+'</h4><p class="text-xs leading-relaxed text-mauve">'+body+'</p>'+(question?'<p class="text-[10px] italic text-mauve-light">'+question+'</p>':'');
+ box.classList.remove('hidden');
+}
+function resetOracleExtra(type){const box=document.getElementById('oracleExtra'+type.charAt(0).toUpperCase()+type.slice(1)+'Result');if(box)box.classList.add('hidden');}
+function renderOracleMoon(){
+ const syn=29.530588853,known=Date.UTC(2000,0,6,18,14),days=(Date.now()-known)/86400000,age=((days%syn)+syn)%syn,phase=age/syn;
+ const phases=[
+  {max:.035,name:'Новолуние',symbol:'🌑',message:'Время тихого начала. Не требуй от себя немедленных результатов: выбери одно намерение, которому хочешь дать место.'},
+  {max:.22,name:'Растущая Луна',symbol:'🌒',message:'То, что ты начинаешь, постепенно набирает форму. Поддержи свой замысел конкретным действием и не обесценивай первые результаты.'},
+  {max:.285,name:'Первая четверть',symbol:'🌓',message:'Период выбора и движения. Если что-то важно, попробуй перестать ждать идеального момента и сделай следующий посильный шаг.'},
+  {max:.47,name:'Растущая Луна',symbol:'🌔',message:'Дай выбранному направлению укрепиться. Сейчас полезно замечать, что работает, и спокойно корректировать то, что не подходит.'},
+  {max:.535,name:'Полнолуние',symbol:'🌕',message:'Посмотри на то, что стало заметнее. Не обязательно всё оценивать или решать сегодня — иногда достаточно признать очевидное.'},
+  {max:.72,name:'Убывающая Луна',symbol:'🌖',message:'Подумай, от чего можно освободить пространство. Не всякая привычка, задача или ожидание должны идти с тобой дальше.'},
+  {max:.785,name:'Последняя четверть',symbol:'🌗',message:'Хороший момент пересмотреть лишнее и вернуть себе внимание. Что можно завершить, упростить или перестать тащить в одиночку?'},
+  {max:.965,name:'Убывающая Луна',symbol:'🌘',message:'Замедление тоже часть пути. Оставь место отдыху и не требуй от себя постоянного движения.'},
+  {max:1,name:'Новолуние',symbol:'🌑',message:'Перед новым циклом можно отпустить лишнее и выбрать намерение, которое действительно важно.'}
+ ];
+ const p=phases.find(x=>phase<x.max)||phases[0];document.getElementById('oracleMoonSymbol').textContent=p.symbol;document.getElementById('oracleMoonPhase').textContent=p.name;document.getElementById('oracleMoonMessage').textContent=p.message;
+}
 function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const today=localDayKey();if(appState.dailyTarot.some(x=>x.date===today)){renderDailyTarot();return;}const index=dailyTarotIndex(today);appState.dailyTarot.unshift({date:today,index,revealed:true});appState.dailyTarot=appState.dailyTarot.slice(0,30);saveState();renderDailyTarot();showToast('Твоя карта дня открыта');}
 
     let editingGratitudeIndex=null,editingFeelingIndex=null,editingFutureLetterIndex=null;
