@@ -2701,6 +2701,27 @@ function pickFresh(pool,history,avoid){
  if(!choices.length)choices=pool.map((_,i)=>i);
  return choices[Math.floor(Math.random()*choices.length)];
 }
+function pickLetterFromShuffledBag(pool,category){
+ if(!pool||!pool.length)return -1;
+ appState.oracleLetterDecks=appState.oracleLetterDecks||{};
+ const key=String(category);
+ let deck=appState.oracleLetterDecks[key];
+ if(!Array.isArray(deck)||deck.some(i=>!Number.isInteger(i)||i<0||i>=pool.length)||new Set(deck).size!==deck.length)deck=[];
+ if(!deck.length){
+  deck=pool.map((_,i)=>i);
+  for(let i=deck.length-1;i>0;i--){
+   const j=Math.floor(Math.random()*(i+1));
+   [deck[i],deck[j]]=[deck[j],deck[i]];
+  }
+  const last=appState.oracleLetterLastIndex?.[key];
+  if(deck.length>1&&deck[deck.length-1]===last)[deck[0],deck[deck.length-1]]=[deck[deck.length-1],deck[0]];
+ }
+ const index=deck.pop();
+ appState.oracleLetterDecks[key]=deck;
+ appState.oracleLetterLastIndex=appState.oracleLetterLastIndex||{};
+ appState.oracleLetterLastIndex[key]=index;
+ return index;
+}
 function remember(key,index){
  const old=appState[key],history=Array.isArray(old)?old:(Number.isInteger(old)?[old]:[]);
  appState[key]=[index,...history.filter(x=>x!==index)].slice(0,12);
@@ -2744,7 +2765,7 @@ window.revealOracleExtra=function(type,value){
   renderDailySign();
  }else if(type==='letter'){
   const pool=oracleExtraData.letters[value];if(!pool)return;clearOracle('letter');
-  const key='oracleLetterHistory_'+value,index=pickFresh(pool,appState[key],6);remember(key,index);
+  const index=pickLetterFromShuffledBag(pool,value);
   const x=pool[index];title='Послание: '+value;body=x[0];question=x[1];saveState();
  }else if(type==='crossroads'){
   const direction=Number(value),pool=oracleExtraData.crossroads[direction];if(!pool)return;clearOracle('crossroads');
