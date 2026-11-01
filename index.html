@@ -1257,11 +1257,26 @@
       if(status) status.innerText = role==='FRIENDS' ? 'FRIENDS • ПОЛНЫЙ ДОСТУП БЕСПЛАТНО' : role==='ADMIN' ? 'ADMIN • ПОЛНЫЙ ДОСТУП' : role==='PRO' ? 'PRO • ПОЛНЫЙ ДОСТУП' : 'FREE • BASIC';
       document.getElementById('adminOpenBtn')?.classList.toggle('hidden',!isAdmin);
     }
+    const categoryGreetingLabels = {
+      vision: 'ТВОЯ КАРТА ЖЕЛАНИЙ',
+      daily: 'ПРОСТРАНСТВО ДЛЯ МЫСЛЕЙ',
+      future: 'СИМВОЛЫ И ПОДСКАЗКИ',
+      goals: 'ЦЕЛИ И ПРИВЫЧКИ',
+      practices: 'ЗАБОТА О СЕБЕ'
+    };
+    function setCategoryGreeting(tabId='vision') {
+      const el=document.getElementById('userGreeting');
+      if(!el)return;
+      const label=categoryGreetingLabels[tabId]||categoryGreetingLabels.vision;
+      const name=appState?.user?.name;
+      el.innerText=label+(name?' • '+String(name).toUpperCase():(initData?'':' • ДЕМО'));
+    }
     async function initAccount() {
       const user=tg?.initDataUnsafe?.user;
-      if(user) { appState.user.name=user.first_name || 'Пользователь'; document.getElementById('userGreeting').innerText='КАРТА БУДУЩЕГО • '+appState.user.name.toUpperCase(); }
+      if(user) appState.user.name=user.first_name || 'Пользователь';
       if(initData) { try { const inviteToken=tg?.initDataUnsafe?.start_param; if(inviteToken) { try { await api('/invites/redeem',{token:inviteToken}); showToast('Полный доступ активирован!'); } catch(inviteError) { showToast(inviteError.message); } } const me=await api('/me'); isAdmin=!!me.isAdmin; setAccess(me.access); } catch(e) { showToast(e.message); } }
-      else { document.getElementById('userGreeting').innerText='КАРТА БУДУЩЕГО • ДЕМО'; setAccess('FREE'); }
+      else setAccess('FREE');
+      setCategoryGreeting('vision');
     }
     function setVisionBoardSwipeBehavior(active) {
       const tg = window.Telegram?.WebApp;
@@ -1278,6 +1293,7 @@
       document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(btn=>{btn.classList.remove('text-dusty');btn.classList.add('text-mauve-light');});
       document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
+      setCategoryGreeting(tabId);
       const btn=document.querySelector(`.nav-btn[data-tab="${tabId}"]`); if(btn){btn.classList.remove('text-mauve-light');btn.classList.add('text-dusty');}
       if(tabId==='goals') renderGoals(); if(tabId==='daily'){renderGratitude();renderFeelings();} if(tabId==='practices'){document.querySelector('main')?.scrollTo({top:0,behavior:'auto'});renderPracticeProgress();renderSilentPracticeHistory();}
     }
@@ -2511,7 +2527,7 @@ function drawDailyTarotCard(){appState.dailyTarot=appState.dailyTarot||[];const 
       {key:'fear',name:'Страх',tag:'То, что пытается защитить',question:'От чего тебя пытается уберечь страх?',hint:'Не спорь с ним и не заставляй себя быть смелее. Назови, что именно может быть поставлено на карту и какая защита тебе действительно нужна.',placeholder:'Я боюсь… Мне важно защитить…'},
       {key:'habit',name:'Привычка',tag:'Знакомый маршрут',question:'Что ты выбираешь только потому, что так привычнее?',hint:'Вспомни автоматическую реакцию: согласиться, отложить, промолчать, остаться, всё контролировать. Что ты продолжаешь делать по инерции?',placeholder:'Обычно я… Возможно, я продолжаю это потому, что…'},
       {key:'desire',name:'Настоящее желание',tag:'То, что важно именно тебе',question:'Если бы никто не оценивал твой выбор и не пришлось бы никому ничего доказывать — чего бы ты хотела?',hint:'Разреши себе честный ответ. Он не обязывает немедленно действовать и не должен быть удобным для других.',placeholder:'На самом деле я хочу… Для меня важно…'}
-    ];    function showStandalonePracticeScreen(activeId){['practiceHub','innerCouncilPanel','innerCompassPanel','breathPracticeSection','silentPracticeHome','silentPracticeDetail','silentPracticeFlow','practiceFolderExitButton'].forEach(id=>document.getElementById(id)?.classList.add('hidden'));document.getElementById(activeId)?.classList.remove('hidden');document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});}
+    ];    function showStandalonePracticeScreen(activeId){const tab=document.getElementById('tab-practices');if(!tab)return;Array.from(tab.children).forEach(screen=>screen.classList.toggle('hidden',screen.id!==activeId));const active=document.getElementById(activeId);if(active)active.classList.remove('hidden');document.querySelector('main')?.scrollTo({top:0,behavior:'smooth'});}
     function openInnerCompass(){showStandalonePracticeScreen('innerCompassPanel');appState.innerCompassDraft=appState.innerCompassDraft||{step:0,answers:{}};appState.innerCompassDraft.answers=appState.innerCompassDraft.answers||{};appState.innerCompassDraft.step=Math.min(Number(appState.innerCompassDraft.step)||0,innerCompassVoices.length);renderInnerCompass();}
     function closeInnerCompass(){showStandalonePracticeScreen('silentPracticeHome');}
     function renderInnerCompass(){const d=appState.innerCompassDraft||{step:0,answers:{}},c=document.getElementById('innerCompassContent');if(!c)return;const step=Math.min(Number(d.step)||0,innerCompassVoices.length);if(step===innerCompassVoices.length){c.innerHTML='<div class="flex items-center justify-between"><span class="text-[10px] font-bold text-dusty">ТВОЯ КАРТА ВНУТРЕННИХ ГОЛОСОВ</span><span class="text-[10px] text-mauve-light">4 из 4</span></div><div class="space-y-2">'+innerCompassVoices.map(v=>'<div class="rounded-xl bg-white border border-blush p-3"><p class="text-[10px] font-bold text-dusty">'+v.name+' · '+v.tag+'</p><p class="text-xs text-mauve mt-1 whitespace-pre-wrap">'+escapeHtml(d.answers?.[v.key]||'')+'</p></div>').join('')+'</div><div class="glass-card rounded-2xl border border-blush p-4 space-y-3"><h4 class="text-sm font-extrabold text-mauve">Мой ориентир</h4><p class="text-[11px] text-mauve-light">Учитывая все четыре голоса, какой выбор сейчас ближе к тебе? Какой небольшой шаг поможет проверить его в реальности?</p><textarea id="innerCompassVerdict" rows="4" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y" placeholder="Мой ориентир сейчас…">'+escapeHtml(d.verdict||'')+'</textarea><div class="flex gap-2"><button type="button" onclick="innerCompassBack()" class="flex-1 py-3 rounded-xl border border-blush text-xs font-bold text-mauve">Назад</button><button type="button" onclick="saveInnerCompass()" class="flex-[2] py-3 rounded-xl bg-mauve text-white text-xs font-bold">Сохранить компас</button></div></div><p class="text-[10px] text-mauve-light text-center">Это не тест и не предсказание. Решение остаётся за тобой.</p>';renderInnerCompassHistory();return;}const v=innerCompassVoices[step],value=d.answers?.[v.key]||'';c.innerHTML='<div class="flex items-center justify-between"><span class="text-[10px] font-bold text-dusty">ГОЛОС '+(step+1)+' ИЗ 4</span><span class="text-[10px] text-mauve-light">'+Math.round((step+1)/4*100)+'%</span></div><div class="h-1.5 rounded-full bg-powder overflow-hidden"><div class="h-full bg-dusty rounded-full" style="width:'+((step+1)/4*100)+'%"></div></div><div class="glass-card rounded-2xl border border-blush p-4 space-y-3"><p class="text-[10px] font-bold uppercase tracking-widest text-dusty">'+v.name+' · '+v.tag+'</p><h4 class="text-base font-extrabold text-mauve">'+v.question+'</h4><p class="text-[11px] leading-relaxed text-mauve-light">'+v.hint+'</p><textarea id="innerCompassAnswer" rows="5" class="w-full bg-milk border border-blush rounded-xl p-3 text-xs text-mauve resize-y" placeholder="'+v.placeholder.replace(/"/g,'&quot;')+'">'+escapeHtml(value)+'</textarea><div class="flex gap-2">'+(step>0?'<button type="button" onclick="innerCompassBack()" class="flex-1 py-3 rounded-xl border border-blush text-xs font-bold text-mauve">Назад</button>':'')+'<button type="button" onclick="innerCompassNext()" class="flex-[2] py-3 rounded-xl bg-mauve text-white text-xs font-bold">Продолжить</button></div></div><p class="text-[10px] text-mauve-light text-center">Можно отвечать коротко. Здесь нет правильных ответов.</p>';renderInnerCompassHistory();}
