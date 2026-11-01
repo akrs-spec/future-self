@@ -2198,7 +2198,7 @@ function toggleOracleExtra(id){
  if(!target)return;const open=target.classList.contains('hidden');
  if(open)ids.forEach(key=>{const box=document.getElementById('oracleExtra'+key.charAt(0).toUpperCase()+key.slice(1)+'Result');if(box){box.classList.add('hidden');box.innerHTML='';}});
  ids.forEach(key=>{const el=document.getElementById('oracleExtra'+key.charAt(0).toUpperCase()+key.slice(1));if(el)el.classList.toggle('hidden',key!==id||!open);});
- document.querySelectorAll('#tab-future button[aria-controls^="oracleExtra"]').forEach(btn=>{const active=btn.getAttribute('aria-controls')===target.id&&open;btn.setAttribute('aria-expanded',String(active));const ch=btn.querySelector('span:last-child');if(ch)ch.textContent=active?'⌃':'⌄';});
+ document.querySelectorAll('#tab-future button[aria-controls^="oracleExtra"]').forEach(btn=>{const active=btn.getAttribute('aria-controls')===target.id&&open;btn.setAttribute('aria-expanded',String(active));const ch=btn.querySelector(':scope > span:last-child');if(ch)ch.textContent=active?'⌃':'⌄';});
  if(id==='moon'&&open)renderOracleMoon();
 }
 function oraclePickDifferent(items,last){
@@ -2244,7 +2244,7 @@ function toggleOracleExtra(id){
  const target=document.getElementById('oracleExtra'+id.charAt(0).toUpperCase()+id.slice(1));
  if(!target)return;const open=target.classList.contains('hidden');
  ids.forEach(key=>{const el=document.getElementById('oracleExtra'+key.charAt(0).toUpperCase()+key.slice(1));if(el)el.classList.toggle('hidden',key!==id||!open);});
- document.querySelectorAll('#tab-future button[aria-controls^="oracleExtra"]').forEach(btn=>{const active=btn.getAttribute('aria-controls')===target.id&&open;btn.setAttribute('aria-expanded',String(active));const ch=btn.querySelector('span:last-child');if(ch)ch.textContent=active?'⌃':'⌄';});
+ document.querySelectorAll('#tab-future button[aria-controls^="oracleExtra"]').forEach(btn=>{const active=btn.getAttribute('aria-controls')===target.id&&open;btn.setAttribute('aria-expanded',String(active));const ch=btn.querySelector(':scope > span:last-child');if(ch)ch.textContent=active?'⌃':'⌄';});
  if(id==='moon'&&open)renderOracleMoon();
 }
 function revealOracleExtra(type,value){
@@ -2721,7 +2721,7 @@ window.toggleOracleExtra=function(id){
  ids.forEach(key=>{const panel=document.getElementById('oracleExtra'+key.charAt(0).toUpperCase()+key.slice(1));if(panel)panel.classList.toggle('hidden',key!==id||!open);});
  document.querySelectorAll('#tab-future button[aria-controls^="oracleExtra"]').forEach(btn=>{
   const active=btn.getAttribute('aria-controls')===target.id&&open;btn.setAttribute('aria-expanded',String(active));
-  const ch=btn.querySelector('span:last-child');if(ch)ch.textContent=active?'⌃':'⌄';
+  const ch=btn.querySelector(':scope > span:last-child');if(ch)ch.textContent=active?'⌃':'⌄';
  });
  if(open){
   if(id==='letter')clearOracle('letter');
