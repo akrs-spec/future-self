@@ -214,33 +214,54 @@
       animation: roseShimmer 4s infinite linear;
     }
   
-    .fate-ball {
-      width: 154px;
-      height: 154px;
-      border: 1px solid rgba(255,255,255,.8);
-      background: radial-gradient(circle at 34% 27%, #F9E4E7 0%, #D9A9B0 24%, #8D626B 58%, #49343D 100%);
-      box-shadow: inset -12px -15px 28px rgba(48,27,39,.38), inset 8px 8px 20px rgba(255,255,255,.5), 0 12px 28px rgba(94,57,68,.25);
-      cursor: pointer;
-      transition: transform .2s ease, filter .2s ease;
-      -webkit-tap-highlight-color: transparent;
+    .fate-envelope {
+      position:relative; width:148px; height:100px; margin:8px auto 4px;
+      display:block; border:0; padding:0; background:transparent;
+      cursor:pointer; -webkit-tap-highlight-color:transparent;
+      filter:drop-shadow(0 10px 13px rgba(94,57,68,.20));
+      transition:transform .2s ease,filter .2s ease;
+      perspective:500px;
     }
-    .fate-ball:active { transform: scale(.94); }
-    .fate-ball:disabled { cursor: default; filter: grayscale(.25); opacity: .72; }
-    .fate-ball-answer {
-      width: 76px; height: 76px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(circle at 40% 35%, rgba(255,255,255,.94), rgba(245,213,218,.82) 62%, rgba(201,139,147,.92));
-      color: #68464E; font-size: 30px; font-weight: 900;
-      box-shadow: 0 3px 16px rgba(255,255,255,.35), inset 0 0 12px rgba(137,83,94,.16);
-      text-shadow: 0 1px 0 white;
+    .fate-envelope:active { transform:scale(.96); }
+    .fate-envelope:disabled { cursor:default; opacity:.78; filter:grayscale(.12) drop-shadow(0 8px 10px rgba(94,57,68,.14)); }
+    .fate-envelope .env-back {
+      position:absolute; inset:8px 0 0; border-radius:8px;
+      background:linear-gradient(145deg,#F7DDE1,#DDAEB6);
+      border:1px solid rgba(255,255,255,.85);
     }
-    .fate-ball.rolling { animation: fateRoll .65s ease-in-out; }
-    @keyframes fateRoll {
-      0% { transform: rotate(0) scale(1); }
-      25% { transform: rotate(-12deg) scale(1.06); }
-      55% { transform: rotate(12deg) scale(.96); }
-      100% { transform: rotate(0) scale(1); }
+    .fate-envelope .env-paper {
+      position:absolute; left:12px; right:12px; top:0; height:78px;
+      border-radius:5px 5px 2px 2px; background:linear-gradient(160deg,#FFFEFC,#F7E9E9);
+      box-shadow:0 2px 7px rgba(90,61,66,.12);
+      transition:transform .45s ease; 
     }
+    .fate-envelope .env-front {
+      position:absolute; inset:8px 0 0; border-radius:0 0 8px 8px;
+      background:linear-gradient(145deg,#E8C5C8,#C98B93);
+      clip-path:polygon(0 0,50% 57%,100% 0,100% 100%,0 100%);
+      border-bottom:1px solid rgba(255,255,255,.75);
+    }
+    .fate-envelope .env-flap {
+      position:absolute; left:0; right:0; top:8px; height:58px;
+      background:linear-gradient(160deg,#F9E7E9,#DDAEB6);
+      clip-path:polygon(0 0,100% 0,50% 100%);
+      transform-origin:top center; transition:transform .42s ease;
+      z-index:3; backface-visibility:hidden;
+    }
+    .fate-envelope .env-seal {
+      position:absolute; z-index:4; left:50%; top:42px; transform:translateX(-50%);
+      width:30px; height:30px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      color:#FFF9F9; font-size:17px; font-weight:700;
+      border:1px solid rgba(255,255,255,.8);
+      background:radial-gradient(circle at 35% 25%,#D9A9B0,#986873 75%);
+      box-shadow:0 2px 7px rgba(90,61,66,.22);
+      transition:opacity .2s ease,transform .35s ease;
+    }
+    .fate-envelope.opened .env-flap { transform:rotateX(180deg); }
+    .fate-envelope.opened .env-seal { opacity:0; transform:translate(-50%,-8px) scale(.7); }
+    .fate-envelope.opened .env-paper { transform:translateY(-12px); }
+    .fate-envelope:focus-visible { outline:2px solid #B8737B; outline-offset:5px; border-radius:10px; }
     .fate-dot {
       width: 7px; height: 7px; border-radius: 50%;
       background: #C98B93; opacity: .9;
@@ -760,7 +781,7 @@
         </div>
         <div class="space-y-2">
           <button type="button" onclick="toggleOracleExtra('sign')" aria-expanded="false" aria-controls="oracleExtraSign" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#F1E4E5,#E4C9D0)">✥</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Знак судьбы</span><span class="block text-[10px] text-mauve-light mt-1">Один новый символ и послание каждый день</span></span><span class="text-dusty text-lg">⌄</span></button>
-          <div id="oracleExtraSign" class="hidden rounded-2xl border border-blush p-4 text-center space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light">Какой знак сегодня найдёт тебя?</p><button onclick="revealOracleExtra('sign')" class="mx-auto w-24 h-24 rounded-full text-4xl border border-blush shadow-card-float" style="background:radial-gradient(circle at 35% 30%,#fff,#E8C5C8)">✧</button><div id="oracleExtraSignResult" class="hidden rounded-xl bg-white p-3 space-y-2"></div></div>
+          <div id="oracleExtraSign" class="hidden rounded-2xl border border-blush p-4 text-center space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light">Какой знак сегодня найдёт тебя?</p><button id="fateEnvelopeButton" type="button" onclick="revealOracleExtra('sign')" class="fate-envelope" aria-label="Открыть конверт со знаком судьбы"><span class="env-back"></span><span class="env-paper"></span><span class="env-front"></span><span class="env-flap"></span><span class="env-seal">✧</span></button><div id="oracleExtraSignResult" class="hidden rounded-xl bg-white p-3 space-y-2"></div></div>
         </div>
         <div class="space-y-2">
           <button type="button" onclick="toggleOracleExtra('letter')" aria-expanded="false" aria-controls="oracleExtraLetter" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#F4E8E8,#E7CED2)">✉</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Тайное послание</span><span class="block text-[10px] text-mauve-light mt-1">Открой конверт с посланием для себя</span></span><span class="text-dusty text-lg">⌄</span></button>
@@ -2661,8 +2682,10 @@ function renderDailySign(){
  if(entry&&entry.date===today&&Number.isInteger(entry.index)){
   const x=oracleExtraData.signs[entry.index],box=document.getElementById('oracleExtraSignResult');
   if(x&&box)showOracle(box,x[0]+' '+x[1],x[2],x[3]);
+  const envelope=document.getElementById('fateEnvelopeButton');
+  if(envelope){envelope.classList.add('opened');envelope.disabled=true;envelope.title='Знак дня уже открыт';}
   if(button){button.disabled=true;button.style.opacity='.68';button.title='Новый знак появится завтра';}
- }else if(button){button.disabled=false;button.style.opacity='1';button.title='Открыть знак дня';}
+ }else if(button){button.disabled=false;button.style.opacity='1';button.title='Открыть знак дня';const envelope=document.getElementById('fateEnvelopeButton');if(envelope){envelope.classList.remove('opened');envelope.disabled=false;envelope.title='Открыть знак дня';}}
 }
 window.revealOracleExtra=function(type,value){
  const box=document.getElementById('oracleExtra'+type.charAt(0).toUpperCase()+type.slice(1)+'Result');
@@ -2680,7 +2703,9 @@ window.revealOracleExtra=function(type,value){
    appState.oracleSignDaily={date:today,index};saveState();
   }
   const x=oracleExtraData.signs[appState.oracleSignDaily.index];if(!x)return;
-  title=x[0]+' '+x[1];body=x[2];question=x[3];renderDailySign();
+  title=x[0]+' '+x[1];body=x[2];question=x[3];
+  const envelope=document.getElementById('fateEnvelopeButton');if(envelope)envelope.classList.add('opened');
+  renderDailySign();
  }else if(type==='letter'){
   const pool=oracleExtraData.letters[value];if(!pool)return;clearOracle('letter');
   const key='oracleLetterHistory_'+value,index=pickFresh(pool,appState[key],6);remember(key,index);
