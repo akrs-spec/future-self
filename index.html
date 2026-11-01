@@ -713,7 +713,7 @@
           <div id="oracleExtraDoors" class="hidden rounded-2xl border border-blush p-3 space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light text-center">Не думай слишком долго. Какая дверь притягивает первой?</p><div class="grid grid-cols-3 gap-2"><button onclick="revealOracleExtra('doors',0)" class="rounded-xl p-3 text-3xl border border-blush bg-white">♧<small class="block text-[9px] text-mauve mt-2">Первая</small></button><button onclick="revealOracleExtra('doors',1)" class="rounded-xl p-3 text-3xl border border-blush bg-white">✧<small class="block text-[9px] text-mauve mt-2">Вторая</small></button><button onclick="revealOracleExtra('doors',2)" class="rounded-xl p-3 text-3xl border border-blush bg-white">☾<small class="block text-[9px] text-mauve mt-2">Третья</small></button></div><div id="oracleExtraDoorsResult" class="hidden rounded-xl bg-white p-3 text-center space-y-2"></div><button onclick="resetOracleExtra('doors')" class="w-full text-[10px] text-dusty">Выбрать другую дверь</button></div>
         </div>
         <div class="space-y-2">
-          <button type="button" onclick="toggleOracleExtra('sign')" aria-expanded="false" aria-controls="oracleExtraSign" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#F1E4E5,#E4C9D0)">✥</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Знак судьбы</span><span class="block text-[10px] text-mauve-light mt-1">Получи символ и его значение</span></span><span class="text-dusty text-lg">⌄</span></button>
+          <button type="button" onclick="toggleOracleExtra('sign')" aria-expanded="false" aria-controls="oracleExtraSign" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#F1E4E5,#E4C9D0)">✥</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Знак судьбы</span><span class="block text-[10px] text-mauve-light mt-1">Один новый символ и послание каждый день</span></span><span class="text-dusty text-lg">⌄</span></button>
           <div id="oracleExtraSign" class="hidden rounded-2xl border border-blush p-4 text-center space-y-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)"><p class="text-[11px] text-mauve-light">Какой знак сегодня найдёт тебя?</p><button onclick="revealOracleExtra('sign')" class="mx-auto w-24 h-24 rounded-full text-4xl border border-blush shadow-card-float" style="background:radial-gradient(circle at 35% 30%,#fff,#E8C5C8)">✧</button><div id="oracleExtraSignResult" class="hidden rounded-xl bg-white p-3 space-y-2"></div></div>
         </div>
         <div class="space-y-2">
@@ -2162,13 +2162,13 @@ function revealOracleExtra(type,value){
  }
  if(type==='letter'){
   const pool=oracleExtraData.letters[value];if(!pool)return;
-  const x=pool[oraclePickDifferent(pool,appState.oracleLastLetter&&appState.oracleLastLetter[value]??-1)];
+  const x=pool[oraclePickDifferent(pool,(appState.oracleLastLetter&&appState.oracleLastLetter[value])??-1)];
   appState.oracleLastLetter=appState.oracleLastLetter||{};appState.oracleLastLetter[value]=pool.indexOf(x);saveState();
   title='Послание: '+value;body=x[0];question=x[1];
  }
  if(type==='crossroads'){
   const pool=oracleExtraData.crossroads[value];if(!pool)return;
-  const last=appState.oracleLastCrossroads&&appState.oracleLastCrossroads[value]??-1;
+  const last=(appState.oracleLastCrossroads&&appState.oracleLastCrossroads[value])??-1;
   const index=oraclePickDifferent(pool,last);appState.oracleLastCrossroads=appState.oracleLastCrossroads||{};appState.oracleLastCrossroads[value]=index;saveState();
   const x=pool[index];title='Твой путь';body=x[0];question=x[1];
  }
