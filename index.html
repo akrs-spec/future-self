@@ -351,6 +351,33 @@
     body.keyboard-open #silentPracticeFlow .flex.gap-2 button {
       min-height:42px !important; padding-top:9px !important; padding-bottom:9px !important;
     }
+
+    /* Восстановленный визуал шара судьбы */
+    .fate-ball {
+      width:154px; height:154px; flex:0 0 154px;
+      border:1px solid rgba(255,255,255,.8);
+      background:radial-gradient(circle at 34% 27%,#F9E4E7 0%,#D9A9B0 24%,#8D626B 58%,#49343D 100%);
+      box-shadow:inset -12px -15px 28px rgba(48,27,39,.38),inset 8px 8px 20px rgba(255,255,255,.5),0 12px 28px rgba(94,57,68,.25);
+      cursor:pointer; transition:transform .2s ease,filter .2s ease;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .fate-ball:active { transform:scale(.94); }
+    .fate-ball:disabled { cursor:default; filter:grayscale(.25); opacity:.72; }
+    .fate-ball-answer {
+      width:76px; height:76px; border-radius:50%; display:flex;
+      align-items:center; justify-content:center;
+      background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.94),rgba(245,213,218,.82) 62%,rgba(201,139,147,.92));
+      color:#68464E; font-size:30px; font-weight:900;
+      box-shadow:0 3px 16px rgba(255,255,255,.35),inset 0 0 12px rgba(137,83,94,.16);
+      text-shadow:0 1px 0 white;
+    }
+    .fate-ball.rolling { animation:fateRoll .65s ease-in-out; }
+    @keyframes fateRoll {
+      0% { transform:rotate(0) scale(1); }
+      25% { transform:rotate(-12deg) scale(1.06); }
+      55% { transform:rotate(12deg) scale(.96); }
+      100% { transform:rotate(0) scale(1); }
+    }
 </style>
 </head>
 
