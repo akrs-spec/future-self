@@ -719,66 +719,9 @@
         </div>
       </div>
 
-        <div class="space-y-2">
-          <button type="button" onclick="toggleOracleFolder('mirror')" aria-expanded="false" aria-controls="oracleFolderMirrorContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
-            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8DDE8,#D9C6D9)">◉</span>
-            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Незнакомка в зеркале</span><span class="block text-[10px] text-mauve-light mt-1">Узнай, какую сторону себя ты редко замечаешь</span></span>
-            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
-          </button>
-          <div id="oracleFolderMirrorContent" class="hidden space-y-3">
-            <div class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#47353F,#765B68 60%,#B18B98);color:#FFF8F8">
-              <div class="mx-auto w-28 h-32 rounded-[48%] border border-white/40 flex items-center justify-center text-5xl" style="background:radial-gradient(ellipse at 50% 40%,#F5E6E8 0%,#C6AAB5 48%,#604956 100%);box-shadow:0 0 35px #F5DDE566">◉</div>
-              <p class="text-[9px] tracking-[.25em] font-bold">THE OTHER SIDE OF YOU</p>
-              <h3 class="text-lg font-extrabold">Ты уверена, что знаешь себя?</h3>
-              <p class="text-[11px] leading-relaxed text-white/80">Ответь на 7 вопросов. В конце зеркало покажет не ярлык, а возможный портрет твоего нынешнего внутреннего состояния.</p>
-              <button id="mirrorStartBtn" type="button" onclick="startMirrorJourney()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5DDE3;color:#563F49">Посмотреть в зеркало</button>
-            </div>
-            <div id="mirrorQuiz" class="hidden glass-card rounded-3xl border border-blush p-4 space-y-4">
-              <div class="flex items-center justify-between"><span id="mirrorStepLabel" class="text-[10px] font-bold text-dusty uppercase tracking-widest">Вопрос 1 из 7</span><span id="mirrorProgressLabel" class="text-[10px] text-mauve-light">0%</span></div>
-              <div class="h-1.5 rounded-full bg-blush/50 overflow-hidden"><div id="mirrorProgress" class="h-full rounded-full" style="width:0%;background:#A77E8B"></div></div>
-              <h3 id="mirrorQuestion" class="text-base font-extrabold text-mauve leading-snug"></h3>
-              <div id="mirrorAnswers" class="space-y-2"></div>
-            </div>
-            <div id="mirrorResult" class="hidden glass-card rounded-3xl border border-blush p-4 space-y-3">
-              <p class="text-[9px] tracking-[.2em] font-bold text-dusty uppercase">Твоё отражение</p>
-              <h3 id="mirrorResultTitle" class="text-xl font-extrabold text-mauve"></h3>
-              <p id="mirrorResultIntro" class="text-xs leading-relaxed text-mauve"></p>
-              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Твоя сильная сторона</p><p id="mirrorStrength" class="text-xs text-mauve"></p></div>
-              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Что может оставаться в тени</p><p id="mirrorShadow" class="text-xs text-mauve"></p></div>
-              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Вопрос для себя</p><p id="mirrorReflection" class="text-xs italic text-mauve"></p></div>
-              <button type="button" onclick="startMirrorJourney()" class="w-full py-3 rounded-xl text-xs font-bold bg-mauve text-white">Посмотреть ещё раз</button>
-            </div>
-            <div id="mirrorHistory" class="space-y-2"></div>
-          </div>
-        </div>
+        
 
-        <div class="space-y-2">
-          <button type="button" onclick="toggleOracleFolder('rooms')" aria-expanded="false" aria-controls="oracleFolderRoomsContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
-            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8E0EF,#CFC0DD)">⌘</span>
-            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Комната выбора</span><span class="block text-[10px] text-mauve-light mt-1">Каждый раз — новая история и другие двери</span></span>
-            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
-          </button>
-          <div id="oracleFolderRoomsContent" class="hidden space-y-3">
-            <div class="space-y-1"><h3 class="text-lg font-extrabold text-mauve">Куда сегодня приведёт тебя выбор?</h3><p class="text-[11px] text-mauve-light">Выбери комнату. В каждой спрятаны разные истории, развилки и несколько вариантов финала.</p></div>
-            <div id="oracleRoomsGrid" class="grid grid-cols-2 gap-2">
-              <button type="button" onclick="enterOracleRoom('library')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#F2E6E4,#DCC7C5)"><span class="text-2xl">⌑</span><span><b class="block text-xs text-mauve">Забытая библиотека</b><small class="text-[9px] text-mauve-light">Тайны и воспоминания</small></span></button>
-              <button type="button" onclick="enterOracleRoom('forest')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E3E9E0,#C3D0C2)"><span class="text-2xl">♧</span><span><b class="block text-xs text-mauve">Лес без названия</b><small class="text-[9px] text-mauve-light">Интуиция и неизвестность</small></span></button>
-              <button type="button" onclick="enterOracleRoom('house')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E8DFE7,#CDBBCB)"><span class="text-2xl">⌂</span><span><b class="block text-xs text-mauve">Дом незнакомца</b><small class="text-[9px] text-mauve-light">Отношения и скрытые желания</small></span></button>
-              <button type="button" onclick="enterOracleRoom('train')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E9E2D8,#D1C2AA)"><span class="text-2xl">↠</span><span><b class="block text-xs text-mauve">Последний поезд</b><small class="text-[9px] text-mauve-light">Перемены и решения</small></span></button>
-            </div>
-            <div id="oracleStory" class="hidden rounded-3xl p-4 space-y-3 border border-blush" style="background:linear-gradient(160deg,#FBF4F1,#F0E2E5)">
-              <div class="flex items-center justify-between"><span id="oracleStoryRoom" class="text-[9px] font-bold tracking-widest text-dusty uppercase"></span><button type="button" onclick="leaveOracleStory()" class="text-xs text-mauve-light">К комнатам ×</button></div>
-              <h3 id="oracleStoryTitle" class="text-lg font-extrabold text-mauve"></h3>
-              <p id="oracleStoryText" class="text-xs leading-relaxed text-mauve"></p>
-              <div id="oracleStoryChoices" class="space-y-2"></div>
-              <div id="oracleStoryEnding" class="hidden space-y-3">
-                <div class="rounded-2xl p-3 space-y-2" style="background:#FFF9F8"><p class="text-[9px] tracking-widest font-bold text-dusty uppercase">Твой финал</p><p id="oracleStoryEndingText" class="text-xs leading-relaxed text-mauve"></p></div>
-                <p id="oracleStoryQuestion" class="text-xs italic text-mauve"></p>
-                <button type="button" onclick="leaveOracleStory()" class="w-full py-3 rounded-xl text-xs font-bold bg-mauve text-white">Вернуться в комнаты</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        
 
         <div class="space-y-2">
           <button type="button" onclick="toggleOracleExtra('doors')" aria-expanded="false" aria-controls="oracleExtraDoors" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm"><span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8DDF0,#CFC0DD)">🚪</span><span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Три двери</span><span class="block text-[10px] text-mauve-light mt-1">Три пути на выбор. За каждой дверью — отдельное послание, которое поможет посмотреть на ситуацию под новым углом.</span></span><span class="text-dusty text-lg">⌄</span></button>
@@ -933,6 +876,68 @@
       <div id="silentPracticeHome" class="hidden space-y-3 pt-2 pb-6" style="padding-top:8px;">
         <button id="silentPracticeBackButton" type="button" onclick="backToPracticeHub()" class="!inline-flex items-center gap-1.5 text-[11px] font-semibold text-mauve-light hover:text-mauve px-1 py-1 mb-1 relative z-10"><i class="fa-solid fa-arrow-left text-[10px]"></i><span>Назад</span></button>
         <div class="space-y-1"><p class="text-[10px] font-bold text-dusty uppercase tracking-widest">БЕЗ ЗВУКА И СПЕШКИ</p><h3 class="text-base font-extrabold text-mauve">Тихие практики</h3><p class="text-[10px] text-mauve-light">Небольшие упражнения, чтобы разобраться в себе. Один вопрос за раз — в своём темпе.</p></div>
+        <div class="space-y-3 rounded-2xl border border-blush p-3" style="background:linear-gradient(145deg,#F8EEF2,#FFF9F8)">
+          <div class="space-y-1"><p class="text-[9px] font-bold text-dusty uppercase tracking-widest">ГЛУБОКОЕ САМОПОЗНАНИЕ</p><h3 class="text-sm font-extrabold text-mauve">Исследовать себя глубже</h3><p class="text-[10px] text-mauve-light">Практики с вопросами, историями и выбором — удели себе немного больше времени.</p></div>
+          <div class="space-y-2">
+          <button type="button" onclick="toggleOracleFolder('mirror')" aria-expanded="false" aria-controls="oracleFolderMirrorContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
+            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8DDE8,#D9C6D9)">◉</span>
+            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Незнакомка в зеркале</span><span class="block text-[10px] text-mauve-light mt-1">Узнай, какую сторону себя ты редко замечаешь</span></span>
+            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div id="oracleFolderMirrorContent" class="hidden space-y-3">
+            <div class="rounded-3xl p-4 text-center space-y-3" style="background:linear-gradient(145deg,#47353F,#765B68 60%,#B18B98);color:#FFF8F8">
+              <div class="mx-auto w-28 h-32 rounded-[48%] border border-white/40 flex items-center justify-center text-5xl" style="background:radial-gradient(ellipse at 50% 40%,#F5E6E8 0%,#C6AAB5 48%,#604956 100%);box-shadow:0 0 35px #F5DDE566">◉</div>
+              <p class="text-[9px] tracking-[.25em] font-bold">THE OTHER SIDE OF YOU</p>
+              <h3 class="text-lg font-extrabold">Ты уверена, что знаешь себя?</h3>
+              <p class="text-[11px] leading-relaxed text-white/80">Ответь на 7 вопросов. В конце зеркало покажет не ярлык, а возможный портрет твоего нынешнего внутреннего состояния.</p>
+              <button id="mirrorStartBtn" type="button" onclick="startMirrorJourney()" class="w-full py-3 rounded-xl text-xs font-bold" style="background:#F5DDE3;color:#563F49">Посмотреть в зеркало</button>
+            </div>
+            <div id="mirrorQuiz" class="hidden glass-card rounded-3xl border border-blush p-4 space-y-4">
+              <div class="flex items-center justify-between"><span id="mirrorStepLabel" class="text-[10px] font-bold text-dusty uppercase tracking-widest">Вопрос 1 из 7</span><span id="mirrorProgressLabel" class="text-[10px] text-mauve-light">0%</span></div>
+              <div class="h-1.5 rounded-full bg-blush/50 overflow-hidden"><div id="mirrorProgress" class="h-full rounded-full" style="width:0%;background:#A77E8B"></div></div>
+              <h3 id="mirrorQuestion" class="text-base font-extrabold text-mauve leading-snug"></h3>
+              <div id="mirrorAnswers" class="space-y-2"></div>
+            </div>
+            <div id="mirrorResult" class="hidden glass-card rounded-3xl border border-blush p-4 space-y-3">
+              <p class="text-[9px] tracking-[.2em] font-bold text-dusty uppercase">Твоё отражение</p>
+              <h3 id="mirrorResultTitle" class="text-xl font-extrabold text-mauve"></h3>
+              <p id="mirrorResultIntro" class="text-xs leading-relaxed text-mauve"></p>
+              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Твоя сильная сторона</p><p id="mirrorStrength" class="text-xs text-mauve"></p></div>
+              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Что может оставаться в тени</p><p id="mirrorShadow" class="text-xs text-mauve"></p></div>
+              <div class="rounded-2xl p-3 space-y-1" style="background:#F7EDEF"><p class="text-[9px] font-bold text-dusty uppercase">Вопрос для себя</p><p id="mirrorReflection" class="text-xs italic text-mauve"></p></div>
+              <button type="button" onclick="startMirrorJourney()" class="w-full py-3 rounded-xl text-xs font-bold bg-mauve text-white">Посмотреть ещё раз</button>
+            </div>
+            <div id="mirrorHistory" class="space-y-2"></div>
+          </div>
+        </div>
+          <div class="space-y-2">
+          <button type="button" onclick="toggleOracleFolder('rooms')" aria-expanded="false" aria-controls="oracleFolderRoomsContent" class="glass-card w-full rounded-2xl p-4 border border-blush flex items-center gap-3 text-left shadow-sm">
+            <span class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(145deg,#E8E0EF,#CFC0DD)">⌘</span>
+            <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold text-mauve">Комната выбора</span><span class="block text-[10px] text-mauve-light mt-1">Каждый раз — новая история и другие двери</span></span>
+            <span class="text-dusty text-lg oracle-folder-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div id="oracleFolderRoomsContent" class="hidden space-y-3">
+            <div class="space-y-1"><h3 class="text-lg font-extrabold text-mauve">Куда сегодня приведёт тебя выбор?</h3><p class="text-[11px] text-mauve-light">Выбери комнату. В каждой спрятаны разные истории, развилки и несколько вариантов финала.</p></div>
+            <div id="oracleRoomsGrid" class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="enterOracleRoom('library')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#F2E6E4,#DCC7C5)"><span class="text-2xl">⌑</span><span><b class="block text-xs text-mauve">Забытая библиотека</b><small class="text-[9px] text-mauve-light">Тайны и воспоминания</small></span></button>
+              <button type="button" onclick="enterOracleRoom('forest')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E3E9E0,#C3D0C2)"><span class="text-2xl">♧</span><span><b class="block text-xs text-mauve">Лес без названия</b><small class="text-[9px] text-mauve-light">Интуиция и неизвестность</small></span></button>
+              <button type="button" onclick="enterOracleRoom('house')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E8DFE7,#CDBBCB)"><span class="text-2xl">⌂</span><span><b class="block text-xs text-mauve">Дом незнакомца</b><small class="text-[9px] text-mauve-light">Отношения и скрытые желания</small></span></button>
+              <button type="button" onclick="enterOracleRoom('train')" class="rounded-2xl p-3 text-left min-h-28 flex flex-col justify-between border border-blush" style="background:linear-gradient(145deg,#E9E2D8,#D1C2AA)"><span class="text-2xl">↠</span><span><b class="block text-xs text-mauve">Последний поезд</b><small class="text-[9px] text-mauve-light">Перемены и решения</small></span></button>
+            </div>
+            <div id="oracleStory" class="hidden rounded-3xl p-4 space-y-3 border border-blush" style="background:linear-gradient(160deg,#FBF4F1,#F0E2E5)">
+              <div class="flex items-center justify-between"><span id="oracleStoryRoom" class="text-[9px] font-bold tracking-widest text-dusty uppercase"></span><button type="button" onclick="leaveOracleStory()" class="text-xs text-mauve-light">К комнатам ×</button></div>
+              <h3 id="oracleStoryTitle" class="text-lg font-extrabold text-mauve"></h3>
+              <p id="oracleStoryText" class="text-xs leading-relaxed text-mauve"></p>
+              <div id="oracleStoryChoices" class="space-y-2"></div>
+              <div id="oracleStoryEnding" class="hidden space-y-3">
+                <div class="rounded-2xl p-3 space-y-2" style="background:#FFF9F8"><p class="text-[9px] tracking-widest font-bold text-dusty uppercase">Твой финал</p><p id="oracleStoryEndingText" class="text-xs leading-relaxed text-mauve"></p></div>
+                <p id="oracleStoryQuestion" class="text-xs italic text-mauve"></p>
+                <button type="button" onclick="leaveOracleStory()" class="w-full py-3 rounded-xl text-xs font-bold bg-mauve text-white">Вернуться в комнаты</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
         <button onclick="startRandomSilentPractice()" class="w-full rounded-2xl p-4 text-left text-white shadow-card-float flex items-center justify-between" style="background:linear-gradient(120deg,#76545B,#B77D86)"><span><span class="block text-[10px] uppercase tracking-widest text-white/70 font-bold">Не знаешь, с чего начать?</span><span class="block text-sm font-extrabold mt-1">Случайная встреча с собой</span><span class="block text-[10px] text-white/80 mt-1">Я выберу практику за тебя</span></span><span class="text-2xl">✧</span></button>
         <div class="grid grid-cols-2 gap-2">
           <div class="min-w-0"><button onclick="openInnerCompass()" class="glass-card w-full rounded-2xl p-3 text-left border border-blush" style="background:linear-gradient(145deg,#F8EEF0,#FFF9F5)"><span class="text-xl">🧭</span><span class="block text-xs font-bold text-mauve mt-2">Внутренний компас</span><span class="block text-[9px] text-mauve-light mt-1">Отделить желание от страха и привычки · 5–7 мин</span></button></div>
@@ -1948,7 +1953,7 @@ function localDayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.ge
     function toggleOracleFolder(which){
   const suffixes={daily:'Daily',yesno:'YesNo',mirror:'Mirror',rooms:'Rooms'};
   const panels=Object.fromEntries(Object.entries(suffixes).map(([key,suffix])=>[key,document.getElementById('oracleFolder'+suffix+'Content')]));
-  const buttons=document.querySelectorAll('#tab-future button[aria-controls^="oracleFolder"]');
+  const buttons=document.querySelectorAll('button[aria-controls^="oracleFolder"]');
   const target=panels[which];if(!target)return;
   const willOpen=target.classList.contains('hidden');
   Object.entries(panels).forEach(([key,panel])=>{if(panel)panel.classList.toggle('hidden',key!==which||!willOpen);});
