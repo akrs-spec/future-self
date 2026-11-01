@@ -279,20 +279,25 @@
     #dailyJournalHome button > span:first-child, #dailyToolsHome button > span:first-child { width: 2.35rem !important; height: 2.35rem !important; flex: 0 0 2.35rem; font-size: 1.1rem !important; }
     #tab-practices #practiceHub .glass-card, #tab-practices #practiceHub > div.grid button { padding: .75rem !important; }
     #tab-practices #practiceHub > div.grid { gap: .55rem !important; }
-    /* Quiet practice cards: consistent, compact card geometry */
-    #silentPracticeHome > .grid { align-items:stretch; }
+    /* Quiet practice cards: noticeably smaller, compact two-column tiles */
+    #silentPracticeHome > .grid { align-items:stretch; gap:.5rem !important; }
     #silentPracticeHome > .grid > div > button {
-      width:100%; height:112px; min-height:112px; box-sizing:border-box;
+      width:100%; height:86px !important; min-height:86px !important;
+      box-sizing:border-box; padding:8px 9px !important;
       display:flex; flex-direction:column; align-items:flex-start;
-      justify-content:flex-start; overflow:hidden;
+      justify-content:flex-start; overflow:hidden; border-radius:14px !important;
     }
-    #silentPracticeHome > .grid > div > button > span:first-child { flex:0 0 auto; line-height:1.25; }
+    #silentPracticeHome > .grid > div > button > span:first-child {
+      flex:0 0 auto; line-height:1; font-size:16px !important;
+    }
     #silentPracticeHome > .grid > div > button > span:nth-child(2) {
-      display:block; min-height:0; line-height:1.15; margin-top:.45rem !important;
+      display:block; min-height:0; line-height:1.1; font-size:10px !important;
+      margin-top:5px !important;
     }
     #silentPracticeHome > .grid > div > button > span:nth-child(3) {
       display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
-      overflow:hidden; line-height:1.15; margin-top:.2rem !important; padding-top:0;
+      overflow:hidden; line-height:1.1; font-size:8px !important;
+      margin-top:3px !important; padding-top:0;
     }
     #tab-practices #practiceHub > div.grid button span.h-24 { height: 4.5rem !important; margin-bottom: .45rem !important; }
     #tab-practices #practiceHub .rounded-xl.bg-milk.p-3 { padding: .55rem !important; }
