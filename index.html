@@ -384,21 +384,20 @@
 <body class="h-full flex flex-col justify-between max-w-md mx-auto relative shadow-2xl bg-cream min-h-screen pb-24 pt-4 px-4">
 
   <!-- TOP HEADER -->
-  <header class="flex justify-between items-center mb-4 pt-2">
-    <div class="flex items-center space-x-2">
-      <div class="w-9 h-9 rounded-full bg-powder border border-blush flex items-center justify-center text-dusty font-bold text-sm">
-        ✨
-      </div>
-      <div>
-        <h1 id="userGreeting" class="text-xs font-bold tracking-widest text-mauve uppercase">FUTURE SELF</h1>
-        <p id="userAccountStatus" class="text-[10px] text-dusty font-semibold">FREE TARIF • BASIC</p>
+  <header class="flex w-full min-w-0 items-center justify-between gap-2 mb-4 pt-2">
+    <div class="flex min-w-0 flex-1 items-center gap-2">
+      <div class="w-9 h-9 shrink-0 rounded-full bg-powder border border-blush flex items-center justify-center text-dusty font-bold text-sm">✨</div>
+      <div class="min-w-0 flex-1 overflow-hidden">
+        <h1 id="userGreeting" class="block max-w-full truncate text-[11px] font-bold tracking-[.12em] text-mauve uppercase leading-tight">FUTURE SELF</h1>
+        <p id="userAccountStatus" class="block max-w-full truncate text-[9px] text-dusty font-semibold leading-tight mt-1">FREE TARIF • BASIC</p>
       </div>
     </div>
-    <button id="adminOpenBtn" onclick="openAdminPanel()" class="hidden px-3 py-1.5 rounded-full bg-mauve text-white text-xs font-bold">ADMIN</button>
-    <button onclick="openPremiumModal()" class="px-3 py-1.5 rounded-full bg-powder border border-blush text-mauve text-xs font-bold hover:bg-blush transition flex items-center space-x-1 shadow-sm">
-      <i class="fa-solid fa-crown text-dusty text-[10px]"></i>
-      <span>PRO</span>
-    </button>
+    <div class="flex shrink-0 items-center gap-1.5">
+      <button id="adminOpenBtn" onclick="openAdminPanel()" class="hidden shrink-0 px-2.5 py-2 rounded-full bg-mauve text-white text-[10px] font-bold leading-none">ADMIN</button>
+      <button onclick="openPremiumModal()" class="shrink-0 px-2.5 py-2 rounded-full bg-powder border border-blush text-mauve text-[10px] font-bold hover:bg-blush transition flex items-center gap-1 shadow-sm leading-none">
+        <i class="fa-solid fa-crown text-dusty text-[10px]"></i><span>PRO</span>
+      </button>
+    </div>
   </header>
 
   <!-- MAIN TAB CONTENT CONTAINER -->
@@ -1258,18 +1257,16 @@
       document.getElementById('adminOpenBtn')?.classList.toggle('hidden',!isAdmin);
     }
     const categoryGreetingLabels = {
-      vision: 'ТВОЯ КАРТА ЖЕЛАНИЙ',
-      daily: 'ПРОСТРАНСТВО ДЛЯ МЫСЛЕЙ',
+      vision: 'КАРТА ЖЕЛАНИЙ',
+      daily: 'ДНЕВНИК ДНЯ',
       future: 'СИМВОЛЫ И ПОДСКАЗКИ',
       goals: 'ЦЕЛИ И ПРИВЫЧКИ',
-      practices: 'ЗАБОТА О СЕБЕ'
+      practices: 'ПРАКТИКИ'
     };
     function setCategoryGreeting(tabId='vision') {
       const el=document.getElementById('userGreeting');
       if(!el)return;
-      const label=categoryGreetingLabels[tabId]||categoryGreetingLabels.vision;
-      const name=appState?.user?.name;
-      el.innerText=label+(name?' • '+String(name).toUpperCase():(initData?'':' • ДЕМО'));
+      el.innerText=categoryGreetingLabels[tabId]||categoryGreetingLabels.vision;
     }
     async function initAccount() {
       const user=tg?.initDataUnsafe?.user;
