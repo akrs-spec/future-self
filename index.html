@@ -2703,23 +2703,25 @@ function pickFresh(pool,history,avoid){
 }
 function pickLetterFromShuffledBag(pool,category){
  if(!pool||!pool.length)return -1;
- appState.oracleLetterDecks=appState.oracleLetterDecks||{};
- const key=String(category);
- let deck=appState.oracleLetterDecks[key];
- if(!Array.isArray(deck)||deck.some(i=>!Number.isInteger(i)||i<0||i>=pool.length)||new Set(deck).size!==deck.length)deck=[];
- if(!deck.length){
+ const deckKey=storageKey+'_secret_letter_deck_v3_'+String(category);
+ let saved=null;
+ try{saved=JSON.parse(localStorage.getItem(deckKey)||'null');}catch(e){}
+ let deck= saved&&Array.isArray(saved.remaining)?saved.remaining:[];
+ const valid=deck.every(i=>Number.isInteger(i)&&i>=0&&i<pool.length)&&new Set(deck).size===deck.length;
+ let last=saved&&Number.isInteger(saved.last)?saved.last:-1;
+ if(!valid||!deck.length){
   deck=pool.map((_,i)=>i);
   for(let i=deck.length-1;i>0;i--){
    const j=Math.floor(Math.random()*(i+1));
    [deck[i],deck[j]]=[deck[j],deck[i]];
   }
-  const last=appState.oracleLetterLastIndex?.[key];
-  if(deck.length>1&&deck[deck.length-1]===last)[deck[0],deck[deck.length-1]]=[deck[deck.length-1],deck[0]];
+  if(deck.length>1&&deck[deck.length-1]===last){
+   [deck[0],deck[deck.length-1]]=[deck[deck.length-1],deck[0]];
+  }
  }
  const index=deck.pop();
- appState.oracleLetterDecks[key]=deck;
- appState.oracleLetterLastIndex=appState.oracleLetterLastIndex||{};
- appState.oracleLetterLastIndex[key]=index;
+ try{localStorage.setItem(deckKey,JSON.stringify({remaining:deck,last:index,total:pool.length}));}
+ catch(e){console.warn('Secret letter deck could not be saved locally:',e);}
  return index;
 }
 function remember(key,index){
