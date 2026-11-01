@@ -284,6 +284,52 @@
     #tab-daily .space-y-4 > :not([hidden]) ~ :not([hidden]),
     #tab-practices .space-y-4 > :not([hidden]) ~ :not([hidden]),
     #tab-future .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: .65rem !important; }
+
+    /* Phone-first layout for Silent Practices */
+    #silentPracticeFlow {
+      width:100% !important; max-width:28rem !important;
+      padding:4px 0 16px !important; margin:0 auto !important;
+      box-sizing:border-box !important;
+    }
+    #silentPracticeFlow > .glass-card {
+      width:100%; box-sizing:border-box;
+      padding:16px !important; gap:12px !important;
+    }
+    #silentPracticeFlow textarea {
+      display:block; width:100%; box-sizing:border-box;
+      min-height:96px; height:112px; max-height:144px;
+      padding:12px !important; line-height:1.45; font-size:14px;
+    }
+    #silentPracticeFlow button { min-height:40px; }
+    body.keyboard-open {
+      padding-top:0 !important; justify-content:flex-start !important; gap:0 !important;
+    }
+    body.keyboard-open > header { display:none !important; }
+    body.keyboard-open > main {
+      flex:1 1 0% !important; min-height:0 !important;
+      margin-top:0 !important; padding:4px 0 !important;
+      overflow-y:auto !important; overscroll-behavior:contain;
+    }
+    body.keyboard-open #tab-practices {
+      min-height:0 !important; padding-top:0 !important; margin-top:0 !important;
+    }
+    body.keyboard-open #silentPracticeFlow {
+      width:100% !important; max-width:none !important;
+      padding:2px 0 6px !important; margin:0 auto !important;
+    }
+    body.keyboard-open #silentPracticeFlow > .glass-card {
+      padding:12px !important; border-radius:18px !important; gap:10px !important;
+    }
+    body.keyboard-open #silentPracticeFlow textarea {
+      min-height:76px !important; height:88px !important; max-height:112px !important;
+      font-size:16px !important; padding:10px 12px !important;
+    }
+    body.keyboard-open #silentPracticeFlow h3 {
+      font-size:16px !important; line-height:1.3 !important;
+    }
+    body.keyboard-open #silentPracticeFlow .flex.gap-2 button {
+      min-height:42px !important; padding-top:9px !important; padding-bottom:9px !important;
+    }
 </style>
 </head>
 
@@ -883,7 +929,7 @@
         </div>
         <div class="space-y-2"><div class="flex items-center justify-between"><h4 class="text-xs font-extrabold text-mauve">Мои прошлые прохождения</h4><span id="silentPracticeHistoryCount" class="text-[10px] text-mauve-light"></span></div><div id="silentPracticeDetailHistory"></div></div>
       </div>
-      <div id="silentPracticeFlow" class="hidden w-full max-w-md mx-auto px-5 pt-3 pb-10 space-y-4" style="position:relative;overflow:visible;min-height:0;touch-action:pan-y;"></div>
+      <div id="silentPracticeFlow" class="hidden w-full max-w-md mx-auto px-0 pt-1 pb-4 space-y-3" style="position:relative;overflow:visible;min-height:0;touch-action:pan-y;"></div>
       <button id="practiceFolderExitButton" type="button" onclick="backToPracticeHub()" class="hidden">Назад</button>
 
     </section>
@@ -1547,13 +1593,13 @@
       const prompt=isAction?(session.actionPrompt||'Какой один небольшой шаг ты готова сделать в ближайшие сутки?'):questions[step];
       const value=isAction?session.nextStep:session.answers[step];
       flow.innerHTML=`
-        <div class="glass-card rounded-3xl p-5 border border-blush space-y-4">
+        <div class="glass-card rounded-2xl p-4 border border-blush space-y-3">
           <div class="flex items-center justify-between gap-3"><button type="button" aria-label="Вернуться к практикам" title="К практикам" onclick="closeSilentPractice()" class="!inline-flex !w-8 !h-8 !min-w-8 !shrink-0 !items-center !justify-center !p-0 rounded-full bg-white border border-blush text-mauve-light hover:text-mauve"><i class="fa-solid fa-arrow-left text-[10px]"></i></button><span class="text-[10px] text-mauve-light text-right">${isAction?'Завершение':(step+1)+' из '+(total+1)}</span></div>
           <div class="flex justify-between items-center"><span class="text-[10px] uppercase tracking-widest text-dusty font-bold">${escapeHtml(practice.title)}</span></div>
           <div class="h-1.5 rounded-full bg-powder overflow-hidden"><div class="h-full rounded-full bg-dusty" style="width:${progress}%"></div></div>
           <p class="text-[11px] leading-relaxed text-mauve-light">${step===0?escapeHtml(practice.intro):'Не торопись. Здесь нет правильных или неправильных ответов.'}</p>
           <h3 class="text-lg leading-snug font-extrabold text-mauve">${escapeHtml(prompt)}</h3>
-          <textarea id="silentPracticeAnswer" rows="5" maxlength="3000" placeholder="Запиши всё, что приходит в голову…" class="w-full resize-none bg-milk border border-blush rounded-2xl p-3 text-sm text-mauve placeholder:text-mauve-light/60 focus:outline-none focus:ring-1 focus:ring-dusty">${escapeHtml(value||'')}</textarea>
+          <textarea id="silentPracticeAnswer" rows="3" maxlength="3000" placeholder="Запиши всё, что приходит в голову…" class="w-full resize-none bg-milk border border-blush rounded-2xl p-3 text-sm text-mauve placeholder:text-mauve-light/60 focus:outline-none focus:ring-1 focus:ring-dusty">${escapeHtml(value||'')}</textarea>
           <div class="flex gap-2"><button onclick="stepSilentPractice(-1)" ${step===0?'disabled':''} class="px-4 py-3 rounded-xl bg-white border border-blush text-mauve text-xs font-bold disabled:opacity-40">Назад</button><button onclick="stepSilentPractice(1)" class="flex-1 py-3 rounded-xl bg-mauve text-white text-xs font-bold">${isAction?'Завершить практику':'Далее'}</button></div>
           <p class="text-[9px] text-mauve-light text-center">Ответы сохранятся только после завершения практики.</p>
         </div>`;
