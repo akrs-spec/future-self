@@ -2,7 +2,7 @@
 <html lang="ru" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>FUTURE SELF — Telegram Mini App</title>
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -102,7 +102,7 @@
     }
 
     body > nav {
-      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+      padding-bottom: calc(8px + max(env(safe-area-inset-bottom), var(--telegram-safe-bottom, 0px)));
     }
     /* Keep the editor inside the actually visible area when the iOS keyboard opens. */
     body.keyboard-open {
@@ -1082,6 +1082,9 @@
     const tg = window.Telegram?.WebApp;
     tg?.ready();
     tg?.expand();
+    // Match Telegram's native WebView bars to the app canvas.
+    try { tg?.setBackgroundColor?.('#FFF9F9'); } catch (_) {}
+    try { tg?.setBottomBarColor?.('#FFF9F9'); } catch (_) {}
 
     const isTextEditor = (element) => !!element?.matches?.('input,textarea,select,[contenteditable="true"]');
     function syncAppViewportHeight() {
@@ -1099,7 +1102,12 @@
       }
       const deviceTop = Number(tg?.safeAreaInset?.top || 0);
       const contentTop = Number(tg?.contentSafeAreaInset?.top || 0);
+      const safeBottom = Math.max(
+        Number(tg?.safeAreaInset?.bottom || 0),
+        Number(tg?.contentSafeAreaInset?.bottom || 0)
+      );
       document.documentElement.style.setProperty('--telegram-safe-top', (deviceTop + contentTop) + 'px');
+      document.documentElement.style.setProperty('--telegram-safe-bottom', safeBottom + 'px');
       document.body.classList.toggle('keyboard-open', editingText);
     }
     function revealFocusedEditor() {
