@@ -57,6 +57,7 @@
     html {
       font-size: 14px;
       -webkit-text-size-adjust: 100%;
+      background-color: #FFF9F9;
     }
 
     html, body {
@@ -1091,7 +1092,8 @@
       const editingText = isTextEditor(document.activeElement);
       const viewport = window.visualViewport;
       const visualHeight = Number(viewport?.height || 0);
-      const telegramHeight = Number(tg?.viewportHeight || tg?.viewportStableHeight || 0);
+      // Use Telegram's stable viewport for layout pinned to the bottom edge.
+      const telegramHeight = Number(tg?.viewportStableHeight || tg?.viewportHeight || 0);
       // visualViewport is the source that follows the iOS keyboard. Telegram's
       // viewport can remain at its pre-keyboard height inside an embedded WebView.
       const height = editingText
