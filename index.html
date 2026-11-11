@@ -2781,7 +2781,8 @@ window.revealOracleExtra=function(type,value){
  }else if(type==='letter'){
   const pool=oracleExtraData.letters[value];if(!pool)return;clearOracle('letter');
   const index=pickLetterFromShuffledBag(pool,value);
-  const x=pool[index];title='Послание: '+value;body=x[0];question=x[1];saveState();
+  const x=pool[index];title='Послание: '+value;body=x[0];question=x[1];
+  // The shuffled deck is saved separately; avoid rewriting the full app cache here.
  }else if(type==='crossroads'){
   const direction=Number(value),pool=oracleExtraData.crossroads[direction];if(!pool)return;clearOracle('crossroads');
   const key='oracleCrossroadsHistory_'+direction,index=pickFresh(pool,appState[key],6);remember(key,index);
